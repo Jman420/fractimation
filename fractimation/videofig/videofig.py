@@ -153,20 +153,13 @@ def videofig(num_frames, redraw_func, play_fps=25, big_scroll=30, key_func=None,
   scroll_axes_handle = plt.axes([0, 0, 1, 0.03], facecolor='lightgoldenrodyellow')
   scroll_handle = Slider(scroll_axes_handle, '', 0.0, num_frames - 1, valinit=0.0)
 
-  import time
-
-  drawNewStart = scrollStart = playStart = None
-
   def draw_new(_):
-    drawNewStart = time.time()
     # Set to the right axes and call the custom redraw function
     plt.sca(axes_handle)
     redraw_func(int(scroll_handle.val), axes_handle)
     fig_handle.canvas.draw_idle()
-    print("Time in draw_new : " + str(time.time() - drawNewStart))
 
   def scroll(new_f):
-    scrollStart = time.time()
     new_f = min(max(new_f, 0), num_frames - 1)  # clip in the range of [0, num_frames - 1]
     cur_f = scroll_handle.val
 
@@ -178,11 +171,9 @@ def videofig(num_frames, redraw_func, play_fps=25, big_scroll=30, key_func=None,
       # move scroll bar to new position
       scroll_handle.set_val(new_f)
 
-    print("Time in scroll : " + str(time.time() - scrollStart))
     return axes_handle
 
   def play(period):
-    playStart = time.time()
     play.running ^= True  # Toggle state
     if play.running:
       frame_idxs = range(int(scroll_handle.val), num_frames)
@@ -191,7 +182,6 @@ def videofig(num_frames, redraw_func, play_fps=25, big_scroll=30, key_func=None,
       plt.draw()
     else:
       play.anim.event_source.stop
-    print("Time in play : " + str(time.time() - playStart))
 
   # Set initial player state
   play.running = False

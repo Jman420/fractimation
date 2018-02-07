@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>4cb95bbf-a21f-468c-9905-b699abc7f5cf</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>matplotlib\fractimation_matplotlib.py</StartupFile>
+    <StartupFile>videofig\fractimation_videofig.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

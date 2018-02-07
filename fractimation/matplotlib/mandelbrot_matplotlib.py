@@ -1,5 +1,7 @@
+# Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
+#    - Further optimized algorithm is within comments; includes ability to calculate multiple iterations in a single calculation
+
 from numpy import *
-import time
 
 class mandelbrot_matplotlib(object):
     """Fractal Renderer for Mandelbrot Set"""
@@ -16,7 +18,7 @@ class mandelbrot_matplotlib(object):
         yValues = linspace(yMin, yMax, height)[yIndexes]
         cValues = xValues + complex(0,1) * yValues
         zValues = copy(cValues)
-        imageArray = zeros(cValues.shape, dtype=int)
+        imageArray = zeros(cValues.shape, dtype=int) - 1
         del xValues, yValues
 
         self._escapeValue = escapeValue
@@ -42,4 +44,7 @@ class mandelbrot_matplotlib(object):
         self._zValues = self._zValues[removableIndexes]
         self._cValues = self._cValues[removableIndexes]
 
-        return copy(self._imageArray.T)
+        recoloredImage = copy(self._imageArray)
+        recoloredImage[recoloredImage == -1] = frameNumber + 1
+
+        return recoloredImage.T
