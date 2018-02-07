@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "fractimation", "fractimation\fractimation.pyproj", "{4CB95BBF-A21F-468C-9905-B699ABC7F5CF}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "fractimation-python", "fractimation-python\fractimation-python.pyproj", "{4CB95BBF-A21F-468C-9905-B699ABC7F5CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
