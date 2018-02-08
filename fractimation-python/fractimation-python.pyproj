@@ -30,6 +30,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="videofig\fractimation_videofig.py" />
+    <Compile Include="videofig\multijulia_videofig.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="videofig\videofig.py" />
   </ItemGroup>
   <ItemGroup>
