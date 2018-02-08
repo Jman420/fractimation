@@ -5,7 +5,7 @@
     <ProjectGuid>4cb95bbf-a21f-468c-9905-b699abc7f5cf</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>videofig\fractimation_videofig.py</StartupFile>
+    <StartupFile>fractimation.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,22 +22,14 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="matplotlib\fractimation_matplotlib.py">
+    <Compile Include="multibrotRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="matplotlib\mandelbrot_matplotlib.py" />
-    <Compile Include="videofig\multibrot_videofig.py">
+    <Compile Include="fractimation.py" />
+    <Compile Include="multijuliaRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="videofig\fractimation_videofig.py" />
-    <Compile Include="videofig\multijulia_videofig.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="videofig\videofig.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="matplotlib\" />
-    <Folder Include="videofig\" />
+    <Compile Include="videofig.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

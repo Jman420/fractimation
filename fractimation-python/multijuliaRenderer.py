@@ -1,19 +1,20 @@
 # Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
-# Multibrot Fractal Definitions : C = realNumber + imaginaryNumber
-#                                 Z = Z**power + C
-#                                 Z0 = complex(constantRealNumber, constantImaginaryNumber) + C
+#                           http://www.relativitybook.com/CoolStuff/julia_set.html
+# Multi-Julia Fractal Definitions : C = complex(constantRealNumber, constantImaginaryNumber)
+#                                   Z = Z**power + C
+#                                   Z0 = realNumber + imaginaryNumber
 
-# Mandelbrot Parameters :
-#realNumberMin, realNumberMax = -2.0, 0.5
-#imaginaryNumberMin, imaginaryNumberMax = -1.25, 1.25
-#constantRealNumber, constantImaginaryNumber = 0, 0
+# Julia Set Parameters
+#realNumberMin, realNumberMax = -1.5, 1.5
+#imaginaryNumberMin, imaginaryNumberMax = -1.5, 1.5
+#constantRealNumber, constantImaginaryNumber = any values between -1 and 1
 #power = 2
-#escapeValue = 2.0
+#escapeValue = 10.0
 
 from numpy import *
 
-class multibrot_videofig(object):
-    """Fractal Renderer for Multibrot Sets"""
+class multijuliaRenderer(object):
+    """Fractal Renderer for Multi-Julia Sets"""
 
     _power = _escapeValue = None
     _xIndexes = _yIndexes = None
@@ -22,8 +23,8 @@ class multibrot_videofig(object):
     _prevFrameNumber = _cache = None
     _initialized = False
 
-    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                constantRealNumber, constantImaginaryNumber, power, escapeValue):
+    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
+                 constantRealNumber, constantImaginaryNumber, power, escapeValue):
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                        constantRealNumber, constantImaginaryNumber, power, escapeValue)
         self._initialized = False
@@ -34,11 +35,11 @@ class multibrot_videofig(object):
 
         realNumberValues = linspace(realNumberMin, realNumberMax, width)[xIndexes]
         imaginaryNumberValues = linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
-        cValues = realNumberValues + complex(0,1) * imaginaryNumberValues
+        zValues = realNumberValues + complex(0,1) * imaginaryNumberValues
         del realNumberValues, imaginaryNumberValues
 
-        zValues = complex(constantRealNumber, constantImaginaryNumber) + cValues
-        imageArray = zeros(cValues.shape, dtype=int) - 1
+        cValues = complex(constantRealNumber, constantImaginaryNumber)
+        imageArray = zeros(zValues.shape, dtype=int) - 1
         
         self._power = power
         self._escapeValue = escapeValue
@@ -50,7 +51,7 @@ class multibrot_videofig(object):
         self._cache = { }
         self._prevFrameNumber = 0
 
-    def iterate(self, frameNumber, axes):
+    def render(self, frameNumber, axes):
         if frameNumber in self._cache:
             self._canvas.set_data(self._cache[frameNumber])
             self._canvas.autoscale()
@@ -75,7 +76,6 @@ class multibrot_videofig(object):
                 removableIndexes = ~remainingIndexes
                 self._xIndexes, self._yIndexes = self._xIndexes[removableIndexes], self._yIndexes[removableIndexes]
                 self._zValues = self._zValues[removableIndexes]
-                self._cValues = self._cValues[removableIndexes]
 
                 recoloredImage = copy(self._imageArray)
                 recoloredImage[recoloredImage == -1] = frameCounter + 1

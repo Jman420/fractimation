@@ -1,0 +1,110 @@
+import matplotlib.pylab as pylab
+
+from matplotlib.animation import FuncAnimation
+from matplotlib.widgets import Slider
+
+class videofig(object):
+    """Re-implementation of bilylee's videofig project"""
+    IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
+    SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
+
+    _figure = None
+    _imageAxes = _drawFunc = None
+    _sliderAxes = _slider = None
+    _animation = _playing = None
+    _frameRate = None
+
+    def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor="lightgoldenrodyellow"):
+        if figure == None:
+            figure = pylab.plt.figure()
+
+        if not windowTitle == None:
+            figure.canvas.set_window_title(windowTitle)
+
+        if len(figure.axes) > 0:
+            imageAxes = figure.gca()
+        else:
+            imageAxes = figure.add_axes(self.IMAGE_AXES_RECT)
+            imageAxes.set_axis_off()
+
+        sliderAxes = figure.add_axes(self.SLIDER_AXES_RECT, facecolor=sliderBackgroundColor)
+
+        self._figure = figure
+        self._imageAxes = imageAxes
+        self._sliderAxes = sliderAxes
+
+    def initializeAnimation(self, totalFrames, drawFunc, frameRate=30):
+        slider = Slider(self._sliderAxes, "", 0, totalFrames - 1, valinit=0.0)
+        slider.on_changed(self.render)
+        
+        self._figure.canvas.mpl_connect("button_press_event", self.handleMouseButtonDown)
+        self._figure.canvas.mpl_connect("key_press_event", self.handleKeyPress)
+
+        self._playing = False
+        self._drawFunc = drawFunc
+        self._slider = slider
+        self._frameRate = 1000 // frameRate
+
+    def render(self, frameNumber):
+        frameNumber = min(max(0, int(frameNumber)), self._slider.valmax)
+        self.renderSlider(frameNumber)
+        self.renderImage(frameNumber)
+
+    def renderImage(self, frameNumber):
+        self._figure.sca(self._imageAxes)
+        self._drawFunc(frameNumber, self._imageAxes)
+        self._figure.canvas.draw_idle()
+
+    def renderSlider(self, newFrameNumber):
+        currentFrameNumber = int(self._slider.val)
+        if currentFrameNumber != newFrameNumber:
+            self._slider.set_val(newFrameNumber)
+
+        if newFrameNumber == self._slider.valmax:
+            self.stop()
+
+    def play(self):
+        if self._playing:
+            return
+
+        framesToPlay = range(int(self._slider.val), self._slider.valmax)
+        animation = FuncAnimation(self._figure, self.render, framesToPlay, interval=self._frameRate, repeat=False)
+        self._figure.canvas.draw()
+
+        self._playing = True
+        self._animation = animation
+
+    def stop(self):
+        if not self._playing:
+            return
+
+        self._animation.event_source.stop()
+        self._playing = False
+
+    def togglePlayback(self):
+        if self._playing:
+            self.stop()
+        else:
+            self.play()
+
+    def handleKeyPress(self, eventData):
+        key = eventData.key
+        currentFrame = int(self._slider.val)
+
+        if key in [ "left", "right", "end", "home" ]:
+            self.stop()
+
+        if key == "left":
+            self.render(currentFrame - 1)
+        elif key == "right":
+            self.render(currentFrame + 1)
+        elif key == "end":
+            self.render(self._slider.valmax)
+        elif key == "home":
+            self.render(0)
+        elif key in [ " ", "enter" ]:
+            self.togglePlayback()
+
+    def handleMouseButtonDown(self, eventData):
+        if eventData.inaxes == self._sliderAxes:
+            self.stop()
