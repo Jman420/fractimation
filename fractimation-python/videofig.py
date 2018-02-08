@@ -18,8 +18,7 @@ class videofig(object):
     def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor="lightgoldenrodyellow"):
         if figure == None:
             figure = pylab.plt.figure()
-        else:
-            assert isinstance(figure, Figure), "figure must be instance of matplotlib.figure.Figure"
+        self.assertIsFigure(figure, "figure")
 
         if not windowTitle == None:
             figure.canvas.set_window_title(windowTitle)
@@ -37,6 +36,10 @@ class videofig(object):
         self._sliderAxes = sliderAxes
 
     def initializeAnimation(self, totalFrames, drawFunc, frameRate=30):
+        self.assertIsInt(totalFrames, "totalFrames")
+        self.assertIsFunction(drawFunc, "drawFunc")
+        self.assertIsInt(frameRate, "frameRate")
+
         slider = Slider(self._sliderAxes, "", 0, totalFrames - 1, valinit=0.0)
         slider.on_changed(self.render)
         
@@ -122,3 +125,12 @@ class videofig(object):
     def handleMouseButtonDown(self, eventData):
         if eventData.inaxes == self._sliderAxes:
             self.stop()
+
+    def assertIsFigure(self, value, variableName):
+        assert isinstance(value, Figure), variableName + " must be an instance of " + str(Figure)
+
+    def assertIsInt(self, value, variableName):
+        assert isinstance(value, int), variableName + " must be an instance of " + str(int) 
+
+    def assertIsFunction(self, value, variableName):
+        assert callable(value), name + " must be a callable function"
