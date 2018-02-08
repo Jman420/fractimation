@@ -1,7 +1,7 @@
 # Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
 # Multibrot Fractal Definitions : C = realNumber + imaginaryNumber
 #                                 Z = Z**power + C
-#                                 Z0 = C
+#                                 Z0 = 0 + C
 
 # Mandelbrot Parameters :
 #xMin, xMax = -2.0, 0.5
