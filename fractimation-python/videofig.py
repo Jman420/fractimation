@@ -2,6 +2,7 @@ import matplotlib.pylab as pylab
 
 from matplotlib.animation import FuncAnimation
 from matplotlib.widgets import Slider
+from matplotlib.figure import Figure
 
 class videofig(object):
     """Re-implementation of bilylee's videofig project"""
@@ -17,6 +18,8 @@ class videofig(object):
     def __init__(self, windowTitle=None, figure=None, sliderBackgroundColor="lightgoldenrodyellow"):
         if figure == None:
             figure = pylab.plt.figure()
+        else:
+            assert isinstance(figure, Figure), "figure must be instance of matplotlib.figure.Figure"
 
         if not windowTitle == None:
             figure.canvas.set_window_title(windowTitle)
@@ -62,6 +65,17 @@ class videofig(object):
 
         if newFrameNumber == self._slider.valmax:
             self.stop()
+
+    def show(self, blocking):
+        try:
+            pylab.plt.show(blocking)
+        except AttributeError:
+            print("Videofig encountered a playback error.")
+            print("This is usually due to a videofig window getting closed during animation playback...")
+            print("This causes all open videofig windows to malfunction.")
+            print("Closing all videofig windows...")
+            pylab.plt.close("all")
+            pass
 
     def play(self):
         if self._playing:

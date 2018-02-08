@@ -18,7 +18,7 @@ multibrotRenderer = multibrot.multibrotRenderer(width, height, realNumberMin, re
                                                 constantRealNumber, constantImaginaryNumber, power, escapeValue)
 mandelbrot = videofig.videofig("Mandelbrot Set")
 mandelbrot.initializeAnimation(maxIterations, multibrotRenderer.render)
-pylab.plt.show(False)
+mandelbrot.show(False)
 
 # Julia Set
 realNumberMin, realNumberMax = -1.5, 1.5
@@ -34,7 +34,4 @@ julia.initializeAnimation(maxIterations, multijuliaRenderer.render)
 mandelbrot.play()
 julia.play()
 
-try:
-    pylab.plt.show()
-except AttributeError:
-    pass
+julia.show(True)
