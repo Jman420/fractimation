@@ -1,11 +1,12 @@
 # Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
 # Multibrot Fractal Definitions : C = realNumber + imaginaryNumber
 #                                 Z = Z**power + C
-#                                 Z0 = 0 + C
+#                                 Z0 = complex(constantRealNumber, constantImaginaryNumber) + C
 
 # Mandelbrot Parameters :
 #realNumberMin, realNumberMax = -2.0, 0.5
 #imaginaryNumberMin, imaginaryNumberMax = -1.25, 1.25
+#constantRealNumber, constantImaginaryNumber = 0, 0
 #power = 2
 #escapeValue = 2.0
 
@@ -21,11 +22,14 @@ class multibrot_videofig(object):
     _prevFrameNumber = _cache = None
     _initialized = False
 
-    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, power, escapeValue):
-        self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, power, escapeValue)
+    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
+                constantRealNumber, constantImaginaryNumber, power, escapeValue):
+        self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
+                       constantRealNumber, constantImaginaryNumber, power, escapeValue)
         self._initialized = False
 
-    def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, power, escapeValue):
+    def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
+                  constantRealNumber, constantImaginaryNumber, power, escapeValue):
         xIndexes, yIndexes = mgrid[0:width, 0:height]
 
         realNumberValues = linspace(realNumberMin, realNumberMax, width)[xIndexes]
@@ -33,7 +37,7 @@ class multibrot_videofig(object):
         cValues = realNumberValues + complex(0,1) * imaginaryNumberValues
         del realNumberValues, imaginaryNumberValues
 
-        zValues = copy(cValues)
+        zValues = complex(constantRealNumber, constantImaginaryNumber) + cValues
         imageArray = zeros(cValues.shape, dtype=int) - 1
         
         self._power = power
