@@ -9,12 +9,6 @@
 #power = 2
 #escapeValue = 2.0
 
-# Julia Parameters :
-#xMin, xMax = -1.5, 1.5
-#yMin, yMax = -1.5, 1.5
-#power = 2
-#escapeValue = 10.0
-
 from numpy import *
 
 class multibrot_videofig(object):
