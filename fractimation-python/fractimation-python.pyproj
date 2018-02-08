@@ -25,11 +25,8 @@
     <Compile Include="matplotlib\fractimation_matplotlib.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="matplotlib\mandelbrot-test_matplotlib.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="matplotlib\mandelbrot_matplotlib.py" />
-    <Compile Include="videofig\mandelbrot_videofig.py">
+    <Compile Include="videofig\multibrot_videofig.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="videofig\fractimation_videofig.py" />

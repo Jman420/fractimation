@@ -9,9 +9,13 @@ class mandelbrot_matplotlib(object):
     _escapeValue = None
     _xIndexes = _yIndexes = None
     _zValues = _cValues = None
-    _imageArray = _cache = None
+    _imageArray = None
 
     def __init__(self, width, height, xMin, xMax, yMin, yMax, escapeValue):
+        self.initialize(width, height, xMin, xMax, yMin, yMax, escapeValue)
+        self._initialized = False
+
+    def initialize(self, width, height, xMin, xMax, yMin, yMax, escapeValue):
         xIndexes, yIndexes = mgrid[0:width, 0:height]
 
         xValues = linspace(xMin, xMax, width)[xIndexes]
@@ -29,7 +33,7 @@ class mandelbrot_matplotlib(object):
         self._imageArray = imageArray
 
     def iterate(self, frameNumber):
-        if not len(self._zValues):
+        if len(self._zValues) <= 0:
             render = canvas.imshow(self._imageArray.T, origin='lower left')
             return render
 
