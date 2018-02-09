@@ -19,17 +19,18 @@ class multibrotRenderer(object):
     _xIndexes = _yIndexes = None
     _zValues = _cValues = None
     _imageArray = _canvas = None
+    _colorMap = None
     _prevFrameNumber = _cache = None
     _initialized = False
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                constantRealNumber, constantImaginaryNumber, power, escapeValue):
+                constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                       constantRealNumber, constantImaginaryNumber, power, escapeValue)
+                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
         self._initialized = False
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  constantRealNumber, constantImaginaryNumber, power, escapeValue):
+                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
         xIndexes, yIndexes = mgrid[0:width, 0:height]
 
         realNumberValues = linspace(realNumberMin, realNumberMax, width)[xIndexes]
@@ -47,6 +48,7 @@ class multibrotRenderer(object):
         self._zValues = zValues
         self._cValues = cValues
         self._imageArray = imageArray
+        self._colorMap = colorMap
         self._cache = { }
         self._prevFrameNumber = 0
 
@@ -87,5 +89,5 @@ class multibrotRenderer(object):
             self._canvas.set_data(finalImage)
             self._canvas.autoscale()
         else:
-            self._canvas = axes.imshow(finalImage)
+            self._canvas = axes.imshow(finalImage, cmap=self._colorMap)
             self._initialized = True
