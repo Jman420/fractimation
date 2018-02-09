@@ -30,9 +30,6 @@ mandelbrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render)
 #multibrotFigure.canvas.mpl_connect("button_release_event", multibrotUiHandler.imageMouseButtonRelease)
 #multibrotFigure.canvas.mpl_connect("motion_notify_event", multibrotUiHandler.imageMouseMotion)
 
-mandelbrotViewer.play()
-mandelbrotViewer.show(False)
-
 # Julia Set
 realNumberMin, realNumberMax = -1.5, 1.5
 imaginaryNumberMin, imaginaryNumberMax = -1.5, 1.5
@@ -44,6 +41,8 @@ multijuliaRenderer = multijulia.multijuliaRenderer(width, height, realNumberMin,
 juliaViewer = videofig.videofig("Julia Set")
 juliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 
-juliaViewer.play()
+mandelbrotViewer.show(False)
+mandelbrotViewer.play()
 
+juliaViewer.play()
 juliaViewer.show(True)
