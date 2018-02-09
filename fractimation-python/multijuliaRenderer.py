@@ -11,9 +11,10 @@
 #power = 2
 #escapeValue = 10.0
 
-from numpy import *
+import numpy
+from fractimationRenderer import fractimationRenderer
 
-class multijuliaRenderer(object):
+class multijuliaRenderer(fractimationRenderer):
     """Fractal Renderer for Multi-Julia Sets"""
 
     _power = _escapeValue = None
@@ -32,15 +33,15 @@ class multijuliaRenderer(object):
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                   constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
-        xIndexes, yIndexes = mgrid[0:width, 0:height]
+        xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
 
-        realNumberValues = linspace(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
-        zValues = realNumberValues + complex(0,1) * imaginaryNumberValues
+        realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
+        imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
+        zValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
         del realNumberValues, imaginaryNumberValues
 
-        cValues = complex(constantRealNumber, constantImaginaryNumber)
-        imageArray = zeros(zValues.shape, dtype=int) - 1
+        cValues = numpy.complex(constantRealNumber, constantImaginaryNumber)
+        imageArray = numpy.zeros(zValues.shape, dtype=int) - 1
         
         self._power = power
         self._escapeValue = escapeValue
@@ -66,20 +67,20 @@ class multijuliaRenderer(object):
                 finalImage = self._cache[len(self._cache) - 1]
                 self._cache.update({ frameCounter : finalImage })
             else:
-                exponentValue = copy(self._zValues)
+                exponentValue = numpy.copy(self._zValues)
                 for exponentCounter in range(0, self._power - 1):
-                    multiply(exponentValue, self._zValues, self._zValues)
+                    numpy.multiply(exponentValue, self._zValues, self._zValues)
 
-                add(self._zValues, self._cValues, self._zValues)
+                numpy.add(self._zValues, self._cValues, self._zValues)
 
-                remainingIndexes = abs(self._zValues) > self._escapeValue
+                remainingIndexes = numpy.abs(self._zValues) > self._escapeValue
                 self._imageArray[self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]] = frameCounter
 
                 removableIndexes = ~remainingIndexes
                 self._xIndexes, self._yIndexes = self._xIndexes[removableIndexes], self._yIndexes[removableIndexes]
                 self._zValues = self._zValues[removableIndexes]
 
-                recoloredImage = copy(self._imageArray)
+                recoloredImage = numpy.copy(self._imageArray)
                 recoloredImage[recoloredImage == -1] = frameCounter + 1
                 finalImage = recoloredImage.T
                 self._cache.update({ frameCounter : finalImage })

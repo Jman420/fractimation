@@ -20,12 +20,18 @@ power = 2                                              # Power to raise Z value 
 escapeValue = 2.0                                      # Limit at which Z values will reach infinity
 multibrotRenderer = multibrot.multibrotRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-mandelbrotFigure = pylab.plt.figure()
-mandelbrotFigure.canvas.mpl_connect("button_press_event", uiHandler.imageMouseButtonDown)
 
-mandelbrot = videofig.videofig("Mandelbrot Set", mandelbrotFigure)
-mandelbrot.initializeAnimation(maxIterations, multibrotRenderer.render)
-mandelbrot.show(False)
+multibrotFigure = pylab.plt.figure()
+mandelbrotViewer = videofig.videofig("Mandelbrot Set", multibrotFigure)
+mandelbrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render)
+
+#multibrotUiHandler = uiHandler.uiHandler(multibrotRenderer, mandelbrotViewer)
+#multibrotFigure.canvas.mpl_connect("button_press_event", multibrotUiHandler.imageMouseButtonPress)
+#multibrotFigure.canvas.mpl_connect("button_release_event", multibrotUiHandler.imageMouseButtonRelease)
+#multibrotFigure.canvas.mpl_connect("motion_notify_event", multibrotUiHandler.imageMouseMotion)
+
+mandelbrotViewer.play()
+mandelbrotViewer.show(False)
 
 # Julia Set
 realNumberMin, realNumberMax = -1.5, 1.5
@@ -35,10 +41,9 @@ power = 2
 escapeValue = 10.0
 multijuliaRenderer = multijulia.multijuliaRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                                    constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-julia = videofig.videofig("Julia Set")
-julia.initializeAnimation(maxIterations, multijuliaRenderer.render)
+juliaViewer = videofig.videofig("Julia Set")
+juliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 
-mandelbrot.play()
-julia.play()
+juliaViewer.play()
 
-julia.show(True)
+juliaViewer.show(True)

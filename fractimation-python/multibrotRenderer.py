@@ -10,17 +10,20 @@
 #power = 2
 #escapeValue = 2.0
 
-from numpy import *
+import numpy
+from fractimationRenderer import fractimationRenderer
 
-class multibrotRenderer(object):
+class multibrotRenderer(fractimationRenderer):
     """Fractal Renderer for Multibrot Sets"""
+    COORDS_CAPTION = "({}, {})"
 
     _power = _escapeValue = None
     _xIndexes = _yIndexes = None
+    _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValues = None
-    _imageArray = _canvas = None
+    _imageArray = _imageCanvas = None
     _colorMap = None
-    _prevFrameNumber = _cache = None
+    _currentFrameNumber = _cache = None
     _initialized = False
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
@@ -31,47 +34,64 @@ class multibrotRenderer(object):
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                   constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
-        xIndexes, yIndexes = mgrid[0:width, 0:height]
+        xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
 
-        realNumberValues = linspace(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
-        cValues = realNumberValues + complex(0,1) * imaginaryNumberValues
-        del realNumberValues, imaginaryNumberValues
-
-        zValues = complex(constantRealNumber, constantImaginaryNumber) + cValues
-        imageArray = zeros(cValues.shape, dtype=int) - 1
+        realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
+        imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
+        cValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
+        zValues = numpy.complex(constantRealNumber, constantImaginaryNumber) + cValues
+        imageArray = numpy.zeros(cValues.shape, dtype=int) - 1
         
         self._power = power
         self._escapeValue = escapeValue
         self._xIndexes = xIndexes
         self._yIndexes = yIndexes
+        self._realNumberValues = realNumberValues
+        self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
         self._cValues = cValues
         self._imageArray = imageArray
         self._colorMap = colorMap
         self._cache = { }
-        self._prevFrameNumber = 0
+        self._currentFrameNumber = 0
+
+    def renderZoomCaption(self, axes):
+        if (self._renderZoomBox):
+            startX, startY = self.getMinZoomCoords()
+            endX, endY = self.getMaxZoomCoords()
+            
+            minRealNumber = self._realNumberValues[startX][startY]
+            minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
+            minValuesCaption = self.COORDS_CAPTION.format(minRealNumber, minImaginaryNumber)
+            axes.text(startX, startY, minValuesCaption, fontsize=8)
+
+            maxRealNumber = self._imaginaryNumberValues[endX][endY]
+            maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
+            maxValuesCaption = self.COORDS_CAPTION.format(maxRealNumber, maxImaginaryNumber)
+            axes.text(endX, endY, maxValuesCaption, fontsize=8)
 
     def render(self, frameNumber, axes):
         if frameNumber in self._cache:
-            self._canvas.set_data(self._cache[frameNumber])
-            self._canvas.autoscale()
+            self._imageCanvas.set_data(self._cache[frameNumber])
+            self._imageCanvas.autoscale()
+
+            self.renderZoomCaption(axes)
             return
 
         finalImage = None
-        for frameCounter in range(self._prevFrameNumber, frameNumber + 1):
+        for frameCounter in range(self._currentFrameNumber, frameNumber + 1):
             if len(self._zValues) <= 0:
                 # Nothing left to calculate, so just store the last image in the cache
                 finalImage = self._cache[len(self._cache) - 1]
                 self._cache.update({ frameCounter : finalImage })
             else:
-                exponentValue = copy(self._zValues)
+                exponentValue = numpy.copy(self._zValues)
                 for exponentCounter in range(0, self._power - 1):
-                    multiply(exponentValue, self._zValues, self._zValues)
+                    numpy.multiply(exponentValue, self._zValues, self._zValues)
 
-                add(self._zValues, self._cValues, self._zValues)
+                numpy.add(self._zValues, self._cValues, self._zValues)
 
-                remainingIndexes = abs(self._zValues) > self._escapeValue
+                remainingIndexes = numpy.abs(self._zValues) > self._escapeValue
                 self._imageArray[self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]] = frameCounter
 
                 removableIndexes = ~remainingIndexes
@@ -79,15 +99,18 @@ class multibrotRenderer(object):
                 self._zValues = self._zValues[removableIndexes]
                 self._cValues = self._cValues[removableIndexes]
 
-                recoloredImage = copy(self._imageArray)
+                recoloredImage = numpy.copy(self._imageArray)
                 recoloredImage[recoloredImage == -1] = frameCounter + 1
                 finalImage = recoloredImage.T
                 self._cache.update({ frameCounter : finalImage })
         
-        self._prevFrameNumber = frameCounter + 1
+        self._currentFrameNumber = frameCounter + 1
         if (self._initialized):
-            self._canvas.set_data(finalImage)
-            self._canvas.autoscale()
+            self._imageCanvas.set_data(finalImage)
+            self._imageCanvas.autoscale()
         else:
-            self._canvas = axes.imshow(finalImage, cmap=self._colorMap)
+            self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap)
             self._initialized = True
+
+        self.renderZoomCaption(axes)
+        super().render(frameNumber, axes)
