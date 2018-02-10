@@ -16,4 +16,4 @@ The framework can likely be used for general animation purposes as well.
 - plotplayer (https://github.com/Jman420/plotplayer)
 
 # Examples
-See [fractimation_test.py], [multibrotRenderer.py], [multijuliaRenderer.py]
+See [fractimation_test.py](fractimation_test.py), [multibrotRenderer.py](multibrotRenderer.py), [multijuliaRenderer.py](multijuliaRenderer.py)
