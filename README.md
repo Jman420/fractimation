@@ -1,5 +1,5 @@
 # fractimation
-A Fractal Animation Engine for Matplotlib
+A Fractal Animation Framework for Matplotlib
 
 # Description
 Fractimation is a framework and player meant for exploring and animating fractal iterations.
