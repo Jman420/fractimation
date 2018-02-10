@@ -3,11 +3,11 @@ import matplotlib.pylab as pylab
 
 import multibrotRenderer as multibrot
 import multijuliaRenderer as multijulia
-import uiHandler
+import zoomHandler
 
 width, height = 1280, 720                              # Width and Height of the image
                                                        # ^^ quick ref : 480p;(640, 480) 720p;(1280, 720) 1080p;(1920, 1080) UHD/4K;(3840, 2160) 8K;(7680, 4320)
-maxIterations = 50                                     # Total number of iterations of fractal equation
+maxIterations = 30                                     # Total number of iterations of fractal equation
                                                        #  ^^ Careful with this value; we are caching each frame
 colorMap = "viridis"                                   # Any valid color map name or combination (default : viridis)
                                                        # ^^ reference : https://matplotlib.org/examples/color/colormaps_reference.html
@@ -21,14 +21,9 @@ escapeValue = 2.0                                      # Limit at which Z values
 multibrotRenderer = multibrot.multibrotRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 
-multibrotFigure = pylab.plt.figure()
-mandelbrotViewer = plotplayer.plotplayer("Mandelbrot Set", multibrotFigure)
-mandelbrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render)
-
-#multibrotUiHandler = uiHandler.uiHandler(multibrotRenderer, mandelbrotViewer)
-#multibrotFigure.canvas.mpl_connect("button_press_event", multibrotUiHandler.imageMouseButtonPress)
-#multibrotFigure.canvas.mpl_connect("button_release_event", multibrotUiHandler.imageMouseButtonRelease)
-#multibrotFigure.canvas.mpl_connect("motion_notify_event", multibrotUiHandler.imageMouseMotion)
+multibrotViewer = plotplayer.plotplayer("Mandelbrot Set")
+multibrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render)
+multibrotZoomHandler = zoomHandler.zoomHandler(multibrotRenderer, multibrotViewer)
 
 # Julia Set
 realNumberMin, realNumberMax = -1.5, 1.5
@@ -38,11 +33,12 @@ power = 2
 escapeValue = 10.0
 multijuliaRenderer = multijulia.multijuliaRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                                    constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-juliaViewer = plotplayer.plotplayer("Julia Set")
-juliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
+multijuliaViewer = plotplayer.plotplayer("Julia Set")
+multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
+juliaZoomHandler = zoomHandler.zoomHandler(multijuliaRenderer, multijuliaViewer)
 
-mandelbrotViewer.show(False)
-mandelbrotViewer.play()
+multibrotViewer.show(False)
+multibrotViewer.play()
 
-juliaViewer.play()
-juliaViewer.show(True)
+multijuliaViewer.play()
+multijuliaViewer.show()

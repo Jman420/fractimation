@@ -22,9 +22,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="fractimationRenderer.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="multibrotRenderer.py">
       <SubType>Code</SubType>
     </Compile>
@@ -33,7 +30,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="plotplayer.py" />
-    <Compile Include="uiHandler.py">
+    <Compile Include="zoomHandler.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

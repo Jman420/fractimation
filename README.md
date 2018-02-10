@@ -9,6 +9,7 @@ The framework can likely be used for general animation purposes as well.
 - Multibrot and Multi-Julia Sets
 - Iteration caching for playback scrubbing
 - Support custom color maps
+- Infinite zoom support
 
 # Dependencies
 - Matplotlib (https://matplotlib.org/)
