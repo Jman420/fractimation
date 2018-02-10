@@ -1,4 +1,4 @@
-import videofig
+import plotplayer
 import matplotlib.pylab as pylab
 
 import multibrotRenderer as multibrot
@@ -22,7 +22,7 @@ multibrotRenderer = multibrot.multibrotRenderer(width, height, realNumberMin, re
                                                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 
 multibrotFigure = pylab.plt.figure()
-mandelbrotViewer = videofig.videofig("Mandelbrot Set", multibrotFigure)
+mandelbrotViewer = plotplayer.plotplayer("Mandelbrot Set", multibrotFigure)
 mandelbrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render)
 
 #multibrotUiHandler = uiHandler.uiHandler(multibrotRenderer, mandelbrotViewer)
@@ -38,7 +38,7 @@ power = 2
 escapeValue = 10.0
 multijuliaRenderer = multijulia.multijuliaRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                                    constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-juliaViewer = videofig.videofig("Julia Set")
+juliaViewer = plotplayer.plotplayer("Julia Set")
 juliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 
 mandelbrotViewer.show(False)

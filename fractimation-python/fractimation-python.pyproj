@@ -32,10 +32,10 @@
     <Compile Include="multijuliaRenderer.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="plotplayer.py" />
     <Compile Include="uiHandler.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="videofig.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

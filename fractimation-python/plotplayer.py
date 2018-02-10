@@ -4,13 +4,14 @@ from matplotlib.animation import FuncAnimation
 from matplotlib.widgets import Slider
 from matplotlib.figure import Figure
 
-class videofig(object):
-    """Re-implementation of bilylee's videofig project"""
+class plotplayer(object):
+    """Lightweight function based animation player for Matplotlib"""
+
     IMAGE_AXES_RECT = [0, 0.03, 1, 0.97]  # [ x, y, width, height ] in percentage of window size
     SLIDER_AXES_RECT = [0, 0, 1, 0.03]  # [ x, y, width, height ] in percentage of window size
 
     _figure = None
-    _imageAxes = _drawFunc = None
+    _animationAxes = _drawFunc = None
     _sliderAxes = _slider = None
     _animation = _playing = None
     _frameRate = None
@@ -24,15 +25,15 @@ class videofig(object):
             figure.canvas.set_window_title(windowTitle)
 
         if len(figure.axes) > 0:
-            imageAxes = figure.gca()
+            animationAxes = figure.gca()
         else:
-            imageAxes = figure.add_axes(self.IMAGE_AXES_RECT)
-            imageAxes.set_axis_off()
+            animationAxes = figure.add_axes(self.IMAGE_AXES_RECT)
+            animationAxes.set_axis_off()
 
         sliderAxes = figure.add_axes(self.SLIDER_AXES_RECT, facecolor=sliderBackgroundColor)
 
         self._figure = figure
-        self._imageAxes = imageAxes
+        self._animationAxes = animationAxes
         self._sliderAxes = sliderAxes
 
     def initializeAnimation(self, totalFrames, drawFunc, frameRate=30):
@@ -57,8 +58,8 @@ class videofig(object):
         self.renderImage(frameNumber)
 
     def renderImage(self, frameNumber):
-        self._figure.sca(self._imageAxes)
-        self._drawFunc(frameNumber, self._imageAxes)
+        self._figure.sca(self._animationAxes)
+        self._drawFunc(frameNumber, self._animationAxes)
         self._figure.canvas.draw_idle()
 
     def renderSlider(self, newFrameNumber):
@@ -69,7 +70,7 @@ class videofig(object):
         if newFrameNumber == self._slider.valmax:
             self.stop()
 
-    def show(self, blocking):
+    def show(self, blocking=True):
         try:
             pylab.plt.show(blocking)
         except AttributeError:
@@ -84,7 +85,7 @@ class videofig(object):
         if self._playing:
             return
 
-        framesToPlay = range(int(self._slider.val), self._slider.valmax)
+        framesToPlay = range(int(self._slider.val), self._slider.valmax + 1)
         animation = FuncAnimation(self._figure, self.render, framesToPlay, interval=self._frameRate, repeat=False)
         self._figure.canvas.draw()
 
