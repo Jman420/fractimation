@@ -12,22 +12,30 @@
 #escapeValue = 10.0
 
 import numpy
-from fractimationRenderer import fractimationRenderer
 
-class multijuliaRenderer(fractimationRenderer):
+class multijuliaRenderer(object):
     """Fractal Renderer for Multi-Julia Sets"""
 
+    _width = _height = None
+    _constantRealNumber = _constantImaginaryNumber = None
     _power = _escapeValue = None
+    _minRealNumber = _maxRealNumber = None
+    _minImaginaryNumber = _maxImaginaryNumber = None
+
     _xIndexes = _yIndexes = None
+    _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValues = None
-    _imageArray = _canvas = None
+
+    _imageArray = _imageCanvas = None
     _colorMap = _currentFrameNumber = None
+    _imageCache = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+        self._zoomCache = [ ]
+
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                        constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-        self._initialized = False
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                   constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
@@ -36,26 +44,35 @@ class multijuliaRenderer(fractimationRenderer):
         realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
         imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
         zValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
-        del realNumberValues, imaginaryNumberValues
-
         cValues = numpy.complex(constantRealNumber, constantImaginaryNumber)
         imageArray = numpy.zeros(zValues.shape, dtype=int) - 1
         
+        self._width = width
+        self._height = height
+        self._constantRealNumber = constantRealNumber
+        self._constantImaginaryNumber = constantImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
+        self._minRealNumber = realNumberMin
+        self._maxRealNumber = realNumberMax
+        self._minImaginaryNumber = imaginaryNumberMin
+        self._maxImaginaryNumber = imaginaryNumberMax
+
         self._xIndexes = xIndexes
         self._yIndexes = yIndexes
+        self._realNumberValues = realNumberValues
+        self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
         self._cValues = cValues
         self._imageArray = imageArray
         self._colorMap = colorMap
-        self._cache = { }
+        self._imageCache = { }
         self._currentFrameNumber = 0
 
     def render(self, frameNumber, axes):
-        if frameNumber in self._cache:
-            self._canvas.set_data(self._cache[frameNumber])
-            self._canvas.autoscale()
+        if frameNumber in self._imageCache:
+            self._imageCanvas.set_data(self._imageCache[frameNumber])
+            self._imageCanvas.autoscale()
             return
 
         finalImage = None
@@ -63,7 +80,7 @@ class multijuliaRenderer(fractimationRenderer):
             if len(self._zValues) <= 0:
                 # Nothing left to calculate, so just store the last image in the cache
                 finalImage = self._cache[len(self._cache) - 1]
-                self._cache.update({ frameCounter : finalImage })
+                self._imageCache.update({ frameCounter : finalImage })
             else:
                 exponentValue = numpy.copy(self._zValues)
                 for exponentCounter in range(0, self._power - 1):
@@ -81,12 +98,43 @@ class multijuliaRenderer(fractimationRenderer):
                 recoloredImage = numpy.copy(self._imageArray)
                 recoloredImage[recoloredImage == -1] = frameCounter + 1
                 finalImage = recoloredImage.T
-                self._cache.update({ frameCounter : finalImage })
+                self._imageCache.update({ frameCounter : finalImage })
         
         self._currentFrameNumber = frameCounter + 1
-        if (self._initialized):
-            self._canvas.set_data(finalImage)
-            self._canvas.autoscale()
+        if self._imageCanvas == None:
+            self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
         else:
-            self._canvas = axes.imshow(finalImage, cmap=self._colorMap)
-            self._initialized = True
+            self._imageCanvas.set_data(finalImage)
+            self._imageCanvas.autoscale()
+
+    def zoomIn(self, startX, startY, endX, endY):
+        prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
+
+        minRealNumber = self._realNumberValues[startX][startY]
+        maxRealNumber = self._realNumberValues[endX][endY]
+        minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
+        maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
+
+        self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
+                        self._constantRealNumber, self._constantImaginaryNumber, self._power, self._escapeValue, self._colorMap)
+        self._zoomCache.append(prevZoom)
+
+    def zoomOut(self):
+        if len(self._zoomCache) < 1:
+            return False
+
+        prevZoom = self._zoomCache.pop()
+        self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
+                       prevZoom.maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
+                       self._escapeValue, self._colorMap)
+        return True
+
+class zoomCacheItem(object):
+    minRealNumber = maxRealNumber = None
+    minImaginaryNumber = maxImaginaryNumber = None
+
+    def __init__(self, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber):
+        self.minRealNumber = minRealNumber
+        self.maxRealNumber = maxRealNumber
+        self.minImaginaryNumber = minImaginaryNumber
+        self.maxImaginaryNumber = maxImaginaryNumber
