@@ -21,9 +21,7 @@ class multijuliaRenderer(fractimationRenderer):
     _xIndexes = _yIndexes = None
     _zValues = _cValues = None
     _imageArray = _canvas = None
-    _colorMap = None
-    _prevFrameNumber = _cache = None
-    _initialized = False
+    _colorMap = _currentFrameNumber = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
@@ -52,7 +50,7 @@ class multijuliaRenderer(fractimationRenderer):
         self._imageArray = imageArray
         self._colorMap = colorMap
         self._cache = { }
-        self._prevFrameNumber = 0
+        self._currentFrameNumber = 0
 
     def render(self, frameNumber, axes):
         if frameNumber in self._cache:
@@ -61,7 +59,7 @@ class multijuliaRenderer(fractimationRenderer):
             return
 
         finalImage = None
-        for frameCounter in range(self._prevFrameNumber, frameNumber + 1):
+        for frameCounter in range(self._currentFrameNumber, frameNumber + 1):
             if len(self._zValues) <= 0:
                 # Nothing left to calculate, so just store the last image in the cache
                 finalImage = self._cache[len(self._cache) - 1]
@@ -85,7 +83,7 @@ class multijuliaRenderer(fractimationRenderer):
                 finalImage = recoloredImage.T
                 self._cache.update({ frameCounter : finalImage })
         
-        self._prevFrameNumber = frameCounter + 1
+        self._currentFrameNumber = frameCounter + 1
         if (self._initialized):
             self._canvas.set_data(finalImage)
             self._canvas.autoscale()

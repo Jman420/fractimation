@@ -7,6 +7,8 @@ class fractimationRenderer(object):
     _renderZoomBox = False
     _startZoomX = _startZoomY = None
     _endZoomX = _endZoomY = None
+    _cache = None
+    _initialized = False
 
     def setStartZoomCoords(self, x, y):
         self._startZoomX = x

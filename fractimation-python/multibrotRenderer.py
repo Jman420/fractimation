@@ -22,9 +22,7 @@ class multibrotRenderer(fractimationRenderer):
     _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValues = None
     _imageArray = _imageCanvas = None
-    _colorMap = None
-    _currentFrameNumber = _cache = None
-    _initialized = False
+    _colorMap = _currentFrameNumber = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
