@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ProfilingTarget xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectTarget>
+    <TargetProject>4cb95bbf-a21f-468c-9905-b699abc7f5cf</TargetProject>
+    <FriendlyName>fractimation</FriendlyName>
+  </ProjectTarget>
+  <Reports>
+    <Report>
+      <Filename>C:\Users\jgiannone\AppData\Local\Temp\fractimation_20180205.vsp</Filename>
+    </Report>
+  </Reports>
+</ProfilingTarget>
