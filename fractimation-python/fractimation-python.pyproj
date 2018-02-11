@@ -29,7 +29,6 @@
     <Compile Include="multijuliaRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="plotplayer.py" />
     <Compile Include="zoomHandler.py">
       <SubType>Code</SubType>
     </Compile>

@@ -9,7 +9,8 @@ The framework can likely be used for general animation purposes as well.
 - Multibrot and Multi-Julia Sets
 - Iteration caching for playback scrubbing
 - Support custom color maps
-- Infinite zoom support
+- Infinite zoom support with selectable area
+- Save animations as video
 
 # Dependencies
 - Matplotlib (https://matplotlib.org/)
@@ -17,16 +18,43 @@ The framework can likely be used for general animation purposes as well.
 - plotplayer (https://github.com/Jman420/plotplayer)
 
 # Usage
-Zoom Controls :
-- Zoom In : Draw rectangle with left mouse button to select area to zoom
-- Zoom Out : Right click mouse button
+## Zoom Controls :
+- Zoom Selection : Draw rectangle with left mouse button to select area to zoom
+- Zoom In : Double click left mouse button
+- Zoom Out : Single click right mouse button
 
-Keyboard Shortcuts :
-* Play - Space & Enter
+## Keyboard Shortcuts :
+* Play/Stop - Space & Enter
 * Skip Ahead 1 Frame - Right
 * Skip Back 1 Frame - Left
 * Skip to Beginning - Home
 * Skip to End - End
 
+## Saving as Video
+To save an animation as a video press and hold the 's' key and then press one of the following keys
+to select the output format:
+* V - mp4 video using ffmpeg (must have ffmpeg installed)
+* H - HTML5 video
+* J - Javascript video
+
 # Examples
 See [fractimation_test.py](fractimation-python/fractimation_test.py), [multibrotRenderer.py](fractimation-python/multibrotRenderer.py), [multijuliaRenderer.py](fractimation-python/multijuliaRenderer.py)
+
+# Issues
+## Inaccurate Framerate
+Matplotlib's FuncAnimation module does not seem to keep accurate frameRate, instead waiting
+for a pre-defined interval between method calls.  This will result in longer playback times
+than expected given the provided frameRate parameter.  For instance, an animation with 30
+frames at a frameRate of 30 frames per second should complete in 1 second, but if the
+animation function on average takes 0.01 seconds then the full playback time will be
+1.30 seconds.
+
+A dynamic sleep timer is needed to smooth the framerate by determining the difference
+between the wait interval and the last call to render.  For example, if interval is 33.33
+milliseconds and animation function takes 3.33 milliseconds to execute then sleep timer
+should wait for 30 milliseconds before rendering the next frame.
+
+This issue can be mitigated by caching each frame within the renderer instead of
+calculating the frame each time.  This will provide accurate playback on playthroughs after
+the initial playback.  Another option is preheating the renderer cache by rendering all
+frames before showing the animation.

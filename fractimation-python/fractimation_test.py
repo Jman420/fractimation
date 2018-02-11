@@ -7,7 +7,7 @@ import zoomHandler
 
 width, height = 1280, 720                              # Width and Height of the image
                                                        # ^^ quick ref : 480p;(640, 480) 720p;(1280, 720) 1080p;(1920, 1080) UHD/4K;(3840, 2160) 8K;(7680, 4320)
-maxIterations = 30                                     # Total number of iterations of fractal equation
+maxIterations = 50                                     # Total number of iterations of fractal equation
                                                        #  ^^ Careful with this value; we are caching each frame
 colorMap = "viridis"                                   # Any valid color map name or combination (default : viridis)
                                                        # ^^ reference : https://matplotlib.org/examples/color/colormaps_reference.html
@@ -37,6 +37,7 @@ multijuliaViewer = plotplayer.plotplayer("Julia Set")
 multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 juliaZoomHandler = zoomHandler.zoomHandler(multijuliaRenderer, multijuliaViewer)
 
+# Render Viewers and Play Animations
 multibrotViewer.show(False)
 multibrotViewer.play()
 
