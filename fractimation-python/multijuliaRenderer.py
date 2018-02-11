@@ -79,7 +79,7 @@ class multijuliaRenderer(object):
         for frameCounter in range(self._currentFrameNumber, frameNumber + 1):
             if len(self._zValues) <= 0:
                 # Nothing left to calculate, so just store the last image in the cache
-                finalImage = self._cache[len(self._cache) - 1]
+                finalImage = self._imageCache[len(self._imageCache) - 1]
                 self._imageCache.update({ frameCounter : finalImage })
             else:
                 exponentValue = numpy.copy(self._zValues)
@@ -88,12 +88,12 @@ class multijuliaRenderer(object):
 
                 numpy.add(self._zValues, self._cValues, self._zValues)
 
-                remainingIndexes = numpy.abs(self._zValues) > self._escapeValue
-                self._imageArray[self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]] = frameCounter
+                explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
+                self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = frameCounter
 
-                removableIndexes = ~remainingIndexes
-                self._xIndexes, self._yIndexes = self._xIndexes[removableIndexes], self._yIndexes[removableIndexes]
-                self._zValues = self._zValues[removableIndexes]
+                remainingIndexes = ~explodedIndexes
+                self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
+                self._zValues = self._zValues[remainingIndexes]
 
                 recoloredImage = numpy.copy(self._imageArray)
                 recoloredImage[recoloredImage == -1] = frameCounter + 1
@@ -114,6 +114,8 @@ class multijuliaRenderer(object):
         maxRealNumber = self._realNumberValues[endX][endY]
         minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
         maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
+        print("ZoomIn Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
+              .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
 
         self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
                         self._constantRealNumber, self._constantImaginaryNumber, self._power, self._escapeValue, self._colorMap)
@@ -124,6 +126,9 @@ class multijuliaRenderer(object):
             return False
 
         prevZoom = self._zoomCache.pop()
+        print("ZoomOut Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
+              .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
+
         self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
                        prevZoom.maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
                        self._escapeValue, self._colorMap)

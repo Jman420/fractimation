@@ -87,13 +87,13 @@ class multibrotRenderer(object):
 
                 numpy.add(self._zValues, self._cValues, self._zValues)
 
-                remainingIndexes = numpy.abs(self._zValues) > self._escapeValue
-                self._imageArray[self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]] = frameCounter
+                explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
+                self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = frameCounter
 
-                removableIndexes = ~remainingIndexes
-                self._xIndexes, self._yIndexes = self._xIndexes[removableIndexes], self._yIndexes[removableIndexes]
-                self._zValues = self._zValues[removableIndexes]
-                self._cValues = self._cValues[removableIndexes]
+                remainingIndexes = ~explodedIndexes
+                self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
+                self._zValues = self._zValues[remainingIndexes]
+                self._cValues = self._cValues[remainingIndexes]
 
                 recoloredImage = numpy.copy(self._imageArray)
                 recoloredImage[recoloredImage == -1] = frameCounter + 1
@@ -114,6 +114,8 @@ class multibrotRenderer(object):
         maxRealNumber = self._realNumberValues[endX][endY]
         minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
         maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
+        print("ZoomIn Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
+              .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
 
         self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
                         self._constantRealNumber, self._constantImaginaryNumber, self._power, self._escapeValue, self._colorMap)
@@ -124,6 +126,9 @@ class multibrotRenderer(object):
             return False
 
         prevZoom = self._zoomCache.pop()
+        print("ZoomOut Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
+              .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
+
         self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
                        prevZoom.maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
                        self._escapeValue, self._colorMap)
