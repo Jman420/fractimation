@@ -24,7 +24,7 @@ class multijuliaRenderer(object):
 
     _xIndexes = _yIndexes = None
     _realNumberValues = _imaginaryNumberValues = None
-    _zValues = _cValues = None
+    _zValues = _cValue = None
 
     _imageArray = _imageCanvas = None
     _colorMap = _currentFrameNumber = None
@@ -44,7 +44,7 @@ class multijuliaRenderer(object):
         realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
         imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
         zValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
-        cValues = numpy.complex(constantRealNumber, constantImaginaryNumber)
+        cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
         imageArray = numpy.zeros(zValues.shape, dtype=int) - 1
         
         self._width = width
@@ -63,7 +63,7 @@ class multijuliaRenderer(object):
         self._realNumberValues = realNumberValues
         self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
-        self._cValues = cValues
+        self._cValue = cValue
         self._imageArray = imageArray
         self._colorMap = colorMap
         self._imageCache = { }
@@ -86,7 +86,7 @@ class multijuliaRenderer(object):
                 for exponentCounter in range(0, self._power - 1):
                     numpy.multiply(exponentValue, self._zValues, self._zValues)
 
-                numpy.add(self._zValues, self._cValues, self._zValues)
+                numpy.add(self._zValues, self._cValue, self._zValues)
 
                 explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
                 self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = frameCounter
