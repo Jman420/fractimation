@@ -24,11 +24,12 @@ class multijuliaRenderer(object):
 
     _xIndexes = _yIndexes = None
     _realNumberValues = _imaginaryNumberValues = None
-    _zValues = _cValues = None
+    _zValues = _cValue = None
 
     _imageArray = _imageCanvas = None
-    _colorMap = _currentFrameNumber = None
+    _colorMap = _currentIterationIndex = None
     _imageCache = _zoomCache = None
+    _imageCachePreheated = False
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
@@ -44,7 +45,7 @@ class multijuliaRenderer(object):
         realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
         imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
         zValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
-        cValues = numpy.complex(constantRealNumber, constantImaginaryNumber)
+        cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
         imageArray = numpy.zeros(zValues.shape, dtype=int) - 1
         
         self._width = width
@@ -63,11 +64,44 @@ class multijuliaRenderer(object):
         self._realNumberValues = realNumberValues
         self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
-        self._cValues = cValues
+        self._cValue = cValue
         self._imageArray = imageArray
         self._colorMap = colorMap
         self._imageCache = { }
-        self._currentFrameNumber = 0
+        self._imageCachePreheated = False
+        self._currentIterationIndex = 0
+
+    def preheatCache(self, maxIterations):
+        if self._imageCachePreheated:
+            return
+
+        print("Preheating Multijulia Cache to {} iterations...".format(maxIterations))
+        for iterationCounter in range(0, maxIterations):
+            print("Multijulia iteration {} processing...".format(iterationCounter))
+            self.iterate(iterationCounter)
+
+        self._imageCachePreheated = True
+        print("Completed preheating Multijulia cache!")
+
+    def iterate(self):
+        exponentValue = numpy.copy(self._zValues)
+        for exponentCounter in range(0, self._power - 1):
+            numpy.multiply(exponentValue, self._zValues, self._zValues)
+
+        numpy.add(self._zValues, self._cValue, self._zValues)
+
+        explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
+        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._currentIterationIndex
+
+        remainingIndexes = ~explodedIndexes
+        self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
+        self._zValues = self._zValues[remainingIndexes]
+
+        recoloredImage = numpy.copy(self._imageArray)
+        recoloredImage[recoloredImage == -1] = self._currentIterationIndex + 1
+        finalImage = recoloredImage.T
+        self._imageCache.update({ self._currentIterationIndex : finalImage })
+        self._currentIterationIndex += 1
 
     def render(self, frameNumber, axes):
         if frameNumber in self._imageCache:
@@ -76,31 +110,15 @@ class multijuliaRenderer(object):
             return
 
         finalImage = None
-        for frameCounter in range(self._currentFrameNumber, frameNumber + 1):
+        for frameCounter in range(self._currentIterationIndex, frameNumber + 1):
             if len(self._zValues) <= 0:
                 # Nothing left to calculate, so just store the last image in the cache
                 finalImage = self._imageCache[len(self._imageCache) - 1]
                 self._imageCache.update({ frameCounter : finalImage })
             else:
-                exponentValue = numpy.copy(self._zValues)
-                for exponentCounter in range(0, self._power - 1):
-                    numpy.multiply(exponentValue, self._zValues, self._zValues)
+                self.iterate()
+                finalImage = self._imageCache[frameCounter]
 
-                numpy.add(self._zValues, self._cValues, self._zValues)
-
-                explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
-                self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = frameCounter
-
-                remainingIndexes = ~explodedIndexes
-                self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
-                self._zValues = self._zValues[remainingIndexes]
-
-                recoloredImage = numpy.copy(self._imageArray)
-                recoloredImage[recoloredImage == -1] = frameCounter + 1
-                finalImage = recoloredImage.T
-                self._imageCache.update({ frameCounter : finalImage })
-        
-        self._currentFrameNumber = frameCounter + 1
         if self._imageCanvas == None:
             self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
         else:

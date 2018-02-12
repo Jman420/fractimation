@@ -7,10 +7,12 @@ The framework can likely be used for general animation purposes as well.
 
 # Features
 - Multibrot and Multi-Julia Sets
+- Sierpinski Carpet and Triangles
 - Iteration caching for playback scrubbing
 - Support custom color maps
 - Infinite zoom support with selectable area
 - Save animations as video
+- Support Cache Preheating for all renderers
 
 # Dependencies
 - Matplotlib (https://matplotlib.org/)

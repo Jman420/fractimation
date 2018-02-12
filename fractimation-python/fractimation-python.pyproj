@@ -22,16 +22,35 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="multibrotRenderer.py">
+    <Compile Include="renderers\goldenSpiralRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\multibrotRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="fractimation_test.py" />
-    <Compile Include="multijuliaRenderer.py">
+    <Compile Include="renderers\multijuliaRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="zoomHandler.py">
+    <Compile Include="renderers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="renderers\sierpinskiCarpetRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\sierpinskiTriangleRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ui\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ui\zoomHandler.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="renderers\" />
+    <Folder Include="ui\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
