@@ -1,3 +1,5 @@
+# https://en.wikipedia.org/wiki/Sierpinski_carpet
+
 from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 

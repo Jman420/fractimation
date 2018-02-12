@@ -41,15 +41,15 @@ multijuliaRenderer = multijuliaRenderer(width, height, realNumberMin, realNumber
 multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 juliaZoomHandler = zoomHandler(multijuliaRenderer, multijuliaViewer)
 
-# Sierpinski Triangle
-sierpinskiTriangleIterations = 7  # Be careful with this number; iterations explode at 3**iteration computations
+# Sierpinski Triangle (3**iteration triangles per iteration)
+sierpinskiTriangleIterations = 7                      # Be careful with this number; iterations explode at 3**iteration computations
 sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterations)
 sierpinskiTriangleViewer = plotplayer.plotplayer("Sierpinski Triangle", hideToolbar=False)
 sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
 sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleRenderer.render, frameRate=sierpinskiTriangleIterations // 2)
 
-# Sierpinski Carpet
-sierpinskiCarpetIterations = 5  # Be careful with this number; iterations explode at 8**iteration computations
+# Sierpinski Carpet (8**iteration rectangles per iteration)
+sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)

@@ -1,3 +1,5 @@
+# https://en.wikipedia.org/wiki/Sierpinski_triangle
+
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
