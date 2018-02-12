@@ -5,6 +5,7 @@ import numpy
 from renderers.multibrotRenderer import multibrotRenderer
 from renderers.multijuliaRenderer import multijuliaRenderer
 from renderers.sierpinskiTriangleRenderer import sierpinskiTriangleRenderer
+from renderers.sierpinskiCarpetRenderer import sierpinskiCarpetRenderer
 
 from ui.zoomHandler import zoomHandler
 
@@ -40,19 +41,27 @@ multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 juliaZoomHandler = zoomHandler(multijuliaRenderer, multijuliaViewer)
 
 # Sierpinski Triangle
-sierpinskiIterations = 7
-sierpinskiLineWidths = numpy.linspace(1.0, 0.1, sierpinskiIterations)
-
+sierpinskiTriangleIterations = 7
+sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterations)
 sierpinskiTriangleViewer = plotplayer.plotplayer("Sierpinski Triangle", hideToolbar=False)
-sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiLineWidths)
-sierpinskiTriangleViewer.initializeAnimation(sierpinskiIterations, sierpinskiTriangleRenderer.render, frameRate=sierpinskiIterations // 2)
+sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
+sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleRenderer.render, frameRate=sierpinskiTriangleIterations // 2)
+
+# Sierpinski Carpet
+sierpinskiCarpetIterations = 5
+sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
+sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
+sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
+sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetRenderer.render, frameRate=sierpinskiCarpetIterations // 2)
 
 # Render Viewers and Play Animations
 multibrotViewer.show(False)
 multijuliaViewer.show(False)
+sierpinskiTriangleViewer.show(False)
 
 multibrotViewer.play()
 multijuliaViewer.play()
 sierpinskiTriangleViewer.play()
+sierpinskiCarpetViewer.play()
 
-sierpinskiTriangleViewer.show()
+sierpinskiCarpetViewer.show()
