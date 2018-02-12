@@ -1,6 +1,42 @@
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
+def calculateSubdivisions(rectangle):
+    quarterWidth = rectangle._width * 0.25
+    halfWidth = rectangle._width * 0.5
+    halfHeight = rectangle._height * 0.5
+
+    topSubdivision = rectangleDimensions(rectangle._x + quarterWidth,
+                                         rectangle._y + halfHeight,
+                                         halfWidth, halfHeight)
+    leftSubdivision = rectangleDimensions(rectangle._x,
+                                          rectangle._y,
+                                          halfWidth, halfHeight)
+    rightSubdivision = rectangleDimensions(rectangle._x + halfWidth,
+                                           rectangle._y,
+                                           halfWidth, halfHeight)
+
+    return [ topSubdivision, leftSubdivision, rightSubdivision ]
+
+def calculateTriangleVertices(rectangle):
+    halfWidth = rectangle._width * 0.5
+        
+    vertices = [
+                 [ rectangle._x                   , rectangle._y ],
+                 [ rectangle._x + halfWidth       , rectangle._y + rectangle._height ],
+                 [ rectangle._x + rectangle._width, rectangle._y ]
+               ]
+    return vertices
+
+def buildTriangle(vertices, lineWidth):
+    newPatch = Polygon(vertices, fill=False, lineWidth=lineWidth)
+    return newPatch
+
+def buildPatchCollection(patches):
+    patchCollection = PatchCollection(patches, True)
+    patchCollection.set_visible(False)
+    return patchCollection
+
 class sierpinskiTriangleRenderer(object):
     """Fractal Renderer for Sierpinski Triangle"""
 
@@ -25,11 +61,11 @@ class sierpinskiTriangleRenderer(object):
 
         initialPatches = [ ]
         for eligibleRect in eligibleRects:
-            triangleVertices = self.calculateTriangleVertices(eligibleRect)
-            newPatch = self.buildTriangle(triangleVertices, lineWidth=lineWidths[0])
+            triangleVertices = calculateTriangleVertices(eligibleRect)
+            newPatch = buildTriangle(triangleVertices, lineWidth=lineWidths[0])
             initialPatches.append(newPatch)
 
-        initialPatchCollection = self.buildPatchCollection(initialPatches)
+        initialPatchCollection = buildPatchCollection(initialPatches)
         self._trianglesCache.update({ 0 : initialPatchCollection })
 
     def preheatCache(self, maxIterations):
@@ -41,48 +77,21 @@ class sierpinskiTriangleRenderer(object):
 
         self._cachePreheated = True
 
-    def calculateTriangleVertices(self, rectangle):
-        halfWidth = rectangle._width * 0.5
-        
-        vertices = [
-                    [ rectangle._x, rectangle._y ],
-                    [ rectangle._x + halfWidth, rectangle._y + rectangle._height ],
-                    [ rectangle._x + rectangle._width, rectangle._y ]
-                   ]
-        return vertices
-
-    def calculateSubdivisions(self, rectangle):
-        quarterWidth = rectangle._width * 0.25
-        halfWidth = rectangle._width * 0.5
-        halfHeight = rectangle._height * 0.5
-
-        topSubdivision = rectangleDimensions(rectangle._x + quarterWidth,
-                                             rectangle._y + halfHeight,
-                                             halfWidth, halfHeight)
-        leftSubdivision = rectangleDimensions(rectangle._x,
-                                              rectangle._y,
-                                              halfWidth, halfHeight)
-        rightSubdivision = rectangleDimensions(rectangle._x + halfWidth,
-                                               rectangle._y,
-                                               halfWidth, halfHeight)
-
-        return [ topSubdivision, leftSubdivision, rightSubdivision ]
-
     def iterate(self, iterationIndex, lineWidth):
         newEligibleRects = [ ]
         newTrianglePatches = [ ]
 
         for eligibleRect in self._eligibleRects:
-            subdivisions = self.calculateSubdivisions(eligibleRect)
+            subdivisions = calculateSubdivisions(eligibleRect)
 
             for newRect in subdivisions:
-                triangleVertices = self.calculateTriangleVertices(newRect)
-                newPatch = self.buildTriangle(triangleVertices, lineWidth)
+                triangleVertices = calculateTriangleVertices(newRect)
+                newPatch = buildTriangle(triangleVertices, lineWidth)
                 newTrianglePatches.append(newPatch)
 
             newEligibleRects.extend(subdivisions)
 
-        iterationPatchCollection = self.buildPatchCollection(newTrianglePatches)
+        iterationPatchCollection = buildPatchCollection(newTrianglePatches)
         self._trianglesCache.update({ iterationIndex : iterationPatchCollection })
 
         self._eligibleRects = newEligibleRects
@@ -105,15 +114,6 @@ class sierpinskiTriangleRenderer(object):
         for frameCounter in range(0, len(self._trianglesCache)):
             frameTriangles = self._trianglesCache[frameCounter]
             frameTriangles.set_visible(frameCounter <= frameNumber)
-
-    def buildTriangle(self, vertices, lineWidth):
-        newPatch = Polygon(vertices, fill=False, lineWidth=lineWidth)
-        return newPatch
-
-    def buildPatchCollection(self, patches):
-        patchCollection = PatchCollection(patches, True)
-        patchCollection.set_visible(False)
-        return patchCollection
 
 class rectangleDimensions(object):
     _x = _y = None
