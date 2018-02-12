@@ -74,10 +74,13 @@ class multibrotRenderer(object):
         if self._imageCachePreheated:
             return
 
+        print("Preheating Multibrot Cache to {} iterations...".format(maxIterations))
         for iterationCounter in range(0, maxIterations):
+            print("Multibrot iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter)
 
         self._imageCachePreheated = True
+        print("Completed preheating Multibrot cache!")
 
     def iterate(self):
         exponentValue = numpy.copy(self._zValues)

@@ -74,10 +74,13 @@ class sierpinskiTriangleRenderer(object):
         if self._cachePreheated:
             return
 
-        for iterationCounter in range(1, maxIterations):
-            self.iterate(iterationCounter, lineWidths[iterationCounter])
+        print("Preheating Sierpinski Triangle Cache to {} iterations...".format(maxIterations))
+        for iterationCounter in range(0, maxIterations):
+            print("Sierpinski Triangle iteration {} processing...".format(iterationCounter))
+            self.iterate(iterationCounter)
 
         self._cachePreheated = True
+        print("Completed preheating Sierpinski Triangle cache!")
 
     def iterate(self, iterationIndex, lineWidth):
         newEligibleRects = [ ]

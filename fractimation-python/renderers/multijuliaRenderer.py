@@ -75,10 +75,13 @@ class multijuliaRenderer(object):
         if self._imageCachePreheated:
             return
 
+        print("Preheating Multijulia Cache to {} iterations...".format(maxIterations))
         for iterationCounter in range(0, maxIterations):
+            print("Multijulia iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter)
 
         self._imageCachePreheated = True
+        print("Completed preheating Multijulia cache!")
 
     def iterate(self):
         exponentValue = numpy.copy(self._zValues)

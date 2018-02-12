@@ -72,10 +72,13 @@ class sierpinskiCarpetRenderer(object):
         if self._cachePreheated:
             return
 
-        for iterationCounter in range(1, maxIterations):
-            self.iterate(iterationCounter, lineWidths[iterationCounter])
+        print("Preheating Sierpinski Carpet Cache to {} iterations...".format(maxIterations))
+        for iterationCounter in range(0, maxIterations):
+            print("Sierpinski Carpet iteration {} processing...".format(iterationCounter))
+            self.iterate(iterationCounter)
 
         self._cachePreheated = True
+        print("Completed preheating Sierpinski Carpet cache!")
 
     def iterate(self, iterationIndex, lineWidth):
         newEligibleRects = [ ]
