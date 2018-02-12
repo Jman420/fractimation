@@ -1,3 +1,6 @@
+# https://numerica.pt/2017/09/14/fibonacci-spiral-in-python/
+# http://junilyd.github.io/blog/2014/08/13/fibonacci-mystery-pythonified/
+
 import numpy
 
 class goldenSpiralRenderer(object):
