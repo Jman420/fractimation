@@ -48,7 +48,10 @@ sierpinskiTriangleViewer = plotplayer.plotplayer("Sierpinski Triangle", hideTool
 sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
 sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleRenderer.render, "sierpinskiTriangle", sierpinskiTriangleIterations // 2)
 
+import time
+startTime = time.time()
 sierpinskiTriangleRenderer.preheatCache(sierpinskiTriangleIterations)
+print("Sierpinski Triangle Render : " + str(time.time() - startTime))
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
 sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations

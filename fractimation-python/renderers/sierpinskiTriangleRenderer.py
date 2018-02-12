@@ -5,24 +5,29 @@ import numpy
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
-def calculateSubdivisions(vertices, largeReduction, smallReduction):
+def calculateSubdivisions(vertices):
+    firstTriangle = vertices[0]
+    largeSubdivision = (firstTriangle[2,0] - firstTriangle[0,0]) / 2
+    smallSubdivision = largeSubdivision / 2
+
     leftSubdivision = vertices + [
                                     [ 0, 0 ],
-                                    [ -smallReduction, -largeReduction ],
-                                    [ -largeReduction, 0 ]
+                                    [ -smallSubdivision, -largeSubdivision ],
+                                    [ -largeSubdivision, 0 ]
                                  ]
     topSubdivision = vertices + [
-                                    [ smallReduction, largeReduction ],
+                                    [ smallSubdivision, largeSubdivision ],
                                     [ 0, 0 ],
-                                    [ -smallReduction, largeReduction ]
+                                    [ -smallSubdivision, largeSubdivision ]
                                 ]
     rightSubdivision = vertices + [
-                                    [ largeReduction, 0 ],
-                                    [ smallReduction, -largeReduction ],
+                                    [ largeSubdivision, 0 ],
+                                    [ smallSubdivision, -largeSubdivision ],
                                     [ 0, 0 ]
                                   ]
 
-    return [ leftSubdivision, topSubdivision, rightSubdivision ]
+    allSubdivisions = numpy.concatenate((leftSubdivision, topSubdivision, rightSubdivision))
+    return allSubdivisions
 
 def buildTriangle(vertices, lineWidth):
     newPatch = Polygon(vertices, fill=False, lineWidth=lineWidth)
@@ -85,26 +90,17 @@ class sierpinskiTriangleRenderer(object):
         if len(self._eligibleVertices) < 1:
             return
         
-        newEligibleVertices = [ ]
         newTrianglePatches = [ ]
 
-        firstTriangle = self._eligibleVertices[0]
-        largeSubdivision = (firstTriangle[2,0] - firstTriangle[0,0]) / 2
-        smallSubdivision = largeSubdivision / 2
-
-        for eligibleVertices in self._eligibleVertices:
-            subdivisions = calculateSubdivisions(eligibleVertices, largeSubdivision, smallSubdivision)
-
-            for triangleVertices in subdivisions:
-                newPatch = buildTriangle(triangleVertices, lineWidth)
-                newTrianglePatches.append(newPatch)
-
-            newEligibleVertices.extend(subdivisions)
+        subdivisions = calculateSubdivisions(self._eligibleVertices)
+        for triangleVertices in subdivisions:
+            newPatch = buildTriangle(triangleVertices, lineWidth)
+            newTrianglePatches.append(newPatch)
 
         iterationPatchCollection = buildPatchCollection(newTrianglePatches)
         self._trianglesCache.update({ iterationIndex : iterationPatchCollection })
 
-        self._eligibleVertices = newEligibleVertices
+        self._eligibleVertices = subdivisions
         self._currentFrameNumber = iterationIndex + 1
 
     def render(self, frameNumber, axes):
