@@ -1,5 +1,6 @@
 import plotplayer
 import matplotlib.pylab as pylab
+import numpy
 
 from renderers.multibrotRenderer import multibrotRenderer
 from renderers.multijuliaRenderer import multijuliaRenderer
@@ -39,9 +40,11 @@ multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 juliaZoomHandler = zoomHandler(multijuliaRenderer, multijuliaViewer)
 
 # Sierpinski Triangle
-sierpinskiIterations = 8
+sierpinskiIterations = 7
+sierpinskiLineWidths = numpy.linspace(1.0, 0.1, sierpinskiIterations)
+
 sierpinskiTriangleViewer = plotplayer.plotplayer("Sierpinski Triangle", hideToolbar=False)
-sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(width, height, sierpinskiIterations)
+sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiLineWidths)
 sierpinskiTriangleViewer.initializeAnimation(sierpinskiIterations, sierpinskiTriangleRenderer.render, frameRate=sierpinskiIterations // 2)
 
 # Render Viewers and Play Animations

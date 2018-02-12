@@ -82,30 +82,34 @@ class multijuliaRenderer(object):
                 finalImage = self._imageCache[len(self._imageCache) - 1]
                 self._imageCache.update({ frameCounter : finalImage })
             else:
-                exponentValue = numpy.copy(self._zValues)
-                for exponentCounter in range(0, self._power - 1):
-                    numpy.multiply(exponentValue, self._zValues, self._zValues)
+                self.iterate(frameCounter)
+                finalImage = self._imageCache[frameCounter]
 
-                numpy.add(self._zValues, self._cValue, self._zValues)
-
-                explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
-                self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = frameCounter
-
-                remainingIndexes = ~explodedIndexes
-                self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
-                self._zValues = self._zValues[remainingIndexes]
-
-                recoloredImage = numpy.copy(self._imageArray)
-                recoloredImage[recoloredImage == -1] = frameCounter + 1
-                finalImage = recoloredImage.T
-                self._imageCache.update({ frameCounter : finalImage })
-        
-        self._currentFrameNumber = frameCounter + 1
         if self._imageCanvas == None:
             self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
         else:
             self._imageCanvas.set_data(finalImage)
             self._imageCanvas.autoscale()
+
+    def iterate(self, iterationIndex):
+        exponentValue = numpy.copy(self._zValues)
+        for exponentCounter in range(0, self._power - 1):
+            numpy.multiply(exponentValue, self._zValues, self._zValues)
+
+        numpy.add(self._zValues, self._cValue, self._zValues)
+
+        explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
+        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = iterationIndex
+
+        remainingIndexes = ~explodedIndexes
+        self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
+        self._zValues = self._zValues[remainingIndexes]
+
+        recoloredImage = numpy.copy(self._imageArray)
+        recoloredImage[recoloredImage == -1] = iterationIndex + 1
+        finalImage = recoloredImage.T
+        self._imageCache.update({ iterationIndex : finalImage })
+        self._currentFrameNumber = iterationIndex + 1
 
     def zoomIn(self, startX, startY, endX, endY):
         prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
