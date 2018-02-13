@@ -2,17 +2,13 @@
 # http://junilyd.github.io/blog/2014/08/13/fibonacci-mystery-pythonified/
 
 import numpy
-from matplotlib.patches import Wedge
+from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
-THETA1_INDEX = 0
-THETA2_INDEX = 1
-
 SIZE_SCALAR = 0.1
 INITIAL_LOCATION = [ 0, 0 ]
-INITIAL_ANGLES = [ 270, 0 ]
 
 PHI = (1 + 5**0.5) / 2.0
 def getFibonocciNumber(index):
@@ -20,8 +16,8 @@ def getFibonocciNumber(index):
         return index
     return int(round((PHI**index - (1 - PHI)**index) / 5**0.5))
 
-def buildWedge(x, y, radius, theta1, theta2, wedgeWidth):
-    newPatch = Wedge([x, y], radius, theta1, theta2, wedgeWidth, fill=False)
+def buildSquare(x, y, dimension, linewidth):
+    newPatch = Rectangle((x, y), dimension, dimension, fill=False, linewidth=linewidth)
     return newPatch
 
 def buildPatchCollection(patches):
@@ -29,14 +25,14 @@ def buildPatchCollection(patches):
     patchCollection.set_visible(False)
     return patchCollection
 
-class goldenSpiralRenderer(object):
-    """Fractal Renderer for the Golden Spiral"""
+class fibonacciSquareRenderer(object):
+    """Fractal Renderer for Fibonocci Squares"""
 
-    _wedgesCache = None
-    _wedgesAddedToAxes = False
+    _squaresCache = None
+    _squaresAddedToAxes = False
     _sizeScalar = _lineWidths = None
-    _nextIterationIndex = _nextWedgeLocation = None
-    _nextMoveMode = _nextWedgeAngles = None
+    _nextIterationIndex = _nextSquareLocation = None
+    _nextMoveMode = None
 
     def __init__(self, lineWidths, sizeScalar=SIZE_SCALAR):
         self._squaresAddedToAxes = False
@@ -45,21 +41,20 @@ class goldenSpiralRenderer(object):
     def initialize(self, lineWidths, sizeScalar=SIZE_SCALAR):
         self._lineWidths = lineWidths
         self._sizeScalar = sizeScalar
-        self._wedgesCache = { }
+        self._squaresCache = { }
         self._nextIterationIndex = 1
-        self._nextWedgeLocation = numpy.array(INITIAL_LOCATION)
-        self._nextWedgeAngles = numpy.array(INITIAL_ANGLES)
+        self._nextSquareLocation = numpy.array(INITIAL_LOCATION)
         self._nextMoveMode = 1
 
         emptyPatches = buildPatchCollection([ ])
-        self._wedgesCache.update({ 0 : emptyPatches })
+        self._squaresCache.update({ 0 : emptyPatches })
 
     def preheatCache(self, maxIterations):
-        if maxIterations < len(self._wedgesCache):
+        if maxIterations < len(self._squaresCache):
             return
 
         print("Preheating Fibonocci Square Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(len(self._wedgesCache), maxIterations):
+        for iterationCounter in range(len(self._squaresCache), maxIterations):
             print("Fibonocci Square iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter, self._lineWidths[iterationCounter])
 
@@ -67,29 +62,27 @@ class goldenSpiralRenderer(object):
         print("Completed preheating Fibonocci Square cache!")
 
     def iterate(self, lineWidth):
-        self._nextWedgeAngles += 90
         currentFibNumber = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
-        wedgeLocation = self._nextWedgeLocation
+        squareLocation = self._nextSquareLocation
 
         secondPrevFibNum = getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
         prevFibNum = getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
         if self._nextMoveMode == 1:
-            moveDeviation = [ -secondPrevFibNum, 0 ]
-            self._nextWedgeLocation = wedgeLocation + moveDeviation
+            moveDeviation = [ -secondPrevFibNum, prevFibNum ]
+            self._nextSquareLocation = squareLocation + moveDeviation
         elif self._nextMoveMode == 2:
-            moveDeviation = [ 0, -secondPrevFibNum ]
-            self._nextWedgeLocation = wedgeLocation + moveDeviation
+            moveDeviation = [ -currentFibNumber, -secondPrevFibNum ]
+            self._nextSquareLocation = squareLocation + moveDeviation
         elif self._nextMoveMode == 3:
-            moveDeviation = [ secondPrevFibNum, 0 ]
-            self._nextWedgeLocation = wedgeLocation + moveDeviation
+            moveDeviation = [ 0, -currentFibNumber ]
+            self._nextSquareLocation = squareLocation + moveDeviation
         elif self._nextMoveMode == 4:
-            moveDeviation = [ 0, secondPrevFibNum ]
-            self._nextWedgeLocation = wedgeLocation + moveDeviation
+            moveDeviation = [ prevFibNum, 0 ]
+            self._nextSquareLocation = squareLocation + moveDeviation
 
-        newWedge = buildWedge(self._nextWedgeLocation[X_VALUE_INDEX], self._nextWedgeLocation[Y_VALUE_INDEX], currentFibNumber,
-                              self._nextWedgeAngles[THETA1_INDEX], self._nextWedgeAngles[THETA2_INDEX], lineWidth)
-        patchCollection = buildPatchCollection([ newWedge ])
-        self._wedgesCache.update({ self._nextIterationIndex : patchCollection })
+        newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
+        patchCollection = buildPatchCollection([ newSquare ])
+        self._squaresCache.update({ self._nextIterationIndex : patchCollection })
 
         self._nextIterationIndex += 1
         self._nextMoveMode += 1
@@ -97,19 +90,19 @@ class goldenSpiralRenderer(object):
             self._nextMoveMode = 1 
 
     def render(self, frameNumber, axes):
-        if not self._wedgesAddedToAxes:
-            for frameCounter in range(0, len(self._wedgesCache)):
-                frameSquares = self._wedgesCache[frameCounter]
+        if not self._squaresAddedToAxes:
+            for frameCounter in range(0, len(self._squaresCache)):
+                frameSquares = self._squaresCache[frameCounter]
                 axes.add_collection(frameSquares)
             self._squaresAddedToAxes = True
         
-        if not frameNumber in self._wedgesCache:
+        if not frameNumber in self._squaresCache:
             for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
                 self.iterate(self._lineWidths[frameCounter])
 
-                frameSquares = self._wedgesCache[frameCounter]
+                frameSquares = self._squaresCache[frameCounter]
                 axes.add_collection(frameSquares)
 
-        for frameCounter in range(0, len(self._wedgesCache)):
-            frameSquares = self._wedgesCache[frameCounter]
+        for frameCounter in range(0, len(self._squaresCache)):
+            frameSquares = self._squaresCache[frameCounter]
             frameSquares.set_visible(frameCounter <= frameNumber)

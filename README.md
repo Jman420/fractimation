@@ -39,6 +39,9 @@ to select the output format:
 * H - HTML5 video
 * J - Javascript video
 
+## Matplotlib Controls
+See https://matplotlib.org/users/navigation_toolbar.html for more built in Matplotlib controls.
+
 # Examples
 See [fractimation_test.py](fractimation-python/fractimation_test.py), [multibrotRenderer.py](fractimation-python/multibrotRenderer.py), [multijuliaRenderer.py](fractimation-python/multijuliaRenderer.py)
 
