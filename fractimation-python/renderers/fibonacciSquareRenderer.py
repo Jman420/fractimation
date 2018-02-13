@@ -1,4 +1,5 @@
 # http://pi3.sites.sheffield.ac.uk/tutorials/week-1-fibonacci
+# http://junilyd.github.io/blog/2014/08/13/fibonacci-mystery-pythonified/
 
 import numpy
 from matplotlib.patches import Rectangle
@@ -10,6 +11,8 @@ SIZE_SCALAR = 0.1
 
 PHI = (1 + 5**0.5) / 2.0
 def getFibonocciNumber(index):
+    if index < 2:
+        return index
     return int(round((PHI**index - (1 - PHI)**index) / 5**0.5))
 
 def buildSquare(x, y, dimension, linewidth):
@@ -28,6 +31,7 @@ class fibonacciSquareRenderer(object):
     _squaresAddedToAxes = False
     _sizeScalar = _lineWidths = None
     _nextIterationIndex = _nextSquareLocation = None
+    _nextMoveMode = None
 
     def __init__(self, lineWidths, sizeScalar=SIZE_SCALAR):
         self._squaresAddedToAxes = False
@@ -37,8 +41,12 @@ class fibonacciSquareRenderer(object):
         self._lineWidths = lineWidths
         self._sizeScalar = sizeScalar
         self._squaresCache = { }
-        self._nextIterationIndex = 0
-        self._nextSquareLocation = [ 0, 0 ]
+        self._nextIterationIndex = 1
+        self._nextSquareLocation = numpy.array([ 0, 0 ])
+        self._nextMoveMode = 1
+
+        emptyPatches = buildPatchCollection([ ])
+        self._squaresCache.update({ 0 : emptyPatches })
 
     def preheatCache(self, maxIterations):
         if maxIterations < len(self._squaresCache):
@@ -53,23 +61,32 @@ class fibonacciSquareRenderer(object):
         print("Completed preheating Fibonocci Square cache!")
 
     def iterate(self, lineWidth):
-        scaledFibNum = getFibonocciNumber(self._nextIterationIndex + 1) * self._sizeScalar
-        newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX],
-                               scaledFibNum, lineWidth)
+        currentFibNumber = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
+        squareLocation = self._nextSquareLocation
+
+        secondPrevFibNum = getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
+        prevFibNum = getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
+        if self._nextMoveMode == 1:
+            moveDeviation = [ -secondPrevFibNum, prevFibNum ]
+            self._nextSquareLocation = squareLocation + moveDeviation
+        elif self._nextMoveMode == 2:
+            moveDeviation = [ -currentFibNumber, -secondPrevFibNum ]
+            self._nextSquareLocation = squareLocation + moveDeviation
+        elif self._nextMoveMode == 3:
+            moveDeviation = [ 0, -currentFibNumber ]
+            self._nextSquareLocation = squareLocation + moveDeviation
+        elif self._nextMoveMode == 4:
+            moveDeviation = [ prevFibNum, 0 ]
+            self._nextSquareLocation = squareLocation + moveDeviation
+
+        newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
         patchCollection = buildPatchCollection([ newSquare ])
         self._squaresCache.update({ self._nextIterationIndex : patchCollection })
 
-        scaledPrevFibNum = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
-        if self._nextIterationIndex % 2:
-            self._nextSquareLocation[Y_VALUE_INDEX] += scaledFibNum
-        elif self._nextIterationIndex % 3:
-            self._nextSquareLocation[X_VALUE_INDEX] -= scaledFibNum
-        elif self._nextIterationIndex % 4:
-            self._nextSquareLocation[Y_VALUE_INDEX] -= scaledFibNum
-        else:
-            self._nextSquareLocation[X_VALUE_INDEX] += scaledFibNum
-
         self._nextIterationIndex += 1
+        self._nextMoveMode += 1
+        if self._nextMoveMode > 4:
+            self._nextMoveMode = 1 
 
     def render(self, frameNumber, axes):
         if not self._squaresAddedToAxes:

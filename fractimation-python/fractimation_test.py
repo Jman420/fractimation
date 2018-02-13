@@ -51,31 +51,30 @@ sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierp
 sierpinskiTriangleRenderer.preheatCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
-sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
+sierpinskiCarpetIterations = 4                        # Be careful with this number; iterations explode at 8**iteration computations
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
 sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetRenderer.render,  "sierpinskiCarpet", sierpinskiCarpetIterations // 2)
 sierpinskiCarpetRenderer.preheatCache(sierpinskiCarpetIterations)
 
-# Fibonocci Square
-fibonocciSquareIterations = 30
-fibonocciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonocciSquareIterations)
-fibonocciSquareViewer = plotplayer.plotplayer("Fibonocci Square", hideToolbar=False)
-fibonocciSquareRenderer = fibonacciSquareRenderer(fibonocciSquareLineWidths)
-fibonocciSquareViewer.initializeAnimation(fibonocciSquareIterations, fibonocciSquareRenderer.render, "fibonocciSquare")
-
-fibonocciSquareViewer.play()
-fibonocciSquareViewer.show()
+# Fibonacci Square
+fibonacciSquareIterations = 30
+fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations)
+fibonacciSquareViewer = plotplayer.plotplayer("Fibonocci Square", hideToolbar=False)
+fibonacciSquareRenderer = fibonacciSquareRenderer(fibonacciSquareLineWidths)
+fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareRenderer.render, "fibonocciSquare")
 
 # Render Viewers and Play Animations
 multibrotViewer.show(False)
 multijuliaViewer.show(False)
 sierpinskiTriangleViewer.show(False)
+sierpinskiCarpetViewer.show(False)
 
 multibrotViewer.play()
 multijuliaViewer.play()
 sierpinskiTriangleViewer.play()
 sierpinskiCarpetViewer.play()
+fibonacciSquareViewer.play()
 
-sierpinskiCarpetViewer.show()
+fibonacciSquareViewer.show()
