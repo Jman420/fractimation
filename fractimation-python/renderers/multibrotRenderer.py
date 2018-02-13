@@ -28,7 +28,6 @@ class multibrotRenderer(object):
     _imageArray = _imageCanvas = None
     _colorMap = _currentIterationIndex = None
     _imageCache = _zoomCache = None
-    _imageCachePreheated = False
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
@@ -67,19 +66,17 @@ class multibrotRenderer(object):
         self._imageArray = imageArray
         self._colorMap = colorMap
         self._imageCache = { }
-        self._imageCachePreheated = False
         self._currentIterationIndex = 0
 
     def preheatCache(self, maxIterations):
-        if self._imageCachePreheated:
+        if maxIterations < len(self._imageCache):
             return
 
         print("Preheating Multibrot Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(0, maxIterations):
+        for iterationCounter in range(len(self._imageCache), maxIterations):
             print("Multibrot iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter)
 
-        self._imageCachePreheated = True
         print("Completed preheating Multibrot cache!")
 
     def iterate(self):

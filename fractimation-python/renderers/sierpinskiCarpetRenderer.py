@@ -75,7 +75,7 @@ class sierpinskiCarpetRenderer(object):
     """Fractal Renderer for Sierpinski Carpet (aka Sierpinski Square)"""
 
     _eligibleRects = _rectanglesCache = None
-    _cachePreheated = _rectanglesAddedToAxes = False
+    _rectanglesAddedToAxes = False
     _lineWidths = None
     _currentFrameNumber =  None
 
@@ -87,7 +87,6 @@ class sierpinskiCarpetRenderer(object):
     def initialize(self, lineWidths, eligibleRects=None):
         self._rectanglesCache = { }
         self._rectanglesAddedToAxes = False
-        self._cachePreheated = False
         self._currentFrameNumber = 1
         self._lineWidths = lineWidths
 
@@ -104,11 +103,11 @@ class sierpinskiCarpetRenderer(object):
         self._rectanglesCache.update({ 0 : initialPatchCollection })
 
     def preheatCache(self, maxIterations):
-        if self._cachePreheated:
+        if maxIterations < len(self._rectanglesCache):
             return
 
         print("Preheating Sierpinski Carpet Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(1, maxIterations):
+        for iterationCounter in range(len(self._rectanglesCache), maxIterations):
             print("Sierpinski Carpet iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter, self._lineWidths[iterationCounter])
 
@@ -148,13 +147,3 @@ class sierpinskiCarpetRenderer(object):
         for frameCounter in range(0, len(self._rectanglesCache)):
             frameRectangles = self._rectanglesCache[frameCounter]
             frameRectangles.set_visible(frameCounter <= frameNumber)
-
-class rectangleDimensions(object):
-    _x = _y = None
-    _width = _height = None
-
-    def __init__(self, x, y, width, height):
-        self._x = x
-        self._y = y
-        self._width = width
-        self._height = height

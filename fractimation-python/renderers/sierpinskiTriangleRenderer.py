@@ -54,7 +54,7 @@ class sierpinskiTriangleRenderer(object):
     """Fractal Renderer for Sierpinski Triangle"""
 
     _eligibleVertices = _trianglesCache = None
-    _cachePreheated = _trianglesAddedToAxes = False
+    _trianglesAddedToAxes = False
     _lineWidths = None
     _currentFrameNumber =  None
 
@@ -66,7 +66,6 @@ class sierpinskiTriangleRenderer(object):
     def initialize(self, lineWidths, eligibleVertices=None):
         self._trianglesCache = { }
         self._trianglesAddedToAxes = False
-        self._cachePreheated = False
         self._currentFrameNumber = 1
         self._lineWidths = lineWidths
 
@@ -83,11 +82,11 @@ class sierpinskiTriangleRenderer(object):
         self._trianglesCache.update({ 0 : initialPatchCollection })
 
     def preheatCache(self, maxIterations):
-        if self._cachePreheated:
+        if maxIterations < len(self._trianglesCache):
             return
 
         print("Preheating Sierpinski Triangle Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(1, maxIterations):
+        for iterationCounter in range(len(self._trianglesCache), maxIterations):
             print("Sierpinski Triangle iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter, self._lineWidths[iterationCounter])
 
