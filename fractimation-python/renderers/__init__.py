@@ -3,3 +3,4 @@ from .multijuliaRenderer import multijuliaRenderer
 from .goldenSpiralRenderer import goldenSpiralRenderer
 from .sierpinskiTriangleRenderer import sierpinskiTriangleRenderer
 from .sierpinskiCarpetRenderer import sierpinskiCarpetRenderer
+from .fibonacciSquareRenderer import fibonacciSquareRenderer

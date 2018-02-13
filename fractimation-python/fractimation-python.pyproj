@@ -22,7 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="renderers\fibonocciSquareRenderer.py">
+    <Compile Include="renderers\fibonacciSquareRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\goldenSpiralRenderer.py">
