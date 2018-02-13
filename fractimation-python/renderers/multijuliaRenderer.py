@@ -76,7 +76,7 @@ class multijuliaRenderer(object):
         print("Preheating Multijulia Cache to {} iterations...".format(maxIterations))
         for iterationCounter in range(len(self._imageCache), maxIterations):
             print("Multijulia iteration {} processing...".format(iterationCounter))
-            self.iterate(iterationCounter)
+            self.iterate()
 
         print("Completed preheating Multijulia cache!")
 
