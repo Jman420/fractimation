@@ -5,9 +5,12 @@ A Fractal Animation Framework for Matplotlib
 Fractimation is a framework and player meant for exploring and animating fractal iterations.
 The framework can likely be used for general animation purposes as well.
 
-# Features
+# Supported Fractals
 - Multibrot and Multi-Julia Sets
 - Sierpinski Carpet and Triangles
+- Fibonacci Squares and Golden Spiral
+
+# Features
 - Iteration caching for playback scrubbing
 - Support custom color maps
 - Infinite zoom support with selectable area
@@ -20,15 +23,17 @@ The framework can likely be used for general animation purposes as well.
 - plotplayer (https://github.com/Jman420/plotplayer)
 
 # Usage
-## Zoom Controls :
+## Zoom Controls (for Fractal Equations like Multibrot and Multi-Julia):
 - Zoom Selection : Draw rectangle with left mouse button to select area to zoom
 - Zoom In : Double click left mouse button
 - Zoom Out : Single click right mouse button
 
 ## Keyboard Shortcuts :
 * Play/Stop - Space & Enter
-* Skip Ahead 1 Frame - Right
-* Skip Back 1 Frame - Left
+* Skip Ahead - Right
+* Skip Back - Left
+* Jump Ahead - Up
+* Jump Back - Down
 * Skip to Beginning - Home
 * Skip to End - End
 
