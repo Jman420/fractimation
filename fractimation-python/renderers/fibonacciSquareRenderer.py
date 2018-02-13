@@ -8,6 +8,7 @@ from matplotlib.collections import PatchCollection
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
 SIZE_SCALAR = 0.1
+INITIAL_LOCATION = [ 0, 0 ]
 
 PHI = (1 + 5**0.5) / 2.0
 def getFibonocciNumber(index):
@@ -42,7 +43,7 @@ class fibonacciSquareRenderer(object):
         self._sizeScalar = sizeScalar
         self._squaresCache = { }
         self._nextIterationIndex = 1
-        self._nextSquareLocation = numpy.array([ 0, 0 ])
+        self._nextSquareLocation = numpy.array(INITIAL_LOCATION)
         self._nextMoveMode = 1
 
         emptyPatches = buildPatchCollection([ ])

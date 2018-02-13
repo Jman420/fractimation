@@ -51,7 +51,7 @@ sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierp
 sierpinskiTriangleRenderer.preheatCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
-sierpinskiCarpetIterations = 4                        # Be careful with this number; iterations explode at 8**iteration computations
+sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
@@ -64,6 +64,16 @@ fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations)
 fibonacciSquareViewer = plotplayer.plotplayer("Fibonocci Square", hideToolbar=False)
 fibonacciSquareRenderer = fibonacciSquareRenderer(fibonacciSquareLineWidths)
 fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareRenderer.render, "fibonocciSquare")
+
+# Golden Spiral
+goldenSpiralIterations = 30
+goldenSpiralLineWidths = numpy.linspace(0.1, 1.0, goldenSpiralIterations)
+goldenSpiralViewer = plotplayer.plotplayer("Golden Spiral", hideToolbar=False)
+goldenSpiralRenderer = None
+#goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralRenderer.render, "goldenSpiral")
+
+#goldenSpiralViewer.play()
+#goldenSpiralViewer.show()
 
 # Render Viewers and Play Animations
 multibrotViewer.show(False)

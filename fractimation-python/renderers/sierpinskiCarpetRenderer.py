@@ -9,7 +9,7 @@ X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
 WIDTH_INDEX = 2
 HEIGHT_INDEX = 3
-INITIAL_RECTS = [ [ 0, 0, 1, 1 ] ]
+INITIAL_RECTS = [ [ 0.01, 0.01, 0.98, 0.98 ] ]
 
 def calculateSubdivisions(rectangles):
     firstRect = rectangles[0]
