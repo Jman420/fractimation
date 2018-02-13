@@ -7,6 +7,7 @@ from renderers.multijuliaRenderer import multijuliaRenderer
 from renderers.sierpinskiTriangleRenderer import sierpinskiTriangleRenderer
 from renderers.sierpinskiCarpetRenderer import sierpinskiCarpetRenderer
 from renderers.fibonacciSquareRenderer import fibonacciSquareRenderer
+from renderers.goldenSpiralRenderer import goldenSpiralRenderer
 
 from ui.zoomHandler import zoomHandler
 
@@ -59,32 +60,23 @@ sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinsk
 sierpinskiCarpetRenderer.preheatCache(sierpinskiCarpetIterations)
 
 # Fibonacci Square
-fibonacciSquareIterations = 30
+fibonacciSquareIterations = 15
 fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations)
 fibonacciSquareViewer = plotplayer.plotplayer("Fibonocci Square", hideToolbar=False)
 fibonacciSquareRenderer = fibonacciSquareRenderer(fibonacciSquareLineWidths)
 fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareRenderer.render, "fibonocciSquare")
 
 # Golden Spiral
-goldenSpiralIterations = 30
-goldenSpiralLineWidths = numpy.linspace(0.1, 1.0, goldenSpiralIterations)
+goldenSpiralIterations = 15
+goldenSpiralLineWidths = numpy.linspace(0.01, 0.1, goldenSpiralIterations)
 goldenSpiralViewer = plotplayer.plotplayer("Golden Spiral", hideToolbar=False)
-goldenSpiralRenderer = None
-#goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralRenderer.render, "goldenSpiral")
+goldenSpiralRenderer = goldenSpiralRenderer(goldenSpiralLineWidths)
+goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralRenderer.render, "goldenSpiral")
 
-#goldenSpiralViewer.play()
-#goldenSpiralViewer.show()
-
-# Render Viewers and Play Animations
+# Render Viewers
 multibrotViewer.show(False)
 multijuliaViewer.show(False)
 sierpinskiTriangleViewer.show(False)
 sierpinskiCarpetViewer.show(False)
-
-multibrotViewer.play()
-multijuliaViewer.play()
-sierpinskiTriangleViewer.play()
-sierpinskiCarpetViewer.play()
-fibonacciSquareViewer.play()
-
-fibonacciSquareViewer.show()
+fibonacciSquareViewer.show(False)
+goldenSpiralViewer.show()
