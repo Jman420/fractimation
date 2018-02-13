@@ -7,6 +7,7 @@ from renderers.multijuliaRenderer import multijuliaRenderer
 from renderers.sierpinskiTriangleRenderer import sierpinskiTriangleRenderer
 from renderers.sierpinskiCarpetRenderer import sierpinskiCarpetRenderer
 from renderers.fibonacciSquareRenderer import fibonacciSquareRenderer
+from renderers.goldenSpiralRenderer import goldenSpiralRenderer
 
 from ui.zoomHandler import zoomHandler
 
@@ -51,7 +52,7 @@ sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierp
 sierpinskiTriangleRenderer.preheatCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
-sierpinskiCarpetIterations = 4                        # Be careful with this number; iterations explode at 8**iteration computations
+sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
@@ -59,22 +60,23 @@ sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinsk
 sierpinskiCarpetRenderer.preheatCache(sierpinskiCarpetIterations)
 
 # Fibonacci Square
-fibonacciSquareIterations = 30
+fibonacciSquareIterations = 15
 fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations)
 fibonacciSquareViewer = plotplayer.plotplayer("Fibonocci Square", hideToolbar=False)
 fibonacciSquareRenderer = fibonacciSquareRenderer(fibonacciSquareLineWidths)
 fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareRenderer.render, "fibonocciSquare")
 
-# Render Viewers and Play Animations
+# Golden Spiral
+goldenSpiralIterations = 15
+goldenSpiralLineWidths = numpy.linspace(0.01, 0.1, goldenSpiralIterations)
+goldenSpiralViewer = plotplayer.plotplayer("Golden Spiral", hideToolbar=False)
+goldenSpiralRenderer = goldenSpiralRenderer(goldenSpiralLineWidths)
+goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralRenderer.render, "goldenSpiral")
+
+# Render Viewers
 multibrotViewer.show(False)
 multijuliaViewer.show(False)
 sierpinskiTriangleViewer.show(False)
 sierpinskiCarpetViewer.show(False)
-
-multibrotViewer.play()
-multijuliaViewer.play()
-sierpinskiTriangleViewer.play()
-sierpinskiCarpetViewer.play()
-fibonacciSquareViewer.play()
-
-fibonacciSquareViewer.show()
+fibonacciSquareViewer.show(False)
+goldenSpiralViewer.show()
