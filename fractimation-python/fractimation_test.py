@@ -27,7 +27,7 @@ power = 2                                              # Power to raise Z value 
 escapeValue = 2.0                                      # Limit at which Z values will reach infinity
 multibrotRenderer = multibrotRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-multibrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render, "multibrotSet")
+multibrotViewer.initializeAnimation(maxIterations, multibrotRenderer.render)
 multibrotZoomHandler = zoomHandler(multibrotRenderer, multibrotViewer)
 
 # Julia Set
@@ -36,10 +36,10 @@ realNumberMin, realNumberMax = -1.5, 1.5
 imaginaryNumberMin, imaginaryNumberMax = -1.5, 1.5
 constantRealNumber, constantImaginaryNumber = 0.0, 0.8 # Constant C value for Julia Set
 power = 2
-escapeValue = 2.0
+escapeValue = 10.0
 multijuliaRenderer = multijuliaRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                         constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render, "multijuliaSet")
+multijuliaViewer.initializeAnimation(maxIterations, multijuliaRenderer.render)
 juliaZoomHandler = zoomHandler(multijuliaRenderer, multijuliaViewer)
 
 # Sierpinski Triangle (3**iteration triangles per iteration)
@@ -48,6 +48,7 @@ sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterat
 sierpinskiTriangleViewer = plotplayer.plotplayer("Sierpinski Triangle", hideToolbar=False)
 sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
 sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleRenderer.render, "sierpinskiTriangle", sierpinskiTriangleIterations // 2)
+sierpinskiTriangleRenderer.preheatCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
 sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
@@ -55,6 +56,7 @@ sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
 sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetRenderer.render,  "sierpinskiCarpet", sierpinskiCarpetIterations // 2)
+sierpinskiCarpetRenderer.preheatCache(sierpinskiCarpetIterations)
 
 # Fibonocci Square
 fibonocciSquareIterations = 30

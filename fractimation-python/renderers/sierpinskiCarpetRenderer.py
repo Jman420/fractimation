@@ -109,7 +109,7 @@ class sierpinskiCarpetRenderer(object):
         print("Preheating Sierpinski Carpet Cache to {} iterations...".format(maxIterations))
         for iterationCounter in range(len(self._rectanglesCache), maxIterations):
             print("Sierpinski Carpet iteration {} processing...".format(iterationCounter))
-            self.iterate(iterationCounter, self._lineWidths[iterationCounter])
+            self.iterate(self._lineWidths[iterationCounter])
 
         print("Completed preheating Sierpinski Carpet cache!")
 

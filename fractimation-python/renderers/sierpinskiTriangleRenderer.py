@@ -88,7 +88,7 @@ class sierpinskiTriangleRenderer(object):
         print("Preheating Sierpinski Triangle Cache to {} iterations...".format(maxIterations))
         for iterationCounter in range(len(self._trianglesCache), maxIterations):
             print("Sierpinski Triangle iteration {} processing...".format(iterationCounter))
-            self.iterate(iterationCounter, self._lineWidths[iterationCounter])
+            self.iterate(self._lineWidths[iterationCounter])
 
         print("Completed preheating Sierpinski Triangle cache!")
 

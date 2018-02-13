@@ -75,7 +75,7 @@ class multibrotRenderer(object):
         print("Preheating Multibrot Cache to {} iterations...".format(maxIterations))
         for iterationCounter in range(len(self._imageCache), maxIterations):
             print("Multibrot iteration {} processing...".format(iterationCounter))
-            self.iterate(iterationCounter)
+            self.iterate()
 
         print("Completed preheating Multibrot cache!")
 
