@@ -6,6 +6,7 @@ from renderers.multibrotRenderer import multibrotRenderer
 from renderers.multijuliaRenderer import multijuliaRenderer
 from renderers.sierpinskiTriangleRenderer import sierpinskiTriangleRenderer
 from renderers.sierpinskiCarpetRenderer import sierpinskiCarpetRenderer
+from renderers.fibonocciSquareRenderer import fibonacciSquareRenderer
 
 from ui.zoomHandler import zoomHandler
 
@@ -54,6 +55,16 @@ sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
 sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetRenderer.render,  "sierpinskiCarpet", sierpinskiCarpetIterations // 2)
+
+# Fibonocci Square
+fibonocciSquareIterations = 30
+fibonocciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonocciSquareIterations)
+fibonocciSquareViewer = plotplayer.plotplayer("Fibonocci Square", hideToolbar=False)
+fibonocciSquareRenderer = fibonacciSquareRenderer(fibonocciSquareLineWidths)
+fibonocciSquareViewer.initializeAnimation(fibonocciSquareIterations, fibonocciSquareRenderer.render, "fibonocciSquare")
+
+fibonocciSquareViewer.play()
+fibonocciSquareViewer.show()
 
 # Render Viewers and Play Animations
 multibrotViewer.show(False)
