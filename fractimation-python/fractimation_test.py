@@ -6,7 +6,7 @@ from renderers.multibrotRenderer import multibrotRenderer
 from renderers.multijuliaRenderer import multijuliaRenderer
 from renderers.sierpinskiTriangleRenderer import sierpinskiTriangleRenderer
 from renderers.sierpinskiCarpetRenderer import sierpinskiCarpetRenderer
-from renderers.fibonocciSquareRenderer import fibonacciSquareRenderer
+from renderers.fibonacciSquareRenderer import fibonacciSquareRenderer
 
 from ui.zoomHandler import zoomHandler
 
