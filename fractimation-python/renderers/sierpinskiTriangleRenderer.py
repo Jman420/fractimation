@@ -56,7 +56,7 @@ class sierpinskiTriangleRenderer(object):
     _eligibleVertices = _trianglesCache = None
     _trianglesAddedToAxes = False
     _lineWidths = None
-    _currentFrameNumber =  None
+    _nextIterationIndex =  None
 
     def __init__(self, lineWidths, eligibleRects=None):
         self.initialize(lineWidths, eligibleRects)
@@ -66,7 +66,7 @@ class sierpinskiTriangleRenderer(object):
     def initialize(self, lineWidths, eligibleVertices=None):
         self._trianglesCache = { }
         self._trianglesAddedToAxes = False
-        self._currentFrameNumber = 1
+        self._nextIterationIndex = 1
         self._lineWidths = lineWidths
 
         if eligibleVertices == None:
@@ -90,10 +90,9 @@ class sierpinskiTriangleRenderer(object):
             print("Sierpinski Triangle iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter, self._lineWidths[iterationCounter])
 
-        self._cachePreheated = True
         print("Completed preheating Sierpinski Triangle cache!")
 
-    def iterate(self, iterationIndex, lineWidth):
+    def iterate(self, lineWidth):
         if len(self._eligibleVertices) < 1:
             return
         
@@ -104,10 +103,10 @@ class sierpinskiTriangleRenderer(object):
             newTrianglePatches.append(newPatch)
 
         iterationPatchCollection = buildPatchCollection(newTrianglePatches)
-        self._trianglesCache.update({ iterationIndex : iterationPatchCollection })
+        self._trianglesCache.update({ self._nextIterationIndex : iterationPatchCollection })
 
         self._eligibleVertices = newSubdivisions
-        self._currentFrameNumber = iterationIndex + 1
+        self._nextIterationIndex += 1
 
     def render(self, frameNumber, axes):
         if not self._trianglesAddedToAxes:
@@ -117,8 +116,8 @@ class sierpinskiTriangleRenderer(object):
             self._trianglesAddedToAxes = True
         
         if not frameNumber in self._trianglesCache:
-            for frameCounter in range(self._currentFrameNumber, frameNumber + 1):
-                self.iterate(frameCounter, self._lineWidths[frameCounter])
+            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
+                self.iterate(self._lineWidths[frameCounter])
 
                 frameTriangles = self._trianglesCache[frameCounter]
                 axes.add_collection(frameTriangles)

@@ -77,7 +77,7 @@ class sierpinskiCarpetRenderer(object):
     _eligibleRects = _rectanglesCache = None
     _rectanglesAddedToAxes = False
     _lineWidths = None
-    _currentFrameNumber =  None
+    _nextIterationIndex =  None
 
     def __init__(self, lineWidths, eligibleRects=None):
         self.initialize(lineWidths, eligibleRects)
@@ -87,7 +87,7 @@ class sierpinskiCarpetRenderer(object):
     def initialize(self, lineWidths, eligibleRects=None):
         self._rectanglesCache = { }
         self._rectanglesAddedToAxes = False
-        self._currentFrameNumber = 1
+        self._nextIterationIndex = 1
         self._lineWidths = lineWidths
 
         if eligibleRects == None:
@@ -111,10 +111,9 @@ class sierpinskiCarpetRenderer(object):
             print("Sierpinski Carpet iteration {} processing...".format(iterationCounter))
             self.iterate(iterationCounter, self._lineWidths[iterationCounter])
 
-        self._cachePreheated = True
         print("Completed preheating Sierpinski Carpet cache!")
 
-    def iterate(self, iterationIndex, lineWidth):
+    def iterate(self, lineWidth):
         if (len(self._eligibleRects)) < 1:
             return
 
@@ -125,10 +124,10 @@ class sierpinskiCarpetRenderer(object):
             newRectanglePatches.append(newPatch)
 
         iterationPatchCollection = buildPatchCollection(newRectanglePatches)
-        self._rectanglesCache.update({ iterationIndex : iterationPatchCollection })
+        self._rectanglesCache.update({ self._nextIterationIndex : iterationPatchCollection })
 
         self._eligibleRects = subdivisions
-        self._currentFrameNumber = iterationIndex + 1
+        self._nextIterationIndex += 1
 
     def render(self, frameNumber, axes):
         if not self._rectanglesAddedToAxes:
@@ -138,8 +137,8 @@ class sierpinskiCarpetRenderer(object):
             self._rectanglesAddedToAxes = True
         
         if not frameNumber in self._rectanglesCache:
-            for frameCounter in range(self._currentFrameNumber, frameNumber + 1):
-                self.iterate(frameCounter, self._lineWidths[frameCounter])
+            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
+                self.iterate(self._lineWidths[frameCounter])
 
                 frameRectangles = self._rectanglesCache[frameCounter]
                 axes.add_collection(frameRectangles)
