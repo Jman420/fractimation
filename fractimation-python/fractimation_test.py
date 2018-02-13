@@ -13,7 +13,7 @@ from ui.zoomHandler import zoomHandler
 width, height = 1280, 720                              # Width and Height of the image
                                                        # ^^ quick ref : 480p;(640, 480) 720p;(1280, 720) 1080p;(1920, 1080) UHD/4K;(3840, 2160) 8K;(7680, 4320)
 maxIterations = 50                                     # Total number of iterations of fractal equation
-                                                       #  ^^ Careful with this value; we are caching each frame
+                                                       # ^^ Careful with this value; we are caching each frame
 colorMap = "viridis"                                   # Any valid color map name or combination (default : viridis)
                                                        # ^^ reference : https://matplotlib.org/examples/color/colormaps_reference.html
 
@@ -46,14 +46,16 @@ sierpinskiTriangleIterations = 7                      # Be careful with this num
 sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterations)
 sierpinskiTriangleViewer = plotplayer.plotplayer("Sierpinski Triangle", hideToolbar=False)
 sierpinskiTriangleRenderer = sierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
-sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleRenderer.render, frameRate=sierpinskiTriangleIterations // 2)
+sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleRenderer.render, "sierpinskiTriangle", sierpinskiTriangleIterations // 2)
+sierpinskiTriangleRenderer.preheatCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
 sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetViewer = plotplayer.plotplayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetRenderer = sierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
-sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetRenderer.render, frameRate=sierpinskiCarpetIterations // 2)
+sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetRenderer.render,  "sierpinskiCarpet", sierpinskiCarpetIterations // 2)
+sierpinskiCarpetRenderer.preheatCache(sierpinskiCarpetIterations)
 
 # Render Viewers and Play Animations
 multibrotViewer.show(False)

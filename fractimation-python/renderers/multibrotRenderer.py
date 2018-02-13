@@ -26,9 +26,8 @@ class multibrotRenderer(object):
     _zValues = _cValues = None
 
     _imageArray = _imageCanvas = None
-    _colorMap = _currentIterationIndex = None
+    _colorMap = _nextIterationIndex = None
     _imageCache = _zoomCache = None
-    _imageCachePreheated = False
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
@@ -67,19 +66,17 @@ class multibrotRenderer(object):
         self._imageArray = imageArray
         self._colorMap = colorMap
         self._imageCache = { }
-        self._imageCachePreheated = False
-        self._currentIterationIndex = 0
+        self._nextIterationIndex = 0
 
     def preheatCache(self, maxIterations):
-        if self._imageCachePreheated:
+        if maxIterations < len(self._imageCache):
             return
 
         print("Preheating Multibrot Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(0, maxIterations):
+        for iterationCounter in range(len(self._imageCache), maxIterations):
             print("Multibrot iteration {} processing...".format(iterationCounter))
-            self.iterate(iterationCounter)
+            self.iterate()
 
-        self._imageCachePreheated = True
         print("Completed preheating Multibrot cache!")
 
     def iterate(self):
@@ -90,7 +87,7 @@ class multibrotRenderer(object):
         numpy.add(self._zValues, self._cValues, self._zValues)
 
         explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
-        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._currentIterationIndex
+        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
         remainingIndexes = ~explodedIndexes
         self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
@@ -98,10 +95,10 @@ class multibrotRenderer(object):
         self._cValues = self._cValues[remainingIndexes]
 
         recoloredImage = numpy.copy(self._imageArray)
-        recoloredImage[recoloredImage == -1] = self._currentIterationIndex + 1
+        recoloredImage[recoloredImage == -1] = self._nextIterationIndex + 1
         finalImage = recoloredImage.T
-        self._imageCache.update({ self._currentIterationIndex : finalImage })
-        self._currentIterationIndex += 1
+        self._imageCache.update({ self._nextIterationIndex : finalImage })
+        self._nextIterationIndex += 1
 
     def render(self, frameNumber, axes):
         if frameNumber in self._imageCache:
@@ -110,7 +107,7 @@ class multibrotRenderer(object):
             return
 
         finalImage = None
-        for frameCounter in range(self._currentIterationIndex, frameNumber + 1):
+        for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
             if len(self._zValues) <= 0:
                 # Nothing left to calculate, so just store the last image in the cache
                 finalImage = self._imageCache[len(self._imageCache) - 1]
