@@ -69,17 +69,14 @@ class fibonacciSquareRenderer(object):
         prevFibNum = getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
         if self._nextMoveMode == 1:
             moveDeviation = [ -secondPrevFibNum, prevFibNum ]
-            self._nextSquareLocation = squareLocation + moveDeviation
         elif self._nextMoveMode == 2:
             moveDeviation = [ -currentFibNumber, -secondPrevFibNum ]
-            self._nextSquareLocation = squareLocation + moveDeviation
         elif self._nextMoveMode == 3:
             moveDeviation = [ 0, -currentFibNumber ]
-            self._nextSquareLocation = squareLocation + moveDeviation
         elif self._nextMoveMode == 4:
             moveDeviation = [ prevFibNum, 0 ]
-            self._nextSquareLocation = squareLocation + moveDeviation
 
+        self._nextSquareLocation = squareLocation + moveDeviation
         newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
         patchCollection = buildPatchCollection([ newSquare ])
         self._squaresCache.update({ self._nextIterationIndex : patchCollection })
