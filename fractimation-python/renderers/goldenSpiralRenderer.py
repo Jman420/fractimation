@@ -101,7 +101,7 @@ class goldenSpiralRenderer(object):
             for frameCounter in range(0, len(self._wedgesCache)):
                 frameSquares = self._wedgesCache[frameCounter]
                 axes.add_collection(frameSquares)
-            self._squaresAddedToAxes = True
+            self._wedgesAddedToAxes = True
         
         if not frameNumber in self._wedgesCache:
             for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
