@@ -28,6 +28,9 @@
     <Compile Include="helpers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="renderers\base\imageRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="renderers\base\patchCollectionRenderer.py">
       <SubType>Code</SubType>
     </Compile>

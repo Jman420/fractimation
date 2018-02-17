@@ -13,9 +13,9 @@
 
 import numpy
 
-from renderers.base.fractimationRenderer import FractimationRenderer
+from renderers.base.imageRenderer import ImageRenderer
 
-class MultijuliaRenderer(FractimationRenderer):
+class MultijuliaRenderer(ImageRenderer):
     """Fractal Renderer for Multi-Julia Sets"""
 
     _width = _height = None
@@ -28,7 +28,7 @@ class MultijuliaRenderer(FractimationRenderer):
     _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValue = None
 
-    _imageArray = _imageCanvas = None
+    _imageArray = None
     _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
@@ -93,28 +93,6 @@ class MultijuliaRenderer(FractimationRenderer):
         finalImage = recoloredImage.T
         self._renderCache.update({ self._nextIterationIndex : finalImage })
         self._nextIterationIndex += 1
-
-    def render(self, frameNumber, axes):
-        if frameNumber in self._renderCache:
-            self._imageCanvas.set_data(self._renderCache[frameNumber])
-            self._imageCanvas.autoscale()
-            return
-
-        finalImage = None
-        for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-            if len(self._zValues) <= 0:
-                # Nothing left to calculate, so just store the last image in the cache
-                finalImage = self._renderCache[len(self._imageCache) - 1]
-                self._renderCache.update({ frameCounter : finalImage })
-            else:
-                self.iterate()
-                finalImage = self._renderCache[frameCounter]
-
-        if self._imageCanvas == None:
-            self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
-        else:
-            self._imageCanvas.set_data(finalImage)
-            self._imageCanvas.autoscale()
 
     def zoomIn(self, startX, startY, endX, endY):
         prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)

@@ -12,9 +12,9 @@
 
 import numpy
 
-from renderers.base.fractimationRenderer import FractimationRenderer
+from renderers.base.imageRenderer import ImageRenderer
 
-class MultibrotRenderer(FractimationRenderer):
+class MultibrotRenderer(ImageRenderer):
     """Fractal Renderer for Multibrot Sets"""
 
     _width = _height = None
@@ -27,7 +27,7 @@ class MultibrotRenderer(FractimationRenderer):
     _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValues = None
 
-    _imageArray = _imageCanvas = None
+    _imageArray = None
     _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
@@ -74,6 +74,12 @@ class MultibrotRenderer(FractimationRenderer):
         super().preheatRenderCache(maxIterations)
 
     def iterate(self):
+        if len(self._zValues) <= 0:
+            # Nothing left to calculate, so just store the last image in the cache
+            finalImage = self._renderCache[len(self._renderCache) - 1]
+            self._renderCache.update({ frameCounter : finalImage })
+            return
+
         exponentValue = numpy.copy(self._zValues)
         for exponentCounter in range(0, self._power - 1):
             numpy.multiply(exponentValue, self._zValues, self._zValues)
@@ -93,28 +99,6 @@ class MultibrotRenderer(FractimationRenderer):
         finalImage = recoloredImage.T
         self._renderCache.update({ self._nextIterationIndex : finalImage })
         self._nextIterationIndex += 1
-
-    def render(self, frameNumber, axes):
-        if frameNumber in self._renderCache:
-            self._imageCanvas.set_data(self._renderCache[frameNumber])
-            self._imageCanvas.autoscale()
-            return
-
-        finalImage = None
-        for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-            if len(self._zValues) <= 0:
-                # Nothing left to calculate, so just store the last image in the cache
-                finalImage = self._renderCache[len(self._renderCache) - 1]
-                self._renderCache.update({ frameCounter : finalImage })
-            else:
-                self.iterate()
-                finalImage = self._renderCache[frameCounter]
-        
-        if self._imageCanvas == None:
-            self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
-        else:
-            self._imageCanvas.set_data(finalImage)
-            self._imageCanvas.autoscale()
 
     def zoomIn(self, startX, startY, endX, endY):
         prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)

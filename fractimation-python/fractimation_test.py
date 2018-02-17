@@ -31,7 +31,7 @@ multibrotFractal = MultibrotRenderer(width, height, realNumberMin, realNumberMax
                                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 multibrotZoomHandler = ZoomHandler(multibrotFractal, multibrotViewer)
 multibrotViewer.initializeAnimation(maxIterations, multibrotFractal.render)
-#multibrotFractal.preheatRenderCache(maxIterations)
+multibrotFractal.preheatRenderCache(maxIterations)
 
 # Julia Set
 multijuliaViewer = PlotPlayer("Julia Set")
@@ -44,7 +44,7 @@ multijuliaFractal = MultijuliaRenderer(width, height, realNumberMin, realNumberM
                                         constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 multijuliaZoomHandler = ZoomHandler(multijuliaFractal, multijuliaViewer)
 multijuliaViewer.initializeAnimation(maxIterations, multijuliaFractal.render)
-#multijuliaFractal.preheatRenderCache(maxIterations)
+multijuliaFractal.preheatRenderCache(maxIterations)
 
 # Sierpinski Triangle (3**iteration triangles per iteration)
 sierpinskiTriangleViewer = PlotPlayer("Sierpinski Triangle", hideToolbar=False)
