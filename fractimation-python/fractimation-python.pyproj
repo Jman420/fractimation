@@ -22,10 +22,22 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="helpers\fractalAlgorithmHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\base\patchCollectionRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\base\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="renderers\fibonacciSquareRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\fractimationRenderer.py">
+    <Compile Include="renderers\base\fractimationRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\goldenSpiralRenderer.py">
@@ -38,7 +50,7 @@
     <Compile Include="renderers\multijuliaRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\renderHelper.py">
+    <Compile Include="helpers\renderHelper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\__init__.py">
@@ -58,7 +70,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="helpers\" />
     <Folder Include="renderers\" />
+    <Folder Include="renderers\base\" />
     <Folder Include="ui\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

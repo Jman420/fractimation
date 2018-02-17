@@ -2,8 +2,8 @@
 
 import numpy
 
-from renderers.fractimationRenderer import FractimationRenderer
-import renderers.renderHelper as renderHelper
+from .base.patchCollectionRenderer import PatchCollectionRenderer
+import helpers.renderHelper as renderHelper
 
 LAST_VERTEX_INDEX = 2
 FIRST_VERTEX_INDEX = 0
@@ -41,13 +41,11 @@ def calculateSubdivisions(vertices):
 
     return numpy.concatenate((leftSubdivision, topSubdivision, rightSubdivision))
 
-class SierpinskiTriangleRenderer(FractimationRenderer):
+class SierpinskiTriangleRenderer(PatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Triangle"""
 
     _eligibleVertices = None
-    _trianglesAddedToAxes = False
     _lineWidths = None
-    _nextIterationIndex =  None
 
     def __init__(self, lineWidths, eligibleRects=None):
         self.initialize(lineWidths, eligibleRects)
@@ -55,9 +53,10 @@ class SierpinskiTriangleRenderer(FractimationRenderer):
     # eligibleVertices is an array of three vertices that describe the points of a triangle as percentages of screen space.
     #    These vertices must be defined from left to right; ie. [ [ left vertex ], [ top vertex ], [ right vertex ] ]
     def initialize(self, lineWidths, eligibleVertices=None):
-        self._lineWidths = lineWidths
-        self._renderCache = { }
+        super().initialize()
 
+        self._lineWidths = lineWidths
+        
         if eligibleVertices == None:
             eligibleVertices = INITIAL_ELIGIBLE_VERTICES
         self._eligibleVertices = numpy.array([ eligibleVertices ])
@@ -67,15 +66,17 @@ class SierpinskiTriangleRenderer(FractimationRenderer):
             newPatch = renderHelper.buildTriangle(eligibleTriangle, lineWidth=lineWidths[0])
             initialPatches.append(newPatch)
 
+        self._renderCache = { }
         initialPatchCollection = renderHelper.buildPatchCollection(initialPatches)
         self._renderCache.update({ 0 : initialPatchCollection })
 
-        self._trianglesAddedToAxes = False
+        self._cacheAddedToAxes = False
         self._nextIterationIndex = 1
 
     def preheatRenderCache(self, maxIterations):
         print("Preheating Sierpinski Triangle Render Cache")
         super().preheatRenderCache(maxIterations)
+        self._cacheAddedToAxes = False
 
     def iterate(self):
         if len(self._eligibleVertices) < 1:
@@ -93,21 +94,3 @@ class SierpinskiTriangleRenderer(FractimationRenderer):
 
         self._eligibleVertices = newSubdivisions
         self._nextIterationIndex += 1
-
-    def render(self, frameNumber, axes):
-        if not self._trianglesAddedToAxes:
-            for frameCounter in range(0, len(self._renderCache)):
-                frameTriangles = self._renderCache[frameCounter]
-                axes.add_collection(frameTriangles)
-            self._trianglesAddedToAxes = True
-        
-        if not frameNumber in self._renderCache:
-            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-                self.iterate()
-
-                frameTriangles = self._renderCache[frameCounter]
-                axes.add_collection(frameTriangles)
-
-        for frameCounter in range(0, len(self._renderCache)):
-            frameTriangles = self._renderCache[frameCounter]
-            frameTriangles.set_visible(frameCounter <= frameNumber)

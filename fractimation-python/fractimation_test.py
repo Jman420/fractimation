@@ -8,7 +8,7 @@ from renderers.multijuliaRenderer import MultijuliaRenderer
 from renderers.sierpinskiTriangleRenderer import SierpinskiTriangleRenderer
 from renderers.sierpinskiCarpetRenderer import SierpinskiCarpetRenderer
 from renderers.fibonacciSquareRenderer import FibonacciSquareRenderer
-from renderers.goldenSpiralRenderer import goldenSpiralRenderer
+from renderers.goldenSpiralRenderer import GoldenSpiralRenderer
 
 from ui.zoomHandler import ZoomHandler
 
@@ -52,7 +52,7 @@ sierpinskiTriangleIterations = 7                      # Be careful with this num
 sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterations)
 sierpinskiTriangleFractal = SierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
 sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleFractal.render, "sierpinskiTriangle", sierpinskiTriangleIterations // 2)
-#sierpinskiTriangleFractal.preheatRenderCache(sierpinskiTriangleIterations)
+sierpinskiTriangleFractal.preheatRenderCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
 sierpinskiCarpetViewer = PlotPlayer("Sierpinski Carpet", hideToolbar=False)
@@ -60,7 +60,7 @@ sierpinskiCarpetIterations = 5                        # Be careful with this num
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetFractal = SierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
 sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetFractal.render,  "sierpinskiCarpet", sierpinskiCarpetIterations // 2)
-#sierpinskiCarpetFractal.preheatRenderCache(sierpinskiCarpetIterations)
+sierpinskiCarpetFractal.preheatRenderCache(sierpinskiCarpetIterations)
 
 # Fibonacci Square
 fibonacciSquareViewer = PlotPlayer("Fibonocci Square", hideToolbar=False)
@@ -68,15 +68,15 @@ fibonacciSquareIterations = 15
 fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations)
 fibonacciSquareFractal = FibonacciSquareRenderer(fibonacciSquareLineWidths)
 fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareFractal.render, "fibonocciSquare")
-#fibonacciSquareFractal.preheatRenderCache(fibonacciSquareIterations)
+fibonacciSquareFractal.preheatRenderCache(fibonacciSquareIterations)
 
 # Golden Spiral
 goldenSpiralViewer = PlotPlayer("Golden Spiral", hideToolbar=False)
 goldenSpiralIterations = 15
 goldenSpiralLineWidths = numpy.linspace(0.01, 0.05, goldenSpiralIterations)
-goldenSpiralFractal = goldenSpiralRenderer(goldenSpiralLineWidths)
+goldenSpiralFractal = GoldenSpiralRenderer(goldenSpiralLineWidths)
 goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralFractal.render, "goldenSpiral")
-#goldenSpiralFractal.preheatRenderCache(goldenSpiralIterations)
+goldenSpiralFractal.preheatRenderCache(goldenSpiralIterations)
 
 # Render Viewers
-#PlotPlayer.showPlayers()
+PlotPlayer.showPlayers()

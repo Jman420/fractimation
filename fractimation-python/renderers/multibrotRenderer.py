@@ -12,7 +12,7 @@
 
 import numpy
 
-from renderers.fractimationRenderer import FractimationRenderer
+from renderers.base.fractimationRenderer import FractimationRenderer
 
 class MultibrotRenderer(FractimationRenderer):
     """Fractal Renderer for Multibrot Sets"""

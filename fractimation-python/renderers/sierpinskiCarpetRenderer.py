@@ -2,8 +2,8 @@
 
 import numpy
 
-from renderers.fractimationRenderer import FractimationRenderer
-import renderers.renderHelper as renderHelper
+from .base.patchCollectionRenderer import PatchCollectionRenderer
+import helpers.renderHelper as renderHelper
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -61,11 +61,10 @@ def calculateSubdivisions(rectangles):
                               bottomLeftSubdivision, bottomMiddleSubdivision, bottomRightSubdivision))
     return allSubdivisions
 
-class SierpinskiCarpetRenderer(FractimationRenderer):
+class SierpinskiCarpetRenderer(PatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Carpet (aka Sierpinski Square)"""
 
     _eligibleRects = None
-    _rectanglesAddedToAxes = False
     _lineWidths = None
 
     def __init__(self, lineWidths, eligibleRects=None):
@@ -74,8 +73,9 @@ class SierpinskiCarpetRenderer(FractimationRenderer):
     # eligibleRects is an array of arrays of x, y, width and height describing the initial rectangles
     #   as percentages of screen space.
     def initialize(self, lineWidths, eligibleRects=None):
+        super().initialize()
+
         self._lineWidths = lineWidths
-        self._renderCache = { }
 
         if eligibleRects == None:
             eligibleRects = INITIAL_RECTS
@@ -90,7 +90,6 @@ class SierpinskiCarpetRenderer(FractimationRenderer):
         initialPatchCollection = renderHelper.buildPatchCollection(initialPatches)
         self._renderCache.update({ 0 : initialPatchCollection })
 
-        self._rectanglesAddedToAxes = False
         self._nextIterationIndex = 1
 
     def preheatRenderCache(self, maxIterations):
@@ -114,21 +113,3 @@ class SierpinskiCarpetRenderer(FractimationRenderer):
 
         self._eligibleRects = subdivisions
         self._nextIterationIndex += 1
-
-    def render(self, frameNumber, axes):
-        if not self._rectanglesAddedToAxes:
-            for frameCounter in range(0, len(self._renderCache)):
-                frameRectangles = self._renderCache[frameCounter]
-                axes.add_collection(frameRectangles)
-            self._rectanglesAddedToAxes = True
-        
-        if not frameNumber in self._renderCache:
-            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-                self.iterate()
-
-                frameRectangles = self._renderCache[frameCounter]
-                axes.add_collection(frameRectangles)
-
-        for frameCounter in range(0, len(self._renderCache)):
-            frameRectangles = self._renderCache[frameCounter]
-            frameRectangles.set_visible(frameCounter <= frameNumber)

@@ -13,7 +13,7 @@
 
 import numpy
 
-from renderers.fractimationRenderer import FractimationRenderer
+from renderers.base.fractimationRenderer import FractimationRenderer
 
 class MultijuliaRenderer(FractimationRenderer):
     """Fractal Renderer for Multi-Julia Sets"""
