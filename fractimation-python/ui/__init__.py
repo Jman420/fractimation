@@ -1,1 +1,1 @@
-from .zoomHandler import zoomHandler
+from .zoomHandler import ZoomHandler

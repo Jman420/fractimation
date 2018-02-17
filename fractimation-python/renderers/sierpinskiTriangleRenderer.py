@@ -2,8 +2,8 @@
 
 import numpy
 
-from matplotlib.patches import Polygon
-from matplotlib.collections import PatchCollection
+from .base.patchCollectionRenderer import PatchCollectionRenderer
+import helpers.renderHelper as renderHelper
 
 LAST_VERTEX_INDEX = 2
 FIRST_VERTEX_INDEX = 0
@@ -41,22 +41,11 @@ def calculateSubdivisions(vertices):
 
     return numpy.concatenate((leftSubdivision, topSubdivision, rightSubdivision))
 
-def buildTriangle(vertices, lineWidth):
-    newPatch = Polygon(vertices, fill=False, lineWidth=lineWidth)
-    return newPatch
-
-def buildPatchCollection(patches):
-    patchCollection = PatchCollection(patches, True)
-    patchCollection.set_visible(False)
-    return patchCollection
-
-class sierpinskiTriangleRenderer(object):
+class SierpinskiTriangleRenderer(PatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Triangle"""
 
-    _eligibleVertices = _trianglesCache = None
-    _trianglesAddedToAxes = False
+    _eligibleVertices = None
     _lineWidths = None
-    _nextIterationIndex =  None
 
     def __init__(self, lineWidths, eligibleRects=None):
         self.initialize(lineWidths, eligibleRects)
@@ -64,64 +53,44 @@ class sierpinskiTriangleRenderer(object):
     # eligibleVertices is an array of three vertices that describe the points of a triangle as percentages of screen space.
     #    These vertices must be defined from left to right; ie. [ [ left vertex ], [ top vertex ], [ right vertex ] ]
     def initialize(self, lineWidths, eligibleVertices=None):
-        self._trianglesCache = { }
-        self._trianglesAddedToAxes = False
-        self._nextIterationIndex = 1
-        self._lineWidths = lineWidths
+        super().initialize()
 
+        self._lineWidths = lineWidths
+        
         if eligibleVertices == None:
             eligibleVertices = INITIAL_ELIGIBLE_VERTICES
         self._eligibleVertices = numpy.array([ eligibleVertices ])
 
         initialPatches = [ ]
         for eligibleTriangle in self._eligibleVertices:
-            newPatch = buildTriangle(eligibleTriangle, lineWidth=lineWidths[0])
+            newPatch = renderHelper.buildTriangle(eligibleTriangle, lineWidth=lineWidths[0])
             initialPatches.append(newPatch)
 
-        initialPatchCollection = buildPatchCollection(initialPatches)
-        self._trianglesCache.update({ 0 : initialPatchCollection })
+        self._renderCache = { }
+        initialPatchCollection = renderHelper.buildPatchCollection(initialPatches)
+        self._renderCache.update({ 0 : initialPatchCollection })
 
-    def preheatCache(self, maxIterations):
-        if maxIterations < len(self._trianglesCache):
-            return
+        self._cacheAddedToAxes = False
+        self._nextIterationIndex = 1
 
-        print("Preheating Sierpinski Triangle Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(len(self._trianglesCache), maxIterations):
-            print("Sierpinski Triangle iteration {} processing...".format(iterationCounter))
-            self.iterate(self._lineWidths[iterationCounter])
+    def preheatRenderCache(self, maxIterations):
+        print("Preheating Sierpinski Triangle Render Cache")
+        super().preheatRenderCache(maxIterations)
+        self._cacheAddedToAxes = False
 
-        print("Completed preheating Sierpinski Triangle cache!")
-
-    def iterate(self, lineWidth):
+    def iterate(self):
         if len(self._eligibleVertices) < 1:
             return
         
         newTrianglePatches = [ ]
         newSubdivisions = calculateSubdivisions(self._eligibleVertices)
+        lineWidth = self._lineWidths[self._nextIterationIndex]
         for triangleVertices in newSubdivisions:
-            newPatch = buildTriangle(triangleVertices, lineWidth)
+            newPatch = renderHelper.buildTriangle(triangleVertices, lineWidth)
             newTrianglePatches.append(newPatch)
 
-        iterationPatchCollection = buildPatchCollection(newTrianglePatches)
-        self._trianglesCache.update({ self._nextIterationIndex : iterationPatchCollection })
+        iterationPatchCollection = renderHelper.buildPatchCollection(newTrianglePatches)
+        self._renderCache.update({ self._nextIterationIndex : iterationPatchCollection })
 
         self._eligibleVertices = newSubdivisions
         self._nextIterationIndex += 1
-
-    def render(self, frameNumber, axes):
-        if not self._trianglesAddedToAxes:
-            for frameCounter in range(0, len(self._trianglesCache)):
-                frameTriangles = self._trianglesCache[frameCounter]
-                axes.add_collection(frameTriangles)
-            self._trianglesAddedToAxes = True
-        
-        if not frameNumber in self._trianglesCache:
-            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-                self.iterate(self._lineWidths[frameCounter])
-
-                frameTriangles = self._trianglesCache[frameCounter]
-                axes.add_collection(frameTriangles)
-
-        for frameCounter in range(0, len(self._trianglesCache)):
-            frameTriangles = self._trianglesCache[frameCounter]
-            frameTriangles.set_visible(frameCounter <= frameNumber)

@@ -1,6 +1,6 @@
 import matplotlib.widgets as widgets
 
-class zoomHandler(object):
+class ZoomHandler(object):
     """Class to handle Fractimation UI Events"""
     LEFT_MOUSE_BUTTON = 1
     RIGHT_MOUSE_BUTTON = 3

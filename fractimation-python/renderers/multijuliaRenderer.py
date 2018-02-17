@@ -13,7 +13,9 @@
 
 import numpy
 
-class multijuliaRenderer(object):
+from renderers.base.imageRenderer import ImageRenderer
+
+class MultijuliaRenderer(ImageRenderer):
     """Fractal Renderer for Multi-Julia Sets"""
 
     _width = _height = None
@@ -26,9 +28,8 @@ class multijuliaRenderer(object):
     _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValue = None
 
-    _imageArray = _imageCanvas = None
-    _colorMap = _nextIterationIndex = None
-    _imageCache = _zoomCache = None
+    _imageArray = None
+    _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
@@ -66,19 +67,12 @@ class multijuliaRenderer(object):
         self._cValue = cValue
         self._imageArray = imageArray
         self._colorMap = colorMap
-        self._imageCache = { }
-        self._nextIterationIndex = 0
+        
+        super().initialize()
 
-    def preheatCache(self, maxIterations):
-        if maxIterations < len(self._imageCache):
-            return
-
-        print("Preheating Multijulia Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(len(self._imageCache), maxIterations):
-            print("Multijulia iteration {} processing...".format(iterationCounter))
-            self.iterate()
-
-        print("Completed preheating Multijulia cache!")
+    def preheatRenderCache(self, maxIterations):
+        print("Preheating Multi-Julia Render Cache")
+        super().preheatRenderCache(maxIterations)
 
     def iterate(self):
         exponentValue = numpy.copy(self._zValues)
@@ -97,30 +91,8 @@ class multijuliaRenderer(object):
         recoloredImage = numpy.copy(self._imageArray)
         recoloredImage[recoloredImage == -1] = self._nextIterationIndex + 1
         finalImage = recoloredImage.T
-        self._imageCache.update({ self._nextIterationIndex : finalImage })
+        self._renderCache.update({ self._nextIterationIndex : finalImage })
         self._nextIterationIndex += 1
-
-    def render(self, frameNumber, axes):
-        if frameNumber in self._imageCache:
-            self._imageCanvas.set_data(self._imageCache[frameNumber])
-            self._imageCanvas.autoscale()
-            return
-
-        finalImage = None
-        for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-            if len(self._zValues) <= 0:
-                # Nothing left to calculate, so just store the last image in the cache
-                finalImage = self._imageCache[len(self._imageCache) - 1]
-                self._imageCache.update({ frameCounter : finalImage })
-            else:
-                self.iterate()
-                finalImage = self._imageCache[frameCounter]
-
-        if self._imageCanvas == None:
-            self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
-        else:
-            self._imageCanvas.set_data(finalImage)
-            self._imageCanvas.autoscale()
 
     def zoomIn(self, startX, startY, endX, endY):
         prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
