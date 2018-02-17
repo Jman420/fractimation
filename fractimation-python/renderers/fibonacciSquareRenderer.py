@@ -2,8 +2,9 @@
 # http://junilyd.github.io/blog/2014/08/13/fibonacci-mystery-pythonified/
 
 import numpy
-from matplotlib.patches import Rectangle
-from matplotlib.collections import PatchCollection
+
+from renderers.fractimationRenderer import FractimationRenderer
+import renderers.renderHelper as renderHelper
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -16,22 +17,12 @@ def getFibonocciNumber(index):
         return index
     return int(round((PHI**index - (1 - PHI)**index) / 5**0.5))
 
-def buildSquare(x, y, dimension, linewidth):
-    newPatch = Rectangle((x, y), dimension, dimension, fill=False, linewidth=linewidth)
-    return newPatch
-
-def buildPatchCollection(patches):
-    patchCollection = PatchCollection(patches, True)
-    patchCollection.set_visible(False)
-    return patchCollection
-
-class fibonacciSquareRenderer(object):
+class FibonacciSquareRenderer(FractimationRenderer):
     """Fractal Renderer for Fibonocci Squares"""
-
-    _squaresCache = None
+    
     _squaresAddedToAxes = False
     _sizeScalar = _lineWidths = None
-    _nextIterationIndex = _nextSquareLocation = None
+    _nextSquareLocation = None
     _nextMoveMode = None
 
     def __init__(self, lineWidths, sizeScalar=SIZE_SCALAR):
@@ -41,27 +32,20 @@ class fibonacciSquareRenderer(object):
     def initialize(self, lineWidths, sizeScalar=SIZE_SCALAR):
         self._lineWidths = lineWidths
         self._sizeScalar = sizeScalar
-        self._squaresCache = { }
-        self._nextIterationIndex = 1
         self._nextSquareLocation = numpy.array(INITIAL_LOCATION)
         self._nextMoveMode = 1
 
-        emptyPatches = buildPatchCollection([ ])
-        self._squaresCache.update({ 0 : emptyPatches })
+        self._renderCache = { }
+        emptyPatches = renderHelper.buildPatchCollection([ ])
+        self._renderCache.update({ 0 : emptyPatches })
 
-    def preheatCache(self, maxIterations):
-        if maxIterations < len(self._squaresCache):
-            return
+        self._nextIterationIndex = 1
 
-        print("Preheating Fibonocci Square Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(len(self._squaresCache), maxIterations):
-            print("Fibonocci Square iteration {} processing...".format(iterationCounter))
-            self.iterate(iterationCounter, self._lineWidths[iterationCounter])
+    def preheatRenderCache(self, maxIterations):
+        print("Preheating Fibonocci Square Render Cache")
+        super().preheatRenderCache(maxIterations)
 
-        self._squaresAddedToAxes = False
-        print("Completed preheating Fibonocci Square cache!")
-
-    def iterate(self, lineWidth):
+    def iterate(self):
         currentFibNumber = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
         squareLocation = self._nextSquareLocation
 
@@ -77,9 +61,10 @@ class fibonacciSquareRenderer(object):
             moveDeviation = [ prevFibNum, 0 ]
 
         self._nextSquareLocation = squareLocation + moveDeviation
-        newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
-        patchCollection = buildPatchCollection([ newSquare ])
-        self._squaresCache.update({ self._nextIterationIndex : patchCollection })
+        lineWidth = self._lineWidths[self._nextIterationIndex]
+        newSquare = renderHelper.buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
+        patchCollection = renderHelper.buildPatchCollection([ newSquare ])
+        self._renderCache.update({ self._nextIterationIndex : patchCollection })
 
         self._nextIterationIndex += 1
         self._nextMoveMode += 1
@@ -88,18 +73,18 @@ class fibonacciSquareRenderer(object):
 
     def render(self, frameNumber, axes):
         if not self._squaresAddedToAxes:
-            for frameCounter in range(0, len(self._squaresCache)):
-                frameSquares = self._squaresCache[frameCounter]
+            for frameCounter in range(0, len(self._renderCache)):
+                frameSquares = self._renderCache[frameCounter]
                 axes.add_collection(frameSquares)
             self._squaresAddedToAxes = True
         
-        if not frameNumber in self._squaresCache:
+        if not frameNumber in self._renderCache:
             for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
-                self.iterate(self._lineWidths[frameCounter])
+                self.iterate()
 
-                frameSquares = self._squaresCache[frameCounter]
+                frameSquares = self._renderCache[frameCounter]
                 axes.add_collection(frameSquares)
 
-        for frameCounter in range(0, len(self._squaresCache)):
-            frameSquares = self._squaresCache[frameCounter]
+        for frameCounter in range(0, len(self._renderCache)):
+            frameSquares = self._renderCache[frameCounter]
             frameSquares.set_visible(frameCounter <= frameNumber)

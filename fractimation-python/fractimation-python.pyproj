@@ -25,6 +25,9 @@
     <Compile Include="renderers\fibonacciSquareRenderer.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="renderers\fractimationRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="renderers\goldenSpiralRenderer.py">
       <SubType>Code</SubType>
     </Compile>
@@ -33,6 +36,9 @@
     </Compile>
     <Compile Include="fractimation_test.py" />
     <Compile Include="renderers\multijuliaRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\renderHelper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\__init__.py">
