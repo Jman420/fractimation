@@ -3,7 +3,7 @@
 
 import numpy
 
-from .base.patchCollectionRenderer import PatchCollectionRenderer
+from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
 import helpers.renderHelper as renderHelper
 import helpers.fractalAlgorithmHelper as fractalAlgHelper
 
@@ -16,7 +16,7 @@ SIZE_SCALAR = 0.1
 INITIAL_LOCATION = [ 0, 0 ]
 INITIAL_ANGLES = [ 270, 0 ]
 
-class GoldenSpiralRenderer(PatchCollectionRenderer):
+class GoldenSpiralRenderer(CachedPatchCollectionRenderer):
     """Fractal Renderer for the Golden Spiral"""
 
     _sizeScalar = _lineWidths = None

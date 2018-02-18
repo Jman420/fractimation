@@ -3,9 +3,10 @@
 
 import numpy
 
-from .base.imageRenderer import ImageRenderer
+from .base.cachedImageRenderer import CachedImageRenderer
+from helpers.fractalAlgorithmHelper import polynomialIterator1D
 
-class newtonFractalRenderer(ImageRenderer):
+class newtonFractalRenderer(CachedImageRenderer):
     """Fractal Renderer for Newton Fractals"""
     
     

@@ -22,9 +22,11 @@
 
 import numpy
 
-from .base.imageRenderer import ImageRenderer
+from .base.cachedImageRenderer import CachedImageRenderer
 
-class MultijuliaRenderer(ImageRenderer):
+DEFAULT_COLOR_MAP = "viridis"
+
+class MultijuliaRenderer(CachedImageRenderer):
     """Fractal Renderer for Multi-Julia Sets"""
 
     _width = _height = None
@@ -41,14 +43,14 @@ class MultijuliaRenderer(ImageRenderer):
     _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
-                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         self._zoomCache = [ ]
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                        constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
 
@@ -85,6 +87,11 @@ class MultijuliaRenderer(ImageRenderer):
         self._colorMap = colorMap
         
         super().initialize()
+
+    def reinitialize(self):
+        self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
+                       self._maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
+                       self._escapeValue, self._colorMap)
 
     def preheatRenderCache(self, maxIterations):
         print("Preheating Multi-Julia Render Cache")

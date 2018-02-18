@@ -21,10 +21,11 @@
 
 import numpy
 
-from .base.imageRenderer import ImageRenderer
-from helpers.fractalAlgorithmHelper import polynomialIterator1D
+from .base.cachedImageRenderer import CachedImageRenderer
 
-class MultibrotRenderer(ImageRenderer):
+DEFAULT_COLOR_MAP = "viridis"
+
+class MultibrotRenderer(CachedImageRenderer):
     """Fractal Renderer for Multibrot Sets"""
 
     _width = _height = None
@@ -41,14 +42,14 @@ class MultibrotRenderer(ImageRenderer):
     _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         self._zoomCache = [ ]
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                        initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap)
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                  initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
         
@@ -86,6 +87,11 @@ class MultibrotRenderer(ImageRenderer):
         self._colorMap = colorMap
         
         super().initialize()
+
+    def reinitialize(self):
+        self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
+                       self._maxImaginaryNumber, self._initialRealNumber, self._initialImaginaryNumber, self._power,
+                       self._escapeValue, self._colorMap)
 
     def preheatRenderCache(self, maxIterations):
         print("Preheating Multibrot Render Cache")

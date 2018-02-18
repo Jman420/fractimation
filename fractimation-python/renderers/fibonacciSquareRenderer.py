@@ -3,7 +3,7 @@
 
 import numpy
 
-from .base.patchCollectionRenderer import PatchCollectionRenderer
+from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
 import helpers.renderHelper as renderHelper
 import helpers.fractalAlgorithmHelper as fractalAlgHelper
 
@@ -12,7 +12,7 @@ Y_VALUE_INDEX = 1
 SIZE_SCALAR = 0.1
 INITIAL_LOCATION = [ 0, 0 ]
 
-class FibonacciSquareRenderer(PatchCollectionRenderer):
+class FibonacciSquareRenderer(CachedPatchCollectionRenderer):
     """Fractal Renderer for Fibonocci Squares"""
     
     _sizeScalar = _lineWidths = None

@@ -1,12 +1,16 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 
-from .fractimationRenderer import FractimationRenderer
+from .cachedRenderer import CachedRenderer
 
-class ImageRenderer(FractimationRenderer, ABC):
+class CachedImageRenderer(CachedRenderer, ABC):
     """Base class for Fractal Renderers using Image Arrays for rendering"""
 
     _imageCanvas = None
-    
+
+    @abstractmethod
+    def iterate(self):
+        super().iterate()
+
     def render(self, frameNumber, axes):
         if frameNumber not in self._renderCache:
             for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
