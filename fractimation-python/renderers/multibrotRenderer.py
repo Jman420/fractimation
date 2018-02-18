@@ -1,7 +1,16 @@
 # Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
-# Multibrot Fractal Definitions : C = realNumber + imaginaryNumber
-#                                 Z = Z**power + C
-#                                 Z0 = complex(constantRealNumber, constantImaginaryNumber) + C
+# Multibrot Fractal Definitions : 
+#   C = realNumber + imaginaryNumber
+#   Z = Z**power + C
+#   Z0 = complex(initialRealNumber, initialImaginaryNumber) + C
+# Multibrot Rendering Instructions :
+#   - Map range of real and imaginary number values evenly to the image x and y pixel coordinates
+#   - For each iteration 
+#     * For each unexploded pixel in the image
+#       @ Retrieve associated real and imaginary number values for pixel coordinates
+#       @ Perform provided Multibrot equation variant
+#       @ Set pixel value equal to number of iterations for Z to exceed the Escape Value
+#     * Remove exploded pixel coordinates from calculation indexes
 
 # Mandelbrot Parameters :
 #realNumberMin, realNumberMax = -2.0, 0.5
@@ -12,13 +21,14 @@
 
 import numpy
 
-from renderers.base.imageRenderer import ImageRenderer
+from .base.imageRenderer import ImageRenderer
+from helpers.fractalAlgorithmHelper import polynomialIterator1D
 
 class MultibrotRenderer(ImageRenderer):
     """Fractal Renderer for Multibrot Sets"""
 
     _width = _height = None
-    _constantRealNumber = _constantImaginaryNumber = None
+    _initialRealNumber = _initialImaginaryNumber = None
     _power = _escapeValue = None
     _minRealNumber = _maxRealNumber = None
     _minImaginaryNumber = _maxImaginaryNumber = None
@@ -31,26 +41,34 @@ class MultibrotRenderer(ImageRenderer):
     _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = "viridis"):
         self._zoomCache = [ ]
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
+                       initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap)
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                  initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+        # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
-
+        
+        # Calculate C Values and Initial Z Value
         realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
         imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
-        cValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
-        zValues = numpy.complex(constantRealNumber, constantImaginaryNumber) + cValues
-        imageArray = numpy.zeros(cValues.shape, dtype=int) - 1
+        
+        cValues = numpy.multiply(numpy.complex(0,1), imaginaryNumberValues)
+        cValues = numpy.add(cValues, realNumberValues)
+
+        zValues = numpy.add(numpy.complex(initialRealNumber, initialImaginaryNumber), cValues)
+
+        # Initialize Image Array
+        imageArray = numpy.zeros(cValues.shape, dtype=int)
+        imageArray = numpy.add(imageArray, -1)
         
         self._width = width
         self._height = height
-        self._constantRealNumber = constantRealNumber
-        self._constantImaginaryNumber = constantImaginaryNumber
+        self._constantRealNumber = initialRealNumber
+        self._constantImaginaryNumber = initialImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
         self._minRealNumber = realNumberMin
@@ -77,28 +95,37 @@ class MultibrotRenderer(ImageRenderer):
         if len(self._zValues) <= 0:
             # Nothing left to calculate, so just store the last image in the cache
             finalImage = self._renderCache[len(self._renderCache) - 1]
-            self._renderCache.update({ frameCounter : finalImage })
+            self._renderCache.update({ self._nextIterationIndex : finalImage })
+            self._nextIterationIndex += 1
             return
 
+        # Calculate exponent piece of Multibrot Equation
+        zValuesNew = numpy.copy(self._zValues)
         exponentValue = numpy.copy(self._zValues)
         for exponentCounter in range(0, self._power - 1):
-            numpy.multiply(exponentValue, self._zValues, self._zValues)
+            zValuesNew = numpy.multiply(exponentValue, zValuesNew)
 
-        numpy.add(self._zValues, self._cValues, self._zValues)
+        # Add C piece of Multibrot Equation
+        zValuesNew = numpy.add(zValuesNew, self._cValues)
 
-        explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
+        # Get update indexes which have exceeded the Escape Value
+        explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
-        remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
-        self._zValues = self._zValues[remainingIndexes]
-        self._cValues = self._cValues[remainingIndexes]
-
+        # Recolor Indexes which have not exceeded the Escape Value
         recoloredImage = numpy.copy(self._imageArray)
         recoloredImage[recoloredImage == -1] = self._nextIterationIndex + 1
         finalImage = recoloredImage.T
+
+        # Update cache and prepare for next iteration
         self._renderCache.update({ self._nextIterationIndex : finalImage })
         self._nextIterationIndex += 1
+
+        # Remove Exploded Indexes since we don't need to calculate them anymore
+        remainingIndexes = ~explodedIndexes
+        self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
+        self._zValues = zValuesNew[remainingIndexes]
+        self._cValues = self._cValues[remainingIndexes]
 
     def zoomIn(self, startX, startY, endX, endY):
         prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
@@ -111,7 +138,7 @@ class MultibrotRenderer(ImageRenderer):
               .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
 
         self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                        self._constantRealNumber, self._constantImaginaryNumber, self._power, self._escapeValue, self._colorMap)
+                        self._initialRealNumber, self._initialImaginaryNumber, self._power, self._escapeValue, self._colorMap)
         self._zoomCache.append(prevZoom)
 
     def zoomOut(self):
@@ -123,7 +150,7 @@ class MultibrotRenderer(ImageRenderer):
               .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
 
         self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
-                       prevZoom.maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
+                       prevZoom.maxImaginaryNumber, self._initialRealNumber, self._initialImaginaryNumber, self._power,
                        self._escapeValue, self._colorMap)
         return True
 

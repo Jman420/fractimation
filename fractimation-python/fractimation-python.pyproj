@@ -56,6 +56,12 @@
     <Compile Include="helpers\renderHelper.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="renderers\newtonFractalRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\polynomialRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="renderers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
