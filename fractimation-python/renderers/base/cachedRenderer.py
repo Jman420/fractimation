@@ -9,7 +9,7 @@ class CachedRenderer(FractimationRenderer, ABC):
     _nextIterationIndex = None
 
     def initialize(self):
-        super().initialize()
+        FractimationRenderer.initialize(self)
 
         self._renderCache = { }
         self._nextIterationIndex = 0

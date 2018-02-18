@@ -22,10 +22,11 @@
 import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
+from .base.zoomableComplexPolynomialRenderer import ZoomableComplexPolynomialRenderer
 
 DEFAULT_COLOR_MAP = "viridis"
 
-class MultibrotRenderer(CachedImageRenderer):
+class MultibrotRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
     """Fractal Renderer for Multibrot Sets"""
 
     _width = _height = None
@@ -53,40 +54,35 @@ class MultibrotRenderer(CachedImageRenderer):
         # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
         
+        # Setup Real and Imaginary Number Spaces
+        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, realNumberMin,
+                                                    realNumberMax, imaginaryNumberMin, imaginaryNumberMax)
+
         # Calculate C Values and Initial Z Value
-        realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
-        
-        cValues = numpy.multiply(numpy.complex(0,1), imaginaryNumberValues)
-        cValues = numpy.add(cValues, realNumberValues)
+        cValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
+        cValues = numpy.add(cValues, self._realNumberValues)
 
         zValues = numpy.add(numpy.complex(initialRealNumber, initialImaginaryNumber), cValues)
 
         # Initialize Image Array
         imageArray = numpy.zeros(cValues.shape, dtype=int)
         imageArray = numpy.add(imageArray, -1)
+
+        # Initialize Image Cache
+        CachedImageRenderer.initialize(self, colorMap)
         
         self._width = width
         self._height = height
-        self._constantRealNumber = initialRealNumber
-        self._constantImaginaryNumber = initialImaginaryNumber
+        self._initialRealNumber = initialRealNumber
+        self._initialImaginaryNumber = initialImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
-        self._minRealNumber = realNumberMin
-        self._maxRealNumber = realNumberMax
-        self._minImaginaryNumber = imaginaryNumberMin
-        self._maxImaginaryNumber = imaginaryNumberMax
 
         self._xIndexes = xIndexes
         self._yIndexes = yIndexes
-        self._realNumberValues = realNumberValues
-        self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
         self._cValues = cValues
         self._imageArray = imageArray
-        self._colorMap = colorMap
-        
-        super().initialize()
 
     def reinitialize(self):
         self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
@@ -132,40 +128,3 @@ class MultibrotRenderer(CachedImageRenderer):
         self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
         self._zValues = zValuesNew[remainingIndexes]
         self._cValues = self._cValues[remainingIndexes]
-
-    def zoomIn(self, startX, startY, endX, endY):
-        prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
-
-        minRealNumber = self._realNumberValues[startX][startY]
-        maxRealNumber = self._realNumberValues[endX][endY]
-        minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
-        maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
-        print("ZoomIn Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
-
-        self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                        self._initialRealNumber, self._initialImaginaryNumber, self._power, self._escapeValue, self._colorMap)
-        self._zoomCache.append(prevZoom)
-
-    def zoomOut(self):
-        if len(self._zoomCache) < 1:
-            return False
-
-        prevZoom = self._zoomCache.pop()
-        print("ZoomOut Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
-
-        self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
-                       prevZoom.maxImaginaryNumber, self._initialRealNumber, self._initialImaginaryNumber, self._power,
-                       self._escapeValue, self._colorMap)
-        return True
-
-class zoomCacheItem(object):
-    minRealNumber = maxRealNumber = None
-    minImaginaryNumber = maxImaginaryNumber = None
-
-    def __init__(self, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber):
-        self.minRealNumber = minRealNumber
-        self.maxRealNumber = maxRealNumber
-        self.minImaginaryNumber = minImaginaryNumber
-        self.maxImaginaryNumber = maxImaginaryNumber

@@ -23,24 +23,21 @@
 import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
+from .base.zoomableComplexPolynomialRenderer import ZoomableComplexPolynomialRenderer
 
 DEFAULT_COLOR_MAP = "viridis"
 
-class MultijuliaRenderer(CachedImageRenderer):
+class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
     """Fractal Renderer for Multi-Julia Sets"""
 
     _width = _height = None
     _constantRealNumber = _constantImaginaryNumber = None
     _power = _escapeValue = None
-    _minRealNumber = _maxRealNumber = None
-    _minImaginaryNumber = _maxImaginaryNumber = None
 
     _xIndexes = _yIndexes = None
-    _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValue = None
 
     _imageArray = None
-    _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
@@ -54,17 +51,22 @@ class MultijuliaRenderer(CachedImageRenderer):
         # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
 
+        # Setup Real and Imaginary Number Spaces
+        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, realNumberMin,
+                                                    realNumberMax, imaginaryNumberMin, imaginaryNumberMax)
+
         # Calculate C Value and Initial Z Values
-        realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
         cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
 
-        zValues = numpy.multiply(numpy.complex(0,1), imaginaryNumberValues)
-        zValues = numpy.add(zValues, realNumberValues)
+        zValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
+        zValues = numpy.add(zValues, self._realNumberValues)
 
         # Initialize Image Array
         imageArray = numpy.zeros(zValues.shape, dtype=int)
         imageArray = numpy.add(imageArray, -1)
+
+        # Initialize Image Cache
+        CachedImageRenderer.initialize(self, colorMap)
         
         self._width = width
         self._height = height
@@ -72,21 +74,12 @@ class MultijuliaRenderer(CachedImageRenderer):
         self._constantImaginaryNumber = constantImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
-        self._minRealNumber = realNumberMin
-        self._maxRealNumber = realNumberMax
-        self._minImaginaryNumber = imaginaryNumberMin
-        self._maxImaginaryNumber = imaginaryNumberMax
 
         self._xIndexes = xIndexes
         self._yIndexes = yIndexes
-        self._realNumberValues = realNumberValues
-        self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
         self._cValue = cValue
         self._imageArray = imageArray
-        self._colorMap = colorMap
-        
-        super().initialize()
 
     def reinitialize(self):
         self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
@@ -131,40 +124,3 @@ class MultijuliaRenderer(CachedImageRenderer):
         remainingIndexes = ~explodedIndexes
         self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
         self._zValues = zValuesNew[remainingIndexes]
-
-    def zoomIn(self, startX, startY, endX, endY):
-        prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
-
-        minRealNumber = self._realNumberValues[startX][startY]
-        maxRealNumber = self._realNumberValues[endX][endY]
-        minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
-        maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
-        print("ZoomIn Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
-
-        self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                        self._constantRealNumber, self._constantImaginaryNumber, self._power, self._escapeValue, self._colorMap)
-        self._zoomCache.append(prevZoom)
-
-    def zoomOut(self):
-        if len(self._zoomCache) < 1:
-            return False
-
-        prevZoom = self._zoomCache.pop()
-        print("ZoomOut Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
-
-        self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
-                       prevZoom.maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
-                       self._escapeValue, self._colorMap)
-        return True
-
-class zoomCacheItem(object):
-    minRealNumber = maxRealNumber = None
-    minImaginaryNumber = maxImaginaryNumber = None
-
-    def __init__(self, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber):
-        self.minRealNumber = minRealNumber
-        self.maxRealNumber = maxRealNumber
-        self.minImaginaryNumber = minImaginaryNumber
-        self.maxImaginaryNumber = maxImaginaryNumber

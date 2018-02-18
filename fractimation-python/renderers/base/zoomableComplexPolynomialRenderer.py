@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import numpy
 
 from .fractimationRenderer import FractimationRenderer
 
@@ -14,9 +15,11 @@ class ZoomableComplexPolynomialRenderer(FractimationRenderer, ABC):
     def __init__(self):
         _zoomCache = [ ]
 
-    def initialize(self, xIndexes, yIndexes, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax):
-        realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
+    def initialize(self, xIndexes, yIndexes, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, spacingFunc=numpy.linspace):
+        super().initialize()
+
+        realNumberValues = spacingFunc(realNumberMin, realNumberMax, width)[xIndexes]
+        imaginaryNumberValues = spacingFunc(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
 
         self._minRealNumber = realNumberMin
         self._maxRealNumber = realNumberMax

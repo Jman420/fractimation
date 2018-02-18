@@ -5,7 +5,12 @@ from .cachedRenderer import CachedRenderer
 class CachedImageRenderer(CachedRenderer, ABC):
     """Base class for Fractal Renderers using Image Arrays for rendering"""
 
-    _imageCanvas = None
+    _imageCanvas = _colorMap = None
+
+    def initialize(self, colorMap):
+        CachedRenderer.initialize(self)
+
+        self._colorMap = colorMap
 
     @abstractmethod
     def iterate(self):
