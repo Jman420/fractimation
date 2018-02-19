@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from .fractimationRenderer import FractimationRenderer
+from .cachedRenderer import CachedRenderer
 
-class PatchCollectionRenderer(FractimationRenderer, ABC):
+class CachedPatchCollectionRenderer(CachedRenderer, ABC):
     """Base class for Fratal Renderers using Matpotlib PatchCollections for rendering"""
 
     _cacheAddedToAxes = False
@@ -10,8 +10,11 @@ class PatchCollectionRenderer(FractimationRenderer, ABC):
     def initialize(self):
         super().initialize()
 
-        self._renderCache = { }
         self._cacheAddedToAxes = False
+
+    @abstractmethod
+    def iterate(self):
+        super().iterate()
 
     def render(self, frameNumber, axes):
         if not self._cacheAddedToAxes:

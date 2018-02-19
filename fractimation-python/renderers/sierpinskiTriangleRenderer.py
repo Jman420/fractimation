@@ -2,7 +2,7 @@
 
 import numpy
 
-from .base.patchCollectionRenderer import PatchCollectionRenderer
+from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
 import helpers.renderHelper as renderHelper
 
 LAST_VERTEX_INDEX = 2
@@ -41,7 +41,7 @@ def calculateSubdivisions(vertices):
 
     return numpy.concatenate((leftSubdivision, topSubdivision, rightSubdivision))
 
-class SierpinskiTriangleRenderer(PatchCollectionRenderer):
+class SierpinskiTriangleRenderer(CachedPatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Triangle"""
 
     _eligibleVertices = None

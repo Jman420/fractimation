@@ -22,16 +22,25 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="debug.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="helpers\fractalAlgorithmHelper.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\imageRenderer.py">
+    <Compile Include="renderers\base\fractimationRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\patchCollectionRenderer.py">
+    <Compile Include="renderers\base\cachedImageRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\base\cachedPatchCollectionRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\base\zoomableComplexPolynomialRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\base\__init__.py">
@@ -40,7 +49,7 @@
     <Compile Include="renderers\fibonacciSquareRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\fractimationRenderer.py">
+    <Compile Include="renderers\base\cachedRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\goldenSpiralRenderer.py">
@@ -54,6 +63,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\renderHelper.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\newtonFractalRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\complexPolynomialRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\__init__.py">

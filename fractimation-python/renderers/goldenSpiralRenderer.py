@@ -3,9 +3,9 @@
 
 import numpy
 
-from .base.patchCollectionRenderer import PatchCollectionRenderer
+from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
 import helpers.renderHelper as renderHelper
-import helpers.fractalAlgorithmHelper as fractalAlgHelper
+from helpers.fractalAlgorithmHelper import getFibonocciNumber
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -16,7 +16,7 @@ SIZE_SCALAR = 0.1
 INITIAL_LOCATION = [ 0, 0 ]
 INITIAL_ANGLES = [ 270, 0 ]
 
-class GoldenSpiralRenderer(PatchCollectionRenderer):
+class GoldenSpiralRenderer(CachedPatchCollectionRenderer):
     """Fractal Renderer for the Golden Spiral"""
 
     _sizeScalar = _lineWidths = None
@@ -48,11 +48,11 @@ class GoldenSpiralRenderer(PatchCollectionRenderer):
 
     def iterate(self):
         self._nextWedgeAngles += 90
-        currentFibNumber = fractalAlgHelper.getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
+        currentFibNumber = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
         wedgeLocation = self._nextWedgeLocation
 
-        secondPrevFibNum = fractalAlgHelper.getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
-        prevFibNum = fractalAlgHelper.getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
+        secondPrevFibNum = getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
+        prevFibNum = getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
         if self._nextMoveMode == 1:
             moveDeviation = [ -secondPrevFibNum, 0 ]
         elif self._nextMoveMode == 2:

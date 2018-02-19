@@ -1,3 +1,5 @@
+import numpy
+
 from matplotlib.patches import Polygon
 from matplotlib.patches import Rectangle
 from matplotlib.patches import Wedge
@@ -23,3 +25,8 @@ def buildPatchCollection(patches, visible=False):
     patchCollection = PatchCollection(patches, True)
     patchCollection.set_visible(visible)
     return patchCollection
+
+def recolorUnexplodedIndexes(image, initialValue, recoloredValue):
+    recoloredImage = numpy.copy(image)
+    recoloredImage[recoloredImage == initialValue] = recoloredValue
+    return recoloredImage

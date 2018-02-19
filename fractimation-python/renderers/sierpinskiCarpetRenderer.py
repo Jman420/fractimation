@@ -2,7 +2,7 @@
 
 import numpy
 
-from .base.patchCollectionRenderer import PatchCollectionRenderer
+from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
 import helpers.renderHelper as renderHelper
 
 X_VALUE_INDEX = 0
@@ -61,7 +61,7 @@ def calculateSubdivisions(rectangles):
                               bottomLeftSubdivision, bottomMiddleSubdivision, bottomRightSubdivision))
     return allSubdivisions
 
-class SierpinskiCarpetRenderer(PatchCollectionRenderer):
+class SierpinskiCarpetRenderer(CachedPatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Carpet (aka Sierpinski Square)"""
 
     _eligibleRects = None

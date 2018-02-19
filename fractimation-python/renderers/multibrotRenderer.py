@@ -1,7 +1,16 @@
 # Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
-# Multibrot Fractal Definitions : C = realNumber + imaginaryNumber
-#                                 Z = Z**power + C
-#                                 Z0 = complex(constantRealNumber, constantImaginaryNumber) + C
+# Multibrot Fractal Definitions : 
+#   C = realNumber + imaginaryNumber
+#   Z = Z**power + C
+#   Z0 = complex(initialRealNumber, initialImaginaryNumber) + C
+# Multibrot Rendering Instructions :
+#   - Map range of real and imaginary number values evenly to the image x and y pixel coordinates
+#   - For each iteration 
+#     * For each unexploded pixel in the image
+#       @ Retrieve associated real and imaginary number values for pixel coordinates
+#       @ Perform provided Multibrot equation variant
+#       @ Set pixel value equal to number of iterations for Z to exceed the Escape Value
+#     * Remove exploded pixel coordinates from calculation indexes
 
 # Mandelbrot Parameters :
 #realNumberMin, realNumberMax = -2.0, 0.5
@@ -12,13 +21,18 @@
 
 import numpy
 
-from renderers.base.imageRenderer import ImageRenderer
+from .base.cachedImageRenderer import CachedImageRenderer
+from .base.zoomableComplexPolynomialRenderer import ZoomableComplexPolynomialRenderer
+from helpers.renderHelper import recolorUnexplodedIndexes
+from helpers.fractalAlgorithmHelper import removeIndexes
 
-class MultibrotRenderer(ImageRenderer):
+DEFAULT_COLOR_MAP = "viridis"
+
+class MultibrotRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
     """Fractal Renderer for Multibrot Sets"""
 
     _width = _height = None
-    _constantRealNumber = _constantImaginaryNumber = None
+    _initialRealNumber = _initialImaginaryNumber = None
     _power = _escapeValue = None
     _minRealNumber = _maxRealNumber = None
     _minImaginaryNumber = _maxImaginaryNumber = None
@@ -31,43 +45,51 @@ class MultibrotRenderer(ImageRenderer):
     _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         self._zoomCache = [ ]
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
+                       initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap)
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = "viridis"):
+                  initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
+        # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
+        
+        # Setup Real and Imaginary Number Spaces
+        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, realNumberMin,
+                                                    realNumberMax, imaginaryNumberMin, imaginaryNumberMax)
 
-        realNumberValues = numpy.linspace(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = numpy.linspace(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
-        cValues = realNumberValues + numpy.complex(0,1) * imaginaryNumberValues
-        zValues = numpy.complex(constantRealNumber, constantImaginaryNumber) + cValues
-        imageArray = numpy.zeros(cValues.shape, dtype=int) - 1
+        # Calculate C Values and Initial Z Value
+        cValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
+        cValues = numpy.add(cValues, self._realNumberValues)
+
+        zValues = numpy.add(numpy.complex(initialRealNumber, initialImaginaryNumber), cValues)
+
+        # Initialize Image Array
+        imageArray = numpy.zeros(cValues.shape, dtype=int)
+        imageArray = numpy.add(imageArray, -1)
+
+        # Initialize Image Cache
+        CachedImageRenderer.initialize(self, colorMap)
         
         self._width = width
         self._height = height
-        self._constantRealNumber = constantRealNumber
-        self._constantImaginaryNumber = constantImaginaryNumber
+        self._initialRealNumber = initialRealNumber
+        self._initialImaginaryNumber = initialImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
-        self._minRealNumber = realNumberMin
-        self._maxRealNumber = realNumberMax
-        self._minImaginaryNumber = imaginaryNumberMin
-        self._maxImaginaryNumber = imaginaryNumberMax
 
         self._xIndexes = xIndexes
         self._yIndexes = yIndexes
-        self._realNumberValues = realNumberValues
-        self._imaginaryNumberValues = imaginaryNumberValues
         self._zValues = zValues
         self._cValues = cValues
         self._imageArray = imageArray
-        self._colorMap = colorMap
-        
-        super().initialize()
+
+    def reinitialize(self):
+        self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
+                       self._maxImaginaryNumber, self._initialRealNumber, self._initialImaginaryNumber, self._power,
+                       self._escapeValue, self._colorMap)
 
     def preheatRenderCache(self, maxIterations):
         print("Preheating Multibrot Render Cache")
@@ -77,62 +99,32 @@ class MultibrotRenderer(ImageRenderer):
         if len(self._zValues) <= 0:
             # Nothing left to calculate, so just store the last image in the cache
             finalImage = self._renderCache[len(self._renderCache) - 1]
-            self._renderCache.update({ frameCounter : finalImage })
+            self._renderCache.update({ self._nextIterationIndex : finalImage })
+            self._nextIterationIndex += 1
             return
 
+        # Calculate exponent piece of Multibrot Equation
+        zValuesNew = numpy.copy(self._zValues)
         exponentValue = numpy.copy(self._zValues)
         for exponentCounter in range(0, self._power - 1):
-            numpy.multiply(exponentValue, self._zValues, self._zValues)
+            zValuesNew = numpy.multiply(exponentValue, zValuesNew)
 
-        numpy.add(self._zValues, self._cValues, self._zValues)
+        # Add C piece of Multibrot Equation
+        zValuesNew = numpy.add(zValuesNew, self._cValues)
 
-        explodedIndexes = numpy.abs(self._zValues) > self._escapeValue
+        # Update indexes which have exceeded the Escape Value
+        explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
-        remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
-        self._zValues = self._zValues[remainingIndexes]
-        self._cValues = self._cValues[remainingIndexes]
-
-        recoloredImage = numpy.copy(self._imageArray)
-        recoloredImage[recoloredImage == -1] = self._nextIterationIndex + 1
+        # Recolor Indexes which have not exceeded the Escape Value
+        recoloredImage = recolorUnexplodedIndexes(self._imageArray, -1, self._nextIterationIndex + 1)
         finalImage = recoloredImage.T
+
+        # Update cache and prepare for next iteration
         self._renderCache.update({ self._nextIterationIndex : finalImage })
         self._nextIterationIndex += 1
 
-    def zoomIn(self, startX, startY, endX, endY):
-        prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
-
-        minRealNumber = self._realNumberValues[startX][startY]
-        maxRealNumber = self._realNumberValues[endX][endY]
-        minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
-        maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
-        print("ZoomIn Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
-
-        self.initialize(self._width, self._height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                        self._constantRealNumber, self._constantImaginaryNumber, self._power, self._escapeValue, self._colorMap)
-        self._zoomCache.append(prevZoom)
-
-    def zoomOut(self):
-        if len(self._zoomCache) < 1:
-            return False
-
-        prevZoom = self._zoomCache.pop()
-        print("ZoomOut Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
-
-        self.initialize(self._width, self._height, prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber,
-                       prevZoom.maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
-                       self._escapeValue, self._colorMap)
-        return True
-
-class zoomCacheItem(object):
-    minRealNumber = maxRealNumber = None
-    minImaginaryNumber = maxImaginaryNumber = None
-
-    def __init__(self, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber):
-        self.minRealNumber = minRealNumber
-        self.maxRealNumber = maxRealNumber
-        self.minImaginaryNumber = minImaginaryNumber
-        self.maxImaginaryNumber = maxImaginaryNumber
+        # Remove Exploded Indexes since we don't need to calculate them anymore
+        remainingIndexes = ~explodedIndexes
+        self._xIndexes, self._yIndexes, self._zValues, self._cValues = removeIndexes([ self._xIndexes, self._yIndexes,
+                                                                                     zValuesNew, self._cValues ], remainingIndexes)
