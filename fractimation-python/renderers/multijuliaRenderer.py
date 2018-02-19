@@ -24,6 +24,8 @@ import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
 from .base.zoomableComplexPolynomialRenderer import ZoomableComplexPolynomialRenderer
+from helpers.renderHelper import recolorUnexplodedIndexes
+from helpers.fractalAlgorithmHelper import removeIndexes
 
 DEFAULT_COLOR_MAP = "viridis"
 
@@ -112,8 +114,7 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer)
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
         # Recolor Indexes which have not exceeded the Escape Value
-        recoloredImage = numpy.copy(self._imageArray)
-        recoloredImage[recoloredImage == -1] = self._nextIterationIndex + 1
+        recoloredImage = recolorUnexplodedIndexes(self._imageArray, -1, self._nextIterationIndex + 1)
         finalImage = recoloredImage.T
 
         # Update cache and prepare for next iteration
@@ -122,5 +123,4 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer)
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes = self._xIndexes[remainingIndexes], self._yIndexes[remainingIndexes]
-        self._zValues = zValuesNew[remainingIndexes]
+        self._xIndexes, self._yIndexes, self._zValues = removeIndexes([ self._xIndexes, self._yIndexes,zValuesNew ], remainingIndexes)

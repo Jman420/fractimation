@@ -5,7 +5,7 @@ import numpy
 
 from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
 import helpers.renderHelper as renderHelper
-import helpers.fractalAlgorithmHelper as fractalAlgHelper
+from helpers.fractalAlgorithmHelper import getFibonocciNumber
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -40,11 +40,11 @@ class FibonacciSquareRenderer(CachedPatchCollectionRenderer):
         super().preheatRenderCache(maxIterations)
 
     def iterate(self):
-        currentFibNumber = fractalAlgHelper.getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
+        currentFibNumber = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
         squareLocation = self._nextSquareLocation
 
-        secondPrevFibNum = fractalAlgHelper.getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
-        prevFibNum = fractalAlgHelper.getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
+        secondPrevFibNum = getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
+        prevFibNum = getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
         if self._nextMoveMode == 1:
             moveDeviation = [ -secondPrevFibNum, prevFibNum ]
         elif self._nextMoveMode == 2:

@@ -9,7 +9,7 @@ def getFibonocciNumber(index):
 
 # polynomialExpressionArray is an array in the format of increasing order; 
 #   ie. [ 1, 2, 3 ] = c + 2z + 3z**2 ; [ 4, 0, 1, 0, 5 ] = 4c + z**2 + 5z**4
-def polynomialIterator1D(coefficientArray, zValues, cValues):
+def evaluatePolynomial1D(coefficientArray, zValues, cValues):
     # Calculate Polynomial Constant Expression
     constantCoefficient = coefficientArray[0]
     constantValues = cValues * constantCoefficient
@@ -29,3 +29,11 @@ def polynomialIterator1D(coefficientArray, zValues, cValues):
     zValuesNew = zValuesNew + constantValues
 
     return zValuesNew
+
+def removeIndexes(originalArrays, remainingIndexes):
+    returnArray = [ ]
+    for array in originalArrays:
+        newArray = array[remainingIndexes]
+        returnArray.append(newArray)
+
+    return returnArray

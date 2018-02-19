@@ -4,7 +4,7 @@
 import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
-from helpers.fractalAlgorithmHelper import polynomialIterator1D
+from helpers.fractalAlgorithmHelper import evaluatePolynomial1D
 
 class newtonFractalRenderer(CachedImageRenderer):
     """Fractal Renderer for Newton Fractals"""
