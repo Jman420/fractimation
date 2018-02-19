@@ -10,6 +10,7 @@ from renderers.sierpinskiTriangleRenderer import SierpinskiTriangleRenderer
 from renderers.sierpinskiCarpetRenderer import SierpinskiCarpetRenderer
 from renderers.fibonacciSquareRenderer import FibonacciSquareRenderer
 from renderers.goldenSpiralRenderer import GoldenSpiralRenderer
+from renderers.newtonFractalRenderer import NewtonFractalRenderer
 
 from ui.zoomHandler import ZoomHandler
 
@@ -31,7 +32,7 @@ escapeValue = 2.0                                      # Limit at which Z values
 multibrotFractal = MultibrotRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 multibrotZoomHandler = ZoomHandler(multibrotFractal, multibrotViewer)
-multibrotViewer.initializeAnimation(maxIterations, multibrotFractal.render)
+multibrotViewer.initializeAnimation(maxIterations, multibrotFractal.render, "multibrotFractal", maxIterations)
 multibrotFractal.preheatRenderCache(maxIterations)
 
 # Julia Set
@@ -44,15 +45,28 @@ escapeValue = 10.0                                     # Limit at which Z values
 multijuliaFractal = MultijuliaRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                         constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
 multijuliaZoomHandler = ZoomHandler(multijuliaFractal, multijuliaViewer)
-multijuliaViewer.initializeAnimation(maxIterations, multijuliaFractal.render)
+multijuliaViewer.initializeAnimation(maxIterations, multijuliaFractal.render, "multijuliaFractal", maxIterations)
 multijuliaFractal.preheatRenderCache(maxIterations)
+
+# Newton Fractal
+newtonFractalViewer = PlotPlayer("Newton Fractal")
+realNumberMin, realNumberMax = -10, 10                 # Min & Max values for X values in fractal equation
+imaginaryNumberMin, imaginaryNumberMax = -10, 10       # Min & Max values for Y values in fractal equation
+constantRealNumber, constantImaginaryNumber = 1.0, 0.0 # Constant C value
+coefficientArray = [ -1, 0, 0, 0, 1 ]                  # Representation of polynomial equation coefficients in accending order (ie. c + x + x**2 + ... + x**n)
+escapeValue = 1e-6
+newtonFractal = NewtonFractalRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
+                                      coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap)
+newtonZoomHandler = ZoomHandler(newtonFractal, newtonFractalViewer)
+newtonFractalViewer.initializeAnimation(maxIterations, newtonFractal.render, "newtonFractal", maxIterations)
+newtonFractal.preheatRenderCache(maxIterations)
 
 # Sierpinski Triangle (3**iteration triangles per iteration)
 sierpinskiTriangleViewer = PlotPlayer("Sierpinski Triangle", hideToolbar=False)
 sierpinskiTriangleIterations = 7                      # Be careful with this number; iterations explode at 3**iteration computations
 sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterations)
 sierpinskiTriangleFractal = SierpinskiTriangleRenderer(sierpinskiTriangleLineWidths)
-sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleFractal.render, "sierpinskiTriangle", sierpinskiTriangleIterations // 2)
+sierpinskiTriangleViewer.initializeAnimation(sierpinskiTriangleIterations, sierpinskiTriangleFractal.render, "sierpinskiTriangle", sierpinskiTriangleIterations)
 #sierpinskiTriangleFractal.preheatRenderCache(sierpinskiTriangleIterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
@@ -60,7 +74,7 @@ sierpinskiCarpetViewer = PlotPlayer("Sierpinski Carpet", hideToolbar=False)
 sierpinskiCarpetIterations = 5                        # Be careful with this number; iterations explode at 8**iteration computations
 sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations)
 sierpinskiCarpetFractal = SierpinskiCarpetRenderer(sierpinskiCarpetLineWidths)
-sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetFractal.render,  "sierpinskiCarpet", sierpinskiCarpetIterations // 2)
+sierpinskiCarpetViewer.initializeAnimation(sierpinskiCarpetIterations, sierpinskiCarpetFractal.render,  "sierpinskiCarpet", sierpinskiCarpetIterations)
 #sierpinskiCarpetFractal.preheatRenderCache(sierpinskiCarpetIterations)
 
 # Fibonacci Square
@@ -68,7 +82,7 @@ fibonacciSquareViewer = PlotPlayer("Fibonocci Square", hideToolbar=False)
 fibonacciSquareIterations = 15
 fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations)
 fibonacciSquareFractal = FibonacciSquareRenderer(fibonacciSquareLineWidths)
-fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareFractal.render, "fibonocciSquare")
+fibonacciSquareViewer.initializeAnimation(fibonacciSquareIterations, fibonacciSquareFractal.render, "fibonocciSquare", fibonacciSquareIterations)
 #fibonacciSquareFractal.preheatRenderCache(fibonacciSquareIterations)
 
 # Golden Spiral
@@ -76,7 +90,7 @@ goldenSpiralViewer = PlotPlayer("Golden Spiral", hideToolbar=False)
 goldenSpiralIterations = 15
 goldenSpiralLineWidths = numpy.linspace(0.01, 0.05, goldenSpiralIterations)
 goldenSpiralFractal = GoldenSpiralRenderer(goldenSpiralLineWidths)
-goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralFractal.render, "goldenSpiral")
+goldenSpiralViewer.initializeAnimation(goldenSpiralIterations, goldenSpiralFractal.render, "goldenSpiral", goldenSpiralIterations)
 #goldenSpiralFractal.preheatRenderCache(goldenSpiralIterations)
 
 # Render Viewers

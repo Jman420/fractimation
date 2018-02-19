@@ -13,7 +13,7 @@ class ZoomableComplexPolynomialRenderer(FractimationRenderer, ABC):
     _zoomCache = None
 
     def __init__(self):
-        _zoomCache = [ ]
+        self._zoomCache = [ ]
 
     def initialize(self, xIndexes, yIndexes, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, spacingFunc=numpy.linspace):
         super().initialize()

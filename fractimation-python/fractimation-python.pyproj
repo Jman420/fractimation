@@ -22,6 +22,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="debug.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="helpers\fractalAlgorithmHelper.py">
       <SubType>Code</SubType>
     </Compile>

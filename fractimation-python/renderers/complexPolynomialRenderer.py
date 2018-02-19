@@ -19,18 +19,20 @@ class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexPolynomialRe
     _imageArray = None
 
     def __init__(self, width, height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                 coefficientArray, escapeValue, colorMap = "viridis"):
+                 coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap = "viridis"):
+        super().__init__()
+
         self.initialize(width, height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                        coefficientArray, escapeValue, colorMap)
+                        coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap)
 
     def initialize(self, width, height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
-                   coefficientArray, escapeValue, colorMap = "viridis"):
+                   coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap = "viridis"):
         # Prepare Image Location Indexes included for calculation
         xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
 
         # Setup Real and Imaginary Number Spaces
-        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, realNumberMin,
-                                                    realNumberMax, imaginaryNumberMin, imaginaryNumberMax)
+        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, minRealNumber,
+                                                    maxRealNumber, minImaginaryNumber, maxImaginaryNumber)
 
         # Calculate C Value and Initial Z Values
         cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
@@ -49,7 +51,7 @@ class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexPolynomialRe
         self._height = height
         self._constantRealNumber = constantRealNumber
         self._constantImaginaryNumber = constantImaginaryNumber
-        self._power = power
+        self._coefficientArray = coefficientArray
         self._escapeValue = escapeValue
 
         self._xIndexes = xIndexes
@@ -59,7 +61,9 @@ class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexPolynomialRe
         self._imageArray = imageArray
         
     def reinitialize(self):
-        self.reinitialize()
+        self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
+                       self._maxImaginaryNumber, self._coefficientArray, self._constantRealNumber, self._constantImaginaryNumber,
+                       self._escapeValue, self._colorMap)
 
     def preheatRenderCache(self, maxIterations):
         print("Preheating Generic Complex Polynomial Render Cache")
@@ -76,7 +80,7 @@ class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexPolynomialRe
         # Evaluate Polynomial
         zValuesNew = evaluatePolynomial1D(self._coefficientArray, self._zValues, self._cValue)
 
-        # Get update indexes which have exceeded the Escape Value
+        # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 

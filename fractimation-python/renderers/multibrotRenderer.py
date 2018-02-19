@@ -112,7 +112,7 @@ class MultibrotRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
         # Add C piece of Multibrot Equation
         zValuesNew = numpy.add(zValuesNew, self._cValues)
 
-        # Get update indexes which have exceeded the Escape Value
+        # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 

@@ -109,7 +109,7 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer)
         # Add C piece of Multijulia Equation
         numpy.add(zValuesNew, self._cValue, zValuesNew)
 
-        # Get update indexes which have exceeded the Escape Value
+        # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
