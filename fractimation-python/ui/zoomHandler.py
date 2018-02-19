@@ -10,7 +10,7 @@ def restartPlayback(viewer):
     viewer.play()
 
 class ZoomHandler(object):
-    """Class to handle Fractimation Zoom UI Input"""
+    """Class to handle Fractimation Zoom UI"""
     
     _renderer = _viewer = None
 
@@ -23,7 +23,7 @@ class ZoomHandler(object):
         self._renderer = renderer
         self._viewer = viewer
 
-        self._zoomBox = widgets.RectangleSelector(self._viewer._animationAxes, self.selectZoomCoords,
+        self._zoomBox = widgets.RectangleSelector(self._viewer.getAnimationAxes(), self.selectZoomCoords,
                                                   useblit=True, minspanx=minZoomWidth, minspany=minZoomHeight,
                                                   button=[ LEFT_MOUSE_BUTTON ], interactive=True)
 

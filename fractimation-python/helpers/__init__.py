@@ -1,1 +1,2 @@
-import helpers.renderHelper
+from .renderHelper import *
+from .fractalAlgorithmHelper import *
