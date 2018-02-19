@@ -6,9 +6,14 @@ Fractimation is a framework and player meant for exploring and animating fractal
 The framework can likely be used for general animation purposes as well.
 
 # Supported Fractals
-- Multibrot and Multi-Julia Sets
-- Sierpinski Carpet and Triangles
-- Fibonacci Squares and Golden Spiral
+- Multibrot
+- Multi-Julia Sets
+- Generic Complex Polynomial Equations
+- Newton Fractal
+- Sierpinski Carpet
+- Sierpinski Triangle
+- Fibonacci Squares
+- Golden Spiral
 
 # Features
 - Iteration caching for playback scrubbing
