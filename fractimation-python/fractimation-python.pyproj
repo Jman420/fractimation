@@ -83,6 +83,7 @@
     <Compile Include="ui\zoomHandler.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="helpers\" />

@@ -41,13 +41,17 @@ The framework can likely be used for general animation purposes as well.
 * Jump Back - Down
 * Skip to Beginning - Home
 * Skip to End - End
+* Save Animation - D + File Selection Key (see below)
 
 ## Saving as Video
-To save an animation as a video press and hold the 's' key and then press one of the following keys
+To save an animation as a video press and hold the 'D' key and then press one of the following keys
 to select the output format:
 * V - mp4 video using ffmpeg (must have ffmpeg installed)
 * H - HTML5 video
 * J - Javascript video
+
+A save file dialog will appear to prompt you for the name of the file to save.  (Note : allow a few
+seconds for the dialog to load)
 
 ## Matplotlib Controls
 See https://matplotlib.org/users/navigation_toolbar.html for more built in Matplotlib controls.
