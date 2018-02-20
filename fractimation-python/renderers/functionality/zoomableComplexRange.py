@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 import numpy
 
-from .fractimationRenderer import FractimationRenderer
-
-class ZoomableComplexPolynomialRenderer(FractimationRenderer, ABC):
+class ZoomableComplexRange(ABC):
     """Base Class for Zoomable Complex Polynomial Fractal Equation Renderers"""
 
+    _xIndexes = _yIndexes = None
     _minRealNumber = _maxRealNumber = None
     _minImaginaryNumber = _maxImaginaryNumber = None
     _realNumberValues = _imaginaryNumberValues = None
@@ -15,12 +14,14 @@ class ZoomableComplexPolynomialRenderer(FractimationRenderer, ABC):
     def __init__(self):
         self._zoomCache = [ ]
 
-    def initialize(self, xIndexes, yIndexes, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, spacingFunc=numpy.linspace):
-        super().initialize()
+    def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, spacingFunc=numpy.linspace):
+        xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
 
         realNumberValues = spacingFunc(realNumberMin, realNumberMax, width)[xIndexes]
         imaginaryNumberValues = spacingFunc(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
 
+        self._xIndexes = xIndexes
+        self._yIndexes = yIndexes
         self._minRealNumber = realNumberMin
         self._maxRealNumber = realNumberMax
         self._minImaginaryNumber = imaginaryNumberMin

@@ -51,11 +51,8 @@ class NewtonFractalRenderer(ComplexPolynomialRenderer):
         explodedIndexes = numpy.abs(iterationDiff) < self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
-        # Recolor Indexes which have not exceeded the Escape Value
-        recoloredImage = recolorUnexplodedIndexes(self._imageArray, -1, self._nextIterationIndex + 1)
-        finalImage = recoloredImage.T
-
         # Update cache and prepare for next iteration
+        finalImage = numpy.copy(self._imageArray.T)
         self._renderCache.update({ self._nextIterationIndex : finalImage })
         self._nextIterationIndex += 1
 

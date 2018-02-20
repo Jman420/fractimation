@@ -1,15 +1,26 @@
 from abc import ABC, abstractmethod
 
+import numpy
+
 from .cachedRenderer import CachedRenderer
 
 class CachedImageRenderer(CachedRenderer, ABC):
     """Base class for Fractal Renderers using Image Arrays for rendering"""
 
+    _width = _height = None
+    _imageArray = None
     _imageCanvas = _colorMap = None
 
-    def initialize(self, colorMap):
+    def initialize(self, width, height, imageArrayShape, colorMap, initialImageArrayValue=-1):
         CachedRenderer.initialize(self)
 
+        # Initialize Image Array
+        imageArray = numpy.zeros(imageArrayShape, dtype=int)
+        imageArray = numpy.add(imageArray, initialImageArrayValue)
+
+        self._width = width
+        self._height = height
+        self._imageArray = imageArray
         self._colorMap = colorMap
 
     @abstractmethod

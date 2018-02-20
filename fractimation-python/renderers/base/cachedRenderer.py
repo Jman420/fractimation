@@ -6,13 +6,11 @@ class CachedRenderer(FractimationRenderer, ABC):
     """Base class for Cached Fractal Renderers"""
 
     _renderCache = None
-    _nextIterationIndex = None
 
     def initialize(self):
         FractimationRenderer.initialize(self)
 
         self._renderCache = { }
-        self._nextIterationIndex = 0
 
     def preheatRenderCache(self, maxIterations):
         if maxIterations < len(self._renderCache):

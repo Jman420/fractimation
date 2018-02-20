@@ -23,23 +23,19 @@
 import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
-from .base.zoomableComplexPolynomialRenderer import ZoomableComplexPolynomialRenderer
+from .functionality.zoomableComplexRange import ZoomableComplexRange
 from helpers.renderHelper import recolorUnexplodedIndexes
 from helpers.fractalAlgorithmHelper import removeIndexes
 
 DEFAULT_COLOR_MAP = "viridis"
 
-class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
+class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Multi-Julia Sets"""
 
-    _width = _height = None
     _constantRealNumber = _constantImaginaryNumber = None
     _power = _escapeValue = None
 
-    _xIndexes = _yIndexes = None
     _zValues = _cValue = None
-
-    _imageArray = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
@@ -50,12 +46,9 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer)
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                   constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
-        # Prepare Image Location Indexes included for calculation
-        xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
-
-        # Setup Real and Imaginary Number Spaces
-        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, realNumberMin,
-                                                    realNumberMax, imaginaryNumberMin, imaginaryNumberMax)
+        # Setup Included Indexes and the Real and Imaginary Number Spaces
+        ZoomableComplexRange.initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin,
+                                       imaginaryNumberMax)
 
         # Calculate C Value and Initial Z Values
         cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
@@ -63,25 +56,16 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer)
         zValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
         zValues = numpy.add(zValues, self._realNumberValues)
 
-        # Initialize Image Array
-        imageArray = numpy.zeros(zValues.shape, dtype=int)
-        imageArray = numpy.add(imageArray, -1)
+        self._zValues = zValues
+        self._cValue = cValue
 
         # Initialize Image Cache
-        CachedImageRenderer.initialize(self, colorMap)
+        CachedImageRenderer.initialize(self, width, height, zValues.shape, colorMap)
         
-        self._width = width
-        self._height = height
         self._constantRealNumber = constantRealNumber
         self._constantImaginaryNumber = constantImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
-
-        self._xIndexes = xIndexes
-        self._yIndexes = yIndexes
-        self._zValues = zValues
-        self._cValue = cValue
-        self._imageArray = imageArray
 
     def reinitialize(self):
         self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,

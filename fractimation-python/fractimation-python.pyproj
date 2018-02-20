@@ -37,16 +37,22 @@
     <Compile Include="renderers\base\cachedPatchCollectionRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\zoomableComplexPolynomialRenderer.py">
+    <Compile Include="renderers\functionality\zoomableComplexRange.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\base\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\collatzFractalRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\fibonacciSquareRenderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\base\cachedRenderer.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="renderers\functionality\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\goldenSpiralRenderer.py">
@@ -83,12 +89,12 @@
     <Compile Include="ui\zoomHandler.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="helpers\" />
     <Folder Include="renderers\" />
     <Folder Include="renderers\base\" />
+    <Folder Include="renderers\functionality\" />
     <Folder Include="ui\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

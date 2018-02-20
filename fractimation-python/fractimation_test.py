@@ -54,7 +54,7 @@ realNumberMin, realNumberMax = -10, 10                 # Min & Max values for X 
 imaginaryNumberMin, imaginaryNumberMax = -10, 10       # Min & Max values for Y values in fractal equation
 constantRealNumber, constantImaginaryNumber = 1.0, 0.0 # Constant C value
 coefficientArray = [ -1, 0, 0, 0, 1 ]                  # Representation of polynomial equation coefficients in accending order (ie. c + x + x**2 + ... + x**n)
-escapeValue = 1e-6
+escapeValue = 1e-4
 newtonFractal = NewtonFractalRenderer(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                                       coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap)
 newtonZoomHandler = ZoomHandler(newtonFractal, newtonFractalViewer)

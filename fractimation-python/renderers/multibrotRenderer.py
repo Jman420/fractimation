@@ -22,27 +22,19 @@
 import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
-from .base.zoomableComplexPolynomialRenderer import ZoomableComplexPolynomialRenderer
+from .functionality.zoomableComplexRange import ZoomableComplexRange
 from helpers.renderHelper import recolorUnexplodedIndexes
 from helpers.fractalAlgorithmHelper import removeIndexes
 
 DEFAULT_COLOR_MAP = "viridis"
 
-class MultibrotRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
+class MultibrotRenderer(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Multibrot Sets"""
 
-    _width = _height = None
     _initialRealNumber = _initialImaginaryNumber = None
     _power = _escapeValue = None
-    _minRealNumber = _maxRealNumber = None
-    _minImaginaryNumber = _maxImaginaryNumber = None
 
-    _xIndexes = _yIndexes = None
-    _realNumberValues = _imaginaryNumberValues = None
     _zValues = _cValues = None
-
-    _imageArray = None
-    _colorMap = _zoomCache = None
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                 initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
@@ -53,12 +45,9 @@ class MultibrotRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                   initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
-        # Prepare Image Location Indexes included for calculation
-        xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
-        
-        # Setup Real and Imaginary Number Spaces
-        ZoomableComplexPolynomialRenderer.initialize(self, xIndexes, yIndexes, width, height, realNumberMin,
-                                                    realNumberMax, imaginaryNumberMin, imaginaryNumberMax)
+        # Setup Included Indexes and the Real and Imaginary Number Spaces
+        ZoomableComplexRange.initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin,
+                                       imaginaryNumberMax)
 
         # Calculate C Values and Initial Z Value
         cValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
@@ -66,25 +55,16 @@ class MultibrotRenderer(CachedImageRenderer, ZoomableComplexPolynomialRenderer):
 
         zValues = numpy.add(numpy.complex(initialRealNumber, initialImaginaryNumber), cValues)
 
-        # Initialize Image Array
-        imageArray = numpy.zeros(cValues.shape, dtype=int)
-        imageArray = numpy.add(imageArray, -1)
+        self._zValues = zValues
+        self._cValues = cValues
 
         # Initialize Image Cache
-        CachedImageRenderer.initialize(self, colorMap)
+        CachedImageRenderer.initialize(self, width, height, cValues.shape, colorMap)
         
-        self._width = width
-        self._height = height
         self._initialRealNumber = initialRealNumber
         self._initialImaginaryNumber = initialImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
-
-        self._xIndexes = xIndexes
-        self._yIndexes = yIndexes
-        self._zValues = zValues
-        self._cValues = cValues
-        self._imageArray = imageArray
 
     def reinitialize(self):
         self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
