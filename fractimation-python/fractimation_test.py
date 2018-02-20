@@ -50,8 +50,8 @@ multijuliaFractal.preheatRenderCache(maxIterations)
 
 # Newton Fractal
 newtonFractalViewer = PlotPlayer("Newton Fractal")
-realNumberMin, realNumberMax = -10, 10                 # Min & Max values for X values in fractal equation
-imaginaryNumberMin, imaginaryNumberMax = -10, 10       # Min & Max values for Y values in fractal equation
+realNumberMin, realNumberMax = -5, 5                 # Min & Max values for X values in fractal equation
+imaginaryNumberMin, imaginaryNumberMax = -5, 5       # Min & Max values for Y values in fractal equation
 constantRealNumber, constantImaginaryNumber = 1.0, 0.0 # Constant C value
 coefficientArray = [ -1, 0, 0, 0, 1 ]                  # Representation of polynomial equation coefficients in accending order (ie. c + x + x**2 + ... + x**n)
 escapeValue = 1e-4
