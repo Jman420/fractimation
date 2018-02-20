@@ -5,7 +5,7 @@ RIGHT_MOUSE_BUTTON = 3
 
 def restartPlayback(viewer):
     viewer.stop()
-    viewer._animationAxes.autoscale(True)
+    viewer._renderHandler._animationAxes.autoscale(True)
     viewer.render(0)
     viewer.play()
 
