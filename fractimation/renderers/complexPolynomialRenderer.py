@@ -2,9 +2,8 @@ import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
 from .functionality.zoomableComplexRange import ZoomableComplexRange
-from helpers.fractalAlgorithmHelper import evaluatePolynomial1D
-from helpers.renderHelper import recolorUnexplodedIndexes
-from helpers.fractalAlgorithmHelper import removeIndexes
+from ..helpers.fractalAlgorithmHelper import evaluatePolynomial1D, removeIndexes
+from ..helpers.renderHelper import recolorUnexplodedIndexes
 
 class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Generic Complex Polynomial Equations"""
@@ -16,7 +15,8 @@ class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexRange):
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                  coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap = "viridis"):
-        super().__init__()
+        CachedImageRenderer.__init__(self)
+        ZoomableComplexRange.__init__(self)
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                         coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap)

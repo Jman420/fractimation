@@ -23,7 +23,8 @@ import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
 from .functionality.zoomableComplexRange import ZoomableComplexRange
-from ..helpers import renderHelper, fractalAlgorithmHelper
+from ..helpers.fractalAlgorithmHelper import removeIndexes, multibrotAlgorithm
+from ..helpers.renderHelper import recolorUnexplodedIndexes
 
 DEFAULT_COLOR_MAP = "viridis"
 
@@ -37,7 +38,8 @@ class MultibrotRenderer(CachedImageRenderer, ZoomableComplexRange):
 
     def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                 initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
-        self._zoomCache = [ ]
+        CachedImageRenderer.__init__(self)
+        ZoomableComplexRange.__init__(self)
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
                        initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap)
@@ -83,14 +85,14 @@ class MultibrotRenderer(CachedImageRenderer, ZoomableComplexRange):
             return
 
         # Apply Multibrot Algorithm
-        zValuesNew = fractalAlgorithmHelper.multibrotAlgorithm(self._zValues, self._cValues, self._power)
+        zValuesNew = multibrotAlgorithm(self._zValues, self._cValues, self._power)
 
         # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
         # Recolor Indexes which have not exceeded the Escape Value
-        recoloredImage = renderHelper.recolorUnexplodedIndexes(self._imageArray, -1, self._nextIterationIndex + 1)
+        recoloredImage = recolorUnexplodedIndexes(self._imageArray, -1, self._nextIterationIndex + 1)
         finalImage = recoloredImage.T
 
         # Update cache and prepare for next iteration
@@ -99,6 +101,5 @@ class MultibrotRenderer(CachedImageRenderer, ZoomableComplexRange):
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes,
-        self._zValues, self._cValues = fractalAlgorithmHelper.removeIndexes([ self._xIndexes, self._yIndexes, zValuesNew,
+        self._xIndexes, self._yIndexes, self._zValues, self._cValues = removeIndexes([ self._xIndexes, self._yIndexes, zValuesNew,
                                                                             self._cValues ], remainingIndexes)

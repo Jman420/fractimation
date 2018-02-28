@@ -5,8 +5,8 @@ RIGHT_MOUSE_BUTTON = 3
 
 def restartPlayback(viewer):
     viewer.stop()
-    viewer._renderHandler._animationAxes.autoscale(True)
-    viewer.render(0)
+    viewer.get_render_manager().get_animation_axes().autoscale(True)
+    viewer.get_animation_manager().render(0)
     viewer.play()
 
 class ZoomHandler(object):
@@ -23,12 +23,13 @@ class ZoomHandler(object):
         self._renderer = renderer
         self._viewer = viewer
 
-        self._zoomBox = widgets.RectangleSelector(self._viewer.getAnimationAxes(), self.selectZoomCoords,
+        self._zoomBox = widgets.RectangleSelector(self._viewer.get_render_manager().get_animation_axes(), self.selectZoomCoords,
                                                   useblit=True, minspanx=minZoomWidth, minspany=minZoomHeight,
                                                   button=[ LEFT_MOUSE_BUTTON ], interactive=True)
 
-        viewer._figure.canvas.mpl_connect('button_press_event', self.handleMouseButtonPress)
-        viewer._figure.canvas.mpl_connect('button_release_event', self.handleMouseButtonRelease)
+        figure = viewer.get_window_manager().get_figure()
+        figure.canvas.mpl_connect('button_press_event', self.handleMouseButtonPress)
+        figure.canvas.mpl_connect('button_release_event', self.handleMouseButtonRelease)
 
     def selectZoomCoords(self, startCoords, endCoords):
         startX = int(max(startCoords.xdata, 0))
@@ -59,7 +60,7 @@ class ZoomHandler(object):
             self.confirmZoomCoords()
 
     def handleMouseButtonRelease(self, eventData):
-        if self._viewer._figure.canvas.toolbar.mode == "pan/zoom":
+        if self._viewer.get_window_manager().get_figure().canvas.toolbar.mode == "pan/zoom":
             return
 
         if eventData.button == RIGHT_MOUSE_BUTTON:

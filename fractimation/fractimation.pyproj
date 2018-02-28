@@ -5,13 +5,15 @@
     <ProjectGuid>4cb95bbf-a21f-468c-9905-b699abc7f5cf</ProjectGuid>
     <ProjectHome>
     </ProjectHome>
-    <StartupFile>fractimation_test.py</StartupFile>
+    <StartupFile>
+    </StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>fractimation</Name>
     <RootNamespace>fractimation</RootNamespace>
+    <InterpreterId>MSBuild|env|$(MSBuildProjectFullPath)</InterpreterId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -64,7 +66,6 @@
     <Compile Include="renderers\multibrotRenderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="fractimation_test.py" />
     <Compile Include="renderers\multijuliaRenderer.py">
       <SubType>Code</SubType>
     </Compile>
@@ -100,6 +101,17 @@
     <Folder Include="renderers\base\" />
     <Folder Include="renderers\functionality\" />
     <Folder Include="ui\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include="env\">
+      <Id>env</Id>
+      <Version>3.6</Version>
+      <Description>env (Python 3.6 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+      <Architecture>X64</Architecture>
+    </Interpreter>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

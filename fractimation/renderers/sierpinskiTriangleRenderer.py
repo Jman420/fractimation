@@ -3,7 +3,7 @@
 import numpy
 
 from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-import helpers.renderHelper as renderHelper
+from ..helpers import renderHelper
 
 LAST_VERTEX_INDEX = 2
 FIRST_VERTEX_INDEX = 0

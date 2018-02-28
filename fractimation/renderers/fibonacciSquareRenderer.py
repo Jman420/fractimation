@@ -4,8 +4,8 @@
 import numpy
 
 from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-import helpers.renderHelper as renderHelper
-from helpers.fractalAlgorithmHelper import getFibonocciNumber
+from ..helpers import renderHelper
+from ..helpers.fractalAlgorithmHelper import getFibonocciNumber
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1

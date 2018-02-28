@@ -5,7 +5,7 @@ import numpy
 import numpy.polynomial.polynomial as numpynomial
 
 from .complexPolynomialRenderer import ComplexPolynomialRenderer
-from ..helpers import fractalAlgorithmHelper
+from ..helpers.fractalAlgorithmHelper import evaluatePolynomial1D, removeIndexes
 
 class NewtonFractalRenderer(ComplexPolynomialRenderer):
     """Fractal Renderer for Newton Method Fractals"""
@@ -14,6 +14,10 @@ class NewtonFractalRenderer(ComplexPolynomialRenderer):
 
     def __init__(self, width, height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
                 coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap = 'viridis'):
+        ComplexPolynomialRenderer.__init__(self, width, height, minRealNumber, maxRealNumber, minImaginaryNumber,
+                                           maxImaginaryNumber, coefficientArray, constantRealNumber,
+                                           constantImaginaryNumber, escapeValue, colorMap)
+
         self.initialize(width, height, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber,
                   coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap)
     

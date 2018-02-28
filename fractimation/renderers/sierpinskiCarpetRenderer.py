@@ -3,7 +3,7 @@
 import numpy
 
 from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-import helpers.renderHelper as renderHelper
+from ..helpers import renderHelper
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
