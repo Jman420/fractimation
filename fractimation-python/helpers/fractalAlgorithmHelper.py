@@ -7,6 +7,27 @@ def getFibonocciNumber(index):
 
     return int(round((PHI**index - (1 - PHI)**index) / 5**0.5))
 
+def multibrotAlgorithm(zValues, cValues, power):
+    # Calculate exponent piece of Multibrot Equation
+    zValuesNew = numpy.copy(zValues)
+    exponentValue = numpy.copy(zValues)
+    for exponentCounter in range(0, power - 1):
+        zValuesNew = numpy.multiply(exponentValue, zValuesNew)
+
+    # Add C piece of Multibrot Equation
+    zValuesNew = numpy.add(zValuesNew, cValues)
+    return zValuesNew
+
+def newtonMethodAlgorithm(coefficientArray, zValues, cValues):
+    coefficientFuncValues = evaluatePolynomial1D(coefficientArray, zValues, cValue)
+    coefficientDerivFuncValues = evaluatePolynomial1D(coefficientArrayDeriv, zValues, cValue)
+    funcValues = numpy.divide(coefficientFuncValues, coefficientDerivFuncValues)
+
+    zValuesNew = numpy.add(zValues, -funcValues)
+    iterationDiff = numpy.add(zValues, -zValuesNew)
+
+    return iterationDiff, zValuesNew
+
 # polynomialExpressionArray is an array in the format of increasing order; 
 #   ie. [ 1, 2, 3 ] = c + 2z + 3z**2 ; [ 4, 0, 1, 0, 5 ] = 4c + z**2 + 5z**4
 def evaluatePolynomial1D(coefficientArray, zValues, cValues):

@@ -9,7 +9,7 @@ from .base.cachedImageRenderer import CachedImageRenderer
 from .functionality.zoomableComplexRange import ZoomableComplexRange
 
 # z = (2 + 7z - (2 + 5z) * cos(pi * z)) / 4
-def collatzConjecture(zValues):
+def collatzConjectureAlgorithm(zValues, cValues):
     twoPlusFiveZ = numpy.add(numpy.multiply(zValues, 5), 2)
     cosPiZ = numpy.cos(numpy.multiply(zValues, numpy.pi))
     
