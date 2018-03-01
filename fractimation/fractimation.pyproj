@@ -24,7 +24,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="helpers\fractalAlgorithmHelper.py">
+    <Compile Include="helpers\fractalAlgorithm.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\__init__.py">
@@ -69,7 +69,7 @@
     <Compile Include="renderers\multijulia.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="helpers\renderHelper.py">
+    <Compile Include="helpers\render.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\newtonFractal.py">

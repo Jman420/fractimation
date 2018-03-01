@@ -5,7 +5,7 @@ import numpy
 import numpy.polynomial.polynomial as numpynomial
 
 from .complexPolynomial import ComplexPolynomial
-from ..helpers.fractalAlgorithmHelper import evaluatePolynomial1D, removeIndexes
+from ..helpers.fractalAlgorithm import evaluatePolynomial1D, removeIndexes
 
 class NewtonFractal(ComplexPolynomial):
     """Fractal Renderer for Newton Method Fractals"""

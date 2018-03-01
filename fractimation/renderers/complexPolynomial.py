@@ -2,8 +2,8 @@ import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
 from .functionality.zoomableComplexRange import ZoomableComplexRange
-from ..helpers.fractalAlgorithmHelper import evaluatePolynomial1D, removeIndexes
-from ..helpers.renderHelper import recolorUnexplodedIndexes
+from ..helpers.fractalAlgorithm import evaluatePolynomial1D, removeIndexes
+from ..helpers.render import recolorUnexplodedIndexes
 
 class ComplexPolynomial(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Generic Complex Polynomial Equations"""

@@ -4,8 +4,8 @@
 import numpy
 
 from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-from ..helpers import renderHelper
-from ..helpers.fractalAlgorithmHelper import getFibonocciNumber
+from ..helpers.render import buildWedge, buildPatchCollection
+from ..helpers.fractalAlgorithm import getFibonocciNumber
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -37,7 +37,7 @@ class GoldenSpiral(CachedPatchCollectionRenderer):
         self._nextWedgeAngles = numpy.array(INITIAL_ANGLES)
         self._nextMoveMode = 1
 
-        emptyPatches = renderHelper.buildPatchCollection([ ])
+        emptyPatches = buildPatchCollection([ ])
         self._renderCache.update({ 0 : emptyPatches })
 
         self._nextIterationIndex = 1
@@ -64,9 +64,9 @@ class GoldenSpiral(CachedPatchCollectionRenderer):
 
         self._nextWedgeLocation = wedgeLocation + moveDeviation
         lineWidth = self._lineWidths[self._nextIterationIndex]
-        newWedge = renderHelper.buildWedge(self._nextWedgeLocation[X_VALUE_INDEX], self._nextWedgeLocation[Y_VALUE_INDEX], currentFibNumber,
+        newWedge = buildWedge(self._nextWedgeLocation[X_VALUE_INDEX], self._nextWedgeLocation[Y_VALUE_INDEX], currentFibNumber,
                               self._nextWedgeAngles[THETA1_INDEX], self._nextWedgeAngles[THETA2_INDEX], lineWidth)
-        patchCollection = renderHelper.buildPatchCollection([ newWedge ])
+        patchCollection = buildPatchCollection([ newWedge ])
         self._renderCache.update({ self._nextIterationIndex : patchCollection })
 
         self._nextIterationIndex += 1

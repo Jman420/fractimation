@@ -23,8 +23,8 @@ import numpy
 
 from .base.cachedImageRenderer import CachedImageRenderer
 from .functionality.zoomableComplexRange import ZoomableComplexRange
-from ..helpers.fractalAlgorithmHelper import removeIndexes, multibrotAlgorithm
-from ..helpers.renderHelper import recolorUnexplodedIndexes
+from ..helpers.fractalAlgorithm import removeIndexes, multibrotAlgorithm
+from ..helpers.render import recolorUnexplodedIndexes
 
 DEFAULT_COLOR_MAP = "viridis"
 

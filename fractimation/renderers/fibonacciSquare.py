@@ -4,8 +4,8 @@
 import numpy
 
 from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-from ..helpers import renderHelper
-from ..helpers.fractalAlgorithmHelper import getFibonocciNumber
+from ..helpers.render import buildSquare, buildPatchCollection
+from ..helpers.fractalAlgorithm import getFibonocciNumber
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -28,7 +28,7 @@ class FibonacciSquare(CachedPatchCollectionRenderer):
         self._lineWidths = lineWidths
         self._sizeScalar = sizeScalar
         
-        emptyPatches = renderHelper.buildPatchCollection([ ])
+        emptyPatches = buildPatchCollection([ ])
         self._renderCache.update({ 0 : emptyPatches })
 
         self._nextIterationIndex = 1
@@ -56,8 +56,8 @@ class FibonacciSquare(CachedPatchCollectionRenderer):
 
         self._nextSquareLocation = squareLocation + moveDeviation
         lineWidth = self._lineWidths[self._nextIterationIndex]
-        newSquare = renderHelper.buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
-        patchCollection = renderHelper.buildPatchCollection([ newSquare ])
+        newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
+        patchCollection = buildPatchCollection([ newSquare ])
         self._renderCache.update({ self._nextIterationIndex : patchCollection })
 
         self._nextIterationIndex += 1
