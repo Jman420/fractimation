@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .cachedRenderer import CachedRenderer
+from .cached_renderer import CachedRenderer
 
 class CachedPatchCollectionRenderer(CachedRenderer, ABC):
     """Base class for Fratal Renderers using Matpotlib PatchCollections for rendering"""

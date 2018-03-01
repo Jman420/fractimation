@@ -24,43 +24,46 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="helpers\fractalAlgorithm.py">
+    <Compile Include="helpers\fractal_algorithm.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\list_tools.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\fractimationRenderer.py">
+    <Compile Include="renderers\base\fractimation_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\cachedImageRenderer.py">
+    <Compile Include="renderers\base\cached_image_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\cachedPatchCollectionRenderer.py">
+    <Compile Include="renderers\base\cached_patch_collection_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\functionality\zoomableComplexRange.py">
+    <Compile Include="renderers\functionality\zoomable_complex_range.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\base\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\collatzFractal.py">
+    <Compile Include="renderers\collatz_fractal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\fibonacciSquare.py">
+    <Compile Include="renderers\fibonacci_square.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\cachedRenderer.py">
+    <Compile Include="renderers\base\cached_renderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\functionality\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\formulaBasedFractal.py">
+    <Compile Include="renderers\formula_based_fractal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\goldenSpiral.py">
+    <Compile Include="renderers\golden_spiral.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\multibrot.py">
@@ -72,25 +75,25 @@
     <Compile Include="helpers\render.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\newtonFractal.py">
+    <Compile Include="renderers\newton_fractal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\complexPolynomial.py">
+    <Compile Include="renderers\complex_polynomial.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\sierpinskiCarpet.py">
+    <Compile Include="renderers\sierpinski_carpet.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\sierpinskiTriangle.py">
+    <Compile Include="renderers\sierpinski_triangle.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ui\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\zoomHandler.py">
+    <Compile Include="ui\zoom_handler.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="__init__.py" />

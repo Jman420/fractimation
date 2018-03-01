@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 import numpy
 
-from .cachedRenderer import CachedRenderer
+from .cached_renderer import CachedRenderer
 
 class CachedImageRenderer(CachedRenderer, ABC):
     """Base class for Fractal Renderers using Image Arrays for rendering"""

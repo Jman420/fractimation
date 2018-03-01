@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from .fractimationRenderer import FractimationRenderer
+from .fractimation_renderer import FractimationRenderer
 
 class CachedRenderer(FractimationRenderer, ABC):
     """Base class for Cached Fractal Renderers"""

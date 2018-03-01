@@ -1,4 +1,4 @@
-from .base.cachedImageRenderer import CachedImageRenderer
+from .base.cached_image_renderer import CachedImageRenderer
 
 class formulaBasedFractal(CachedImageRenderer):
     """description of class"""

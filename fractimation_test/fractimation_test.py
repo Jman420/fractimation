@@ -7,13 +7,13 @@ from plotplayer.managers.window_manager import WindowManager
 
 from fractimation.renderers.multibrot import Multibrot
 from fractimation.renderers.multijulia import Multijulia
-from fractimation.renderers.sierpinskiTriangle import SierpinskiTriangle
-from fractimation.renderers.sierpinskiCarpet import SierpinskiCarpet
-from fractimation.renderers.fibonacciSquare import FibonacciSquare
-from fractimation.renderers.goldenSpiral import GoldenSpiral
-from fractimation.renderers.newtonFractal import NewtonFractal
+from fractimation.renderers.sierpinski_triangle import SierpinskiTriangle
+from fractimation.renderers.sierpinski_carpet import SierpinskiCarpet
+from fractimation.renderers.fibonacci_square import FibonacciSquare
+from fractimation.renderers.golden_spiral import GoldenSpiral
+from fractimation.renderers.newton_fractal import NewtonFractal
 
-from fractimation.ui.zoomHandler import ZoomHandler
+from fractimation.ui.zoom_handler import ZoomHandler
 
 # General Brot & Julia Fractal Parameters
 width, height = 1280, 720                              # Width and Height of the image

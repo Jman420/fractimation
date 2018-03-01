@@ -3,9 +3,9 @@
 
 import numpy
 
-from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-from ..helpers.render import buildSquare, buildPatchCollection
-from ..helpers.fractalAlgorithm import getFibonocciNumber
+from .base.cached_patch_collection_renderer import CachedPatchCollectionRenderer
+from ..helpers.render import build_square, build_patch_collection
+from ..helpers.fractal_algorithm import get_fibonocci_number
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -28,7 +28,7 @@ class FibonacciSquare(CachedPatchCollectionRenderer):
         self._lineWidths = lineWidths
         self._sizeScalar = sizeScalar
         
-        emptyPatches = buildPatchCollection([ ])
+        emptyPatches = build_patch_collection([ ])
         self._renderCache.update({ 0 : emptyPatches })
 
         self._nextIterationIndex = 1
@@ -40,11 +40,11 @@ class FibonacciSquare(CachedPatchCollectionRenderer):
         super().preheatRenderCache(maxIterations)
 
     def iterate(self):
-        currentFibNumber = getFibonocciNumber(self._nextIterationIndex) * self._sizeScalar
+        currentFibNumber = get_fibonocci_number(self._nextIterationIndex) * self._sizeScalar
         squareLocation = self._nextSquareLocation
 
-        secondPrevFibNum = getFibonocciNumber(self._nextIterationIndex - 2) * self._sizeScalar
-        prevFibNum = getFibonocciNumber(self._nextIterationIndex - 1) * self._sizeScalar
+        secondPrevFibNum = get_fibonocci_number(self._nextIterationIndex - 2) * self._sizeScalar
+        prevFibNum = get_fibonocci_number(self._nextIterationIndex - 1) * self._sizeScalar
         if self._nextMoveMode == 1:
             moveDeviation = [ -secondPrevFibNum, prevFibNum ]
         elif self._nextMoveMode == 2:
@@ -56,8 +56,8 @@ class FibonacciSquare(CachedPatchCollectionRenderer):
 
         self._nextSquareLocation = squareLocation + moveDeviation
         lineWidth = self._lineWidths[self._nextIterationIndex]
-        newSquare = buildSquare(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
-        patchCollection = buildPatchCollection([ newSquare ])
+        newSquare = build_square(self._nextSquareLocation[X_VALUE_INDEX], self._nextSquareLocation[Y_VALUE_INDEX], currentFibNumber, lineWidth)
+        patchCollection = build_patch_collection([ newSquare ])
         self._renderCache.update({ self._nextIterationIndex : patchCollection })
 
         self._nextIterationIndex += 1

@@ -5,8 +5,8 @@
 
 import numpy
 
-from .base.cachedImageRenderer import CachedImageRenderer
-from .functionality.zoomableComplexRange import ZoomableComplexRange
+from .base.cached_image_renderer import CachedImageRenderer
+from .functionality.zoomable_complex_range import ZoomableComplexRange
 
 # z = (2 + 7z - (2 + 5z) * cos(pi * z)) / 4
 def collatzConjectureAlgorithm(zValues, cValues):

@@ -1,13 +1,13 @@
 import numpy
 
 PHI = (1 + 5**0.5) / 2.0
-def getFibonocciNumber(index):
+def get_fibonocci_number(index):
     if index < 2:
         return index
 
     return int(round((PHI**index - (1 - PHI)**index) / 5**0.5))
 
-def multibrotAlgorithm(zValues, cValues, power):
+def multibrot_algorithm(zValues, cValues, power):
     # Calculate exponent piece of Multibrot Equation
     zValuesNew = numpy.copy(zValues)
     exponentValue = numpy.copy(zValues)
@@ -18,9 +18,9 @@ def multibrotAlgorithm(zValues, cValues, power):
     zValuesNew = numpy.add(zValuesNew, cValues)
     return zValuesNew
 
-def newtonMethodAlgorithm(coefficientArray, zValues, cValues):
-    coefficientFuncValues = evaluatePolynomial1D(coefficientArray, zValues, cValue)
-    coefficientDerivFuncValues = evaluatePolynomial1D(coefficientArrayDeriv, zValues, cValue)
+def newton_method_algorithm(coefficientArray, coefficientArrayDerivative, zValues, cValues):
+    coefficientFuncValues = evaluate_polynomial_1d(coefficientArray, zValues, cValues)
+    coefficientDerivFuncValues = evaluate_polynomial_1d(coefficientArrayDerivative, zValues, cValues)
     funcValues = numpy.divide(coefficientFuncValues, coefficientDerivFuncValues)
 
     zValuesNew = numpy.add(zValues, -funcValues)
@@ -30,7 +30,7 @@ def newtonMethodAlgorithm(coefficientArray, zValues, cValues):
 
 # polynomialExpressionArray is an array in the format of increasing order; 
 #   ie. [ 1, 2, 3 ] = c + 2z + 3z**2 ; [ 4, 0, 1, 0, 5 ] = 4c + z**2 + 5z**4
-def evaluatePolynomial1D(coefficientArray, zValues, cValues):
+def evaluate_polynomial_1d(coefficientArray, zValues, cValues):
     # Calculate Polynomial Constant Expression
     constantCoefficient = coefficientArray[0]
     constantValues = cValues * constantCoefficient
@@ -50,11 +50,3 @@ def evaluatePolynomial1D(coefficientArray, zValues, cValues):
     zValuesNew = zValuesNew + constantValues
 
     return zValuesNew
-
-def removeIndexes(originalArrays, remainingIndexes):
-    returnArray = [ ]
-    for array in originalArrays:
-        newArray = array[remainingIndexes]
-        returnArray.append(newArray)
-
-    return returnArray

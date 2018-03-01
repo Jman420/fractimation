@@ -2,8 +2,8 @@
 
 import numpy
 
-from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-from ..helpers.render import buildRectangle, buildPatchCollection
+from .base.cached_patch_collection_renderer import CachedPatchCollectionRenderer
+from ..helpers.render import build_rectangle, build_patch_collection
 
 X_VALUE_INDEX = 0
 Y_VALUE_INDEX = 1
@@ -83,11 +83,11 @@ class SierpinskiCarpet(CachedPatchCollectionRenderer):
 
         initialPatches = [ ]
         for eligibleRect in eligibleRects:
-            newPatch = buildRectangle(eligibleRect[X_VALUE_INDEX], eligibleRect[Y_VALUE_INDEX],
+            newPatch = build_rectangle(eligibleRect[X_VALUE_INDEX], eligibleRect[Y_VALUE_INDEX],
                                                    eligibleRect[WIDTH_INDEX], eligibleRect[HEIGHT_INDEX], lineWidths[0])
             initialPatches.append(newPatch)
 
-        initialPatchCollection = buildPatchCollection(initialPatches)
+        initialPatchCollection = build_patch_collection(initialPatches)
         self._renderCache.update({ 0 : initialPatchCollection })
 
         self._nextIterationIndex = 1
@@ -104,11 +104,11 @@ class SierpinskiCarpet(CachedPatchCollectionRenderer):
         subdivisions = calculateSubdivisions(self._eligibleRects)
         lineWidth = self._lineWidths[self._nextIterationIndex]
         for newRect in subdivisions:
-            newPatch = buildRectangle(newRect[X_VALUE_INDEX], newRect[Y_VALUE_INDEX],
+            newPatch = build_rectangle(newRect[X_VALUE_INDEX], newRect[Y_VALUE_INDEX],
                                                    newRect[WIDTH_INDEX], newRect[HEIGHT_INDEX], lineWidth)
             newRectanglePatches.append(newPatch)
 
-        iterationPatchCollection = buildPatchCollection(newRectanglePatches)
+        iterationPatchCollection = build_patch_collection(newRectanglePatches)
         self._renderCache.update({ self._nextIterationIndex : iterationPatchCollection })
 
         self._eligibleRects = subdivisions

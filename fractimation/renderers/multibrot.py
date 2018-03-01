@@ -21,10 +21,10 @@
 
 import numpy
 
-from .base.cachedImageRenderer import CachedImageRenderer
-from .functionality.zoomableComplexRange import ZoomableComplexRange
-from ..helpers.fractalAlgorithm import removeIndexes, multibrotAlgorithm
-from ..helpers.render import recolorUnexplodedIndexes
+from .base.cached_image_renderer import CachedImageRenderer
+from .functionality.zoomable_complex_range import ZoomableComplexRange
+from ..helpers.fractal_algorithm import multibrot_algorithm
+from ..helpers.list_tools import update_indexes_with_value, remove_indexes
 
 DEFAULT_COLOR_MAP = "viridis"
 
@@ -85,14 +85,14 @@ class Multibrot(CachedImageRenderer, ZoomableComplexRange):
             return
 
         # Apply Multibrot Algorithm
-        zValuesNew = multibrotAlgorithm(self._zValues, self._cValues, self._power)
+        zValuesNew = multibrot_algorithm(self._zValues, self._cValues, self._power)
 
         # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
         self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
 
         # Recolor Indexes which have not exceeded the Escape Value
-        recoloredImage = recolorUnexplodedIndexes(self._imageArray, -1, self._nextIterationIndex + 1)
+        recoloredImage = update_indexes_with_value(self._imageArray, -1, self._nextIterationIndex + 1)
         finalImage = recoloredImage.T
 
         # Update cache and prepare for next iteration
@@ -101,5 +101,5 @@ class Multibrot(CachedImageRenderer, ZoomableComplexRange):
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes, self._zValues, self._cValues = removeIndexes([ self._xIndexes, self._yIndexes, zValuesNew,
+        self._xIndexes, self._yIndexes, self._zValues, self._cValues = remove_indexes([ self._xIndexes, self._yIndexes, zValuesNew,
                                                                             self._cValues ], remainingIndexes)

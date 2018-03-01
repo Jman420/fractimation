@@ -4,8 +4,9 @@
 import numpy
 import numpy.polynomial.polynomial as numpynomial
 
-from .complexPolynomial import ComplexPolynomial
-from ..helpers.fractalAlgorithm import evaluatePolynomial1D, removeIndexes
+from .complex_polynomial import ComplexPolynomial
+from ..helpers.fractal_algorithm import newton_method_algorithm
+from ..helpers.list_tools import remove_indexes
 
 class NewtonFractal(ComplexPolynomial):
     """Fractal Renderer for Newton Method Fractals"""
@@ -41,11 +42,10 @@ class NewtonFractal(ComplexPolynomial):
             return
         
         # Perform Newton Method
-        coefficientFuncValues = evaluatePolynomial1D(self._coefficientArray, self._zValues, self._cValue)
-        coefficientDerivFuncValues = evaluatePolynomial1D(self._coefficientArrayDeriv, self._zValues, self._cValue)
-        funcValues = numpy.divide(coefficientFuncValues, coefficientDerivFuncValues)
-        zValuesNew = numpy.add(self._zValues, -funcValues)
-        iterationDiff = numpy.add(self._zValues, -zValuesNew)
+        iterationDiff, zValuesNew = newton_method_algorithm(self._coefficientArray, 
+                                                            self._coefficientArrayDeriv,
+                                                            self._zValues,
+                                                            self._cValue)
 
         # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(iterationDiff) < self._escapeValue
@@ -58,5 +58,5 @@ class NewtonFractal(ComplexPolynomial):
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes, self._zValues = removeIndexes([ self._xIndexes, self._yIndexes, zValuesNew ],
+        self._xIndexes, self._yIndexes, self._zValues = remove_indexes([ self._xIndexes, self._yIndexes, zValuesNew ],
                                                                      remainingIndexes)

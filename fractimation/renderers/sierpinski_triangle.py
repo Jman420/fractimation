@@ -2,8 +2,8 @@
 
 import numpy
 
-from .base.cachedPatchCollectionRenderer import CachedPatchCollectionRenderer
-from ..helpers.render import buildTriangle, buildPatchCollection
+from .base.cached_patch_collection_renderer import CachedPatchCollectionRenderer
+from ..helpers.render import build_triangle, build_patch_collection
 
 LAST_VERTEX_INDEX = 2
 FIRST_VERTEX_INDEX = 0
@@ -63,11 +63,11 @@ class SierpinskiTriangle(CachedPatchCollectionRenderer):
 
         initialPatches = [ ]
         for eligibleTriangle in self._eligibleVertices:
-            newPatch = buildTriangle(eligibleTriangle, lineWidth=lineWidths[0])
+            newPatch = build_triangle(eligibleTriangle, lineWidth=lineWidths[0])
             initialPatches.append(newPatch)
 
         self._renderCache = { }
-        initialPatchCollection = buildPatchCollection(initialPatches)
+        initialPatchCollection = build_patch_collection(initialPatches)
         self._renderCache.update({ 0 : initialPatchCollection })
 
         self._cacheAddedToAxes = False
@@ -86,10 +86,10 @@ class SierpinskiTriangle(CachedPatchCollectionRenderer):
         newSubdivisions = calculateSubdivisions(self._eligibleVertices)
         lineWidth = self._lineWidths[self._nextIterationIndex]
         for triangleVertices in newSubdivisions:
-            newPatch = buildTriangle(triangleVertices, lineWidth)
+            newPatch = build_triangle(triangleVertices, lineWidth)
             newTrianglePatches.append(newPatch)
 
-        iterationPatchCollection = buildPatchCollection(newTrianglePatches)
+        iterationPatchCollection = build_patch_collection(newTrianglePatches)
         self._renderCache.update({ self._nextIterationIndex : iterationPatchCollection })
 
         self._eligibleVertices = newSubdivisions
