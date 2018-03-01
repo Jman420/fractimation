@@ -1,24 +1,23 @@
 # Algorithm modified from : https://thesamovar.wordpress.com/2009/03/22/fast-fractals-with-python-and-numpy/
-#                           http://www.relativitybook.com/CoolStuff/julia_set.html
-# Multi-Julia Fractal Definitions :
-#  C = complex(constantRealNumber, constantImaginaryNumber)
-#  Z = Z**power + C
-#  Z0 = realNumber + imaginaryNumber
-# Multi-Julia Rendering Instructions :
+# Multibrot Fractal Definitions : 
+#   C = realNumber + imaginaryNumber
+#   Z = Z**power + C
+#   Z0 = complex(initialRealNumber, initialImaginaryNumber) + C
+# Multibrot Rendering Instructions :
 #   - Map range of real and imaginary number values evenly to the image x and y pixel coordinates
 #   - For each iteration 
 #     * For each unexploded pixel in the image
 #       @ Retrieve associated real and imaginary number values for pixel coordinates
-#       @ Perform provided Multi-Julia equation variant
+#       @ Perform provided Multibrot equation variant
 #       @ Set pixel value equal to number of iterations for Z to exceed the Escape Value
 #     * Remove exploded pixel coordinates from calculation indexes
 
-# Julia Set Parameters
-#realNumberMin, realNumberMax = -1.5, 1.5
-#imaginaryNumberMin, imaginaryNumberMax = -1.5, 1.5
-#constantRealNumber, constantImaginaryNumber = any values between -1 and 1
+# Mandelbrot Parameters :
+#realNumberMin, realNumberMax = -2.0, 0.5
+#imaginaryNumberMin, imaginaryNumberMax = -1.25, 1.25
+#constantRealNumber, constantImaginaryNumber = 0, 0
 #power = 2
-#escapeValue = 10.0
+#escapeValue = 2.0
 
 import numpy
 
@@ -29,52 +28,52 @@ from ..helpers.renderHelper import recolorUnexplodedIndexes
 
 DEFAULT_COLOR_MAP = "viridis"
 
-class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexRange):
-    """Fractal Renderer for Multi-Julia Sets"""
+class Multibrot(CachedImageRenderer, ZoomableComplexRange):
+    """Fractal Renderer for Multibrot Sets"""
 
-    _constantRealNumber = _constantImaginaryNumber = None
+    _initialRealNumber = _initialImaginaryNumber = None
     _power = _escapeValue = None
 
-    _zValues = _cValue = None
+    _zValues = _cValues = None
 
-    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
-                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
+    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
+                initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         CachedImageRenderer.__init__(self)
         ZoomableComplexRange.__init__(self)
 
         self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
+                       initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap)
 
     def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
+                  initialRealNumber, initialImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
         # Setup Included Indexes and the Real and Imaginary Number Spaces
         ZoomableComplexRange.initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin,
                                        imaginaryNumberMax)
 
-        # Calculate C Value and Initial Z Values
-        cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
+        # Calculate C Values and Initial Z Value
+        cValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
+        cValues = numpy.add(cValues, self._realNumberValues)
 
-        zValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
-        zValues = numpy.add(zValues, self._realNumberValues)
+        zValues = numpy.add(numpy.complex(initialRealNumber, initialImaginaryNumber), cValues)
 
         self._zValues = zValues
-        self._cValue = cValue
+        self._cValues = cValues
 
         # Initialize Image Cache
-        CachedImageRenderer.initialize(self, width, height, zValues.shape, colorMap)
+        CachedImageRenderer.initialize(self, width, height, cValues.shape, colorMap)
         
-        self._constantRealNumber = constantRealNumber
-        self._constantImaginaryNumber = constantImaginaryNumber
+        self._initialRealNumber = initialRealNumber
+        self._initialImaginaryNumber = initialImaginaryNumber
         self._power = power
         self._escapeValue = escapeValue
 
     def reinitialize(self):
         self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
-                       self._maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
+                       self._maxImaginaryNumber, self._initialRealNumber, self._initialImaginaryNumber, self._power,
                        self._escapeValue, self._colorMap)
 
     def preheatRenderCache(self, maxIterations):
-        print("Preheating Multi-Julia Render Cache")
+        print("Preheating Multibrot Render Cache")
         super().preheatRenderCache(maxIterations)
 
     def iterate(self):
@@ -85,8 +84,8 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexRange):
             self._nextIterationIndex += 1
             return
 
-        # Apply Multibrot Algorithm (Julia Set is a different initialization of Multibrot Algorithm)
-        zValuesNew = multibrotAlgorithm(self._zValues, self._cValue, self._power)
+        # Apply Multibrot Algorithm
+        zValuesNew = multibrotAlgorithm(self._zValues, self._cValues, self._power)
 
         # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
@@ -102,5 +101,5 @@ class MultijuliaRenderer(CachedImageRenderer, ZoomableComplexRange):
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes, self._zValues = removeIndexes([ self._xIndexes, self._yIndexes,
-                                                                                             zValuesNew ], remainingIndexes)
+        self._xIndexes, self._yIndexes, self._zValues, self._cValues = removeIndexes([ self._xIndexes, self._yIndexes, zValuesNew,
+                                                                            self._cValues ], remainingIndexes)

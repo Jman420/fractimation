@@ -1,6 +1,6 @@
 from .base.cachedImageRenderer import CachedImageRenderer
 
-class formulaBasedFractalRenderer(CachedImageRenderer):
+class formulaBasedFractal(CachedImageRenderer):
     """description of class"""
 
     _fractalAlgorithmFunc = None

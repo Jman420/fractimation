@@ -45,10 +45,10 @@
     <Compile Include="renderers\base\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\collatzFractalRenderer.py">
+    <Compile Include="renderers\collatzFractal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\fibonacciSquareRenderer.py">
+    <Compile Include="renderers\fibonacciSquare.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\base\cachedRenderer.py">
@@ -57,34 +57,34 @@
     <Compile Include="renderers\functionality\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\formulaBasedFractalRenderer.py">
+    <Compile Include="renderers\formulaBasedFractal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\goldenSpiralRenderer.py">
+    <Compile Include="renderers\goldenSpiral.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\multibrotRenderer.py">
+    <Compile Include="renderers\multibrot.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\multijuliaRenderer.py">
+    <Compile Include="renderers\multijulia.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\renderHelper.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\newtonFractalRenderer.py">
+    <Compile Include="renderers\newtonFractal.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\complexPolynomialRenderer.py">
+    <Compile Include="renderers\complexPolynomial.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\sierpinskiCarpetRenderer.py">
+    <Compile Include="renderers\sierpinskiCarpet.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\sierpinskiTriangleRenderer.py">
+    <Compile Include="renderers\sierpinskiTriangle.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ui\__init__.py">

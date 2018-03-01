@@ -61,7 +61,7 @@ def calculateSubdivisions(rectangles):
                               bottomLeftSubdivision, bottomMiddleSubdivision, bottomRightSubdivision))
     return allSubdivisions
 
-class SierpinskiCarpetRenderer(CachedPatchCollectionRenderer):
+class SierpinskiCarpet(CachedPatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Carpet (aka Sierpinski Square)"""
 
     _eligibleRects = None

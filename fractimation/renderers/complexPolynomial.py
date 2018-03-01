@@ -5,7 +5,7 @@ from .functionality.zoomableComplexRange import ZoomableComplexRange
 from ..helpers.fractalAlgorithmHelper import evaluatePolynomial1D, removeIndexes
 from ..helpers.renderHelper import recolorUnexplodedIndexes
 
-class ComplexPolynomialRenderer(CachedImageRenderer, ZoomableComplexRange):
+class ComplexPolynomial(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Generic Complex Polynomial Equations"""
 
     _constantRealNumber = _constantImaginaryNumber = None

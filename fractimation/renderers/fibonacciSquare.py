@@ -12,7 +12,7 @@ Y_VALUE_INDEX = 1
 SIZE_SCALAR = 0.1
 INITIAL_LOCATION = [ 0, 0 ]
 
-class FibonacciSquareRenderer(CachedPatchCollectionRenderer):
+class FibonacciSquare(CachedPatchCollectionRenderer):
     """Fractal Renderer for Fibonocci Squares"""
     
     _sizeScalar = _lineWidths = None

@@ -41,7 +41,7 @@ def calculateSubdivisions(vertices):
 
     return numpy.concatenate((leftSubdivision, topSubdivision, rightSubdivision))
 
-class SierpinskiTriangleRenderer(CachedPatchCollectionRenderer):
+class SierpinskiTriangle(CachedPatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Triangle"""
 
     _eligibleVertices = None

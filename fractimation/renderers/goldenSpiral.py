@@ -16,7 +16,7 @@ SIZE_SCALAR = 0.1
 INITIAL_LOCATION = [ 0, 0 ]
 INITIAL_ANGLES = [ 270, 0 ]
 
-class GoldenSpiralRenderer(CachedPatchCollectionRenderer):
+class GoldenSpiral(CachedPatchCollectionRenderer):
     """Fractal Renderer for the Golden Spiral"""
 
     _sizeScalar = _lineWidths = None

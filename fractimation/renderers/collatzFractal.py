@@ -23,7 +23,7 @@ def collatzConjectureAlgorithm(zValues, cValues):
 
     return zValuesNew
 
-class CollatzFractalRenderer(CachedImageRenderer, ZoomableComplexRange):
+class CollatzFractal(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Collatz Conjecture Fractals"""
     
     _escapeValue = None
