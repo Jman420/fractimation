@@ -7,34 +7,36 @@ from .cached_renderer import CachedRenderer
 class CachedImageRenderer(CachedRenderer, ABC):
     """Base class for Fractal Renderers using Image Arrays for rendering"""
 
-    _width = _height = None
-    _imageArray = None
-    _imageCanvas = _colorMap = None
+    _width = None
+    _height = None
+    _image_array = None
+    _image_canvas = None
+    _color_map = None
 
-    def initialize(self, width, height, imageArrayShape, colorMap, initialImageArrayValue=-1):
+    def initialize(self, width, height, image_array_shape, color_map, initial_image_array_value=-1):
         CachedRenderer.initialize(self)
 
         # Initialize Image Array
-        imageArray = numpy.zeros(imageArrayShape, dtype=int)
-        imageArray = numpy.add(imageArray, initialImageArrayValue)
+        image_array = numpy.zeros(image_array_shape, dtype=int)
+        image_array = numpy.add(image_array, initial_image_array_value)
 
         self._width = width
         self._height = height
-        self._imageArray = imageArray
-        self._colorMap = colorMap
+        self._image_array = image_array
+        self._color_map = color_map
 
     @abstractmethod
     def iterate(self):
         super().iterate()
 
-    def render(self, frameNumber, axes):
-        if frameNumber not in self._renderCache:
-            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
+    def render(self, frame_num, axes):
+        if frame_num not in self._render_cache:
+            for frame_counter in range(self._next_iteration_index, frame_num + 1):
                 self.iterate()
             
-        finalImage = self._renderCache[frameNumber]
-        if self._imageCanvas == None:
-            self._imageCanvas = axes.imshow(finalImage, cmap=self._colorMap, origin="upper")
+        final_image = self._render_cache[frame_num]
+        if self._image_canvas == None:
+            self._imageCanvas = axes.imshow(final_image, cmap=self._color_map, origin="upper")
         else:
-            self._imageCanvas.set_data(finalImage)
-            self._imageCanvas.autoscale()
+            self._image_canvas.set_data(final_image)
+            self._image_canvas.autoscale()

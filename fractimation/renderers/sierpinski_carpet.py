@@ -88,7 +88,7 @@ class SierpinskiCarpet(CachedPatchCollectionRenderer):
             initialPatches.append(newPatch)
 
         initialPatchCollection = build_patch_collection(initialPatches)
-        self._renderCache.update({ 0 : initialPatchCollection })
+        self._render_cache.update({ 0 : initialPatchCollection })
 
         self._nextIterationIndex = 1
 
@@ -102,14 +102,14 @@ class SierpinskiCarpet(CachedPatchCollectionRenderer):
 
         newRectanglePatches = [ ]
         subdivisions = calculateSubdivisions(self._eligibleRects)
-        lineWidth = self._lineWidths[self._nextIterationIndex]
+        lineWidth = self._lineWidths[self._next_iteration_index]
         for newRect in subdivisions:
             newPatch = build_rectangle(newRect[X_VALUE_INDEX], newRect[Y_VALUE_INDEX],
                                                    newRect[WIDTH_INDEX], newRect[HEIGHT_INDEX], lineWidth)
             newRectanglePatches.append(newPatch)
 
         iterationPatchCollection = build_patch_collection(newRectanglePatches)
-        self._renderCache.update({ self._nextIterationIndex : iterationPatchCollection })
+        self._render_cache.update({ self._next_iteration_index : iterationPatchCollection })
 
         self._eligibleRects = subdivisions
-        self._nextIterationIndex += 1
+        self._next_iteration_index += 1

@@ -4,61 +4,65 @@ import numpy
 class ZoomableComplexRange(ABC):
     """Base Class for Zoomable Complex Polynomial Fractal Equation Renderers"""
 
-    _xIndexes = _yIndexes = None
-    _minRealNumber = _maxRealNumber = None
-    _minImaginaryNumber = _maxImaginaryNumber = None
-    _realNumberValues = _imaginaryNumberValues = None
+    _x_indexes = None
+    _y_indexes = None
+    _min_real_number = None
+    _max_real_number = None
+    _min_imaginary_number = None
+    _max_imaginary_number = None
+    _real_number_values = None
+    _imaginary_number_values = None
 
-    _zoomCache = None
+    _zoom_cache = None
 
     def __init__(self):
         self._zoomCache = [ ]
 
-    def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, spacingFunc=numpy.linspace):
-        xIndexes, yIndexes = numpy.mgrid[0:width, 0:height]
+    def initialize(self, width, height, min_real_number, max_real_number, min_imaginary_number, max_imaginary_number, spacing_func=numpy.linspace):
+        x_indexes, y_indexes = numpy.mgrid[0:width, 0:height]
 
-        realNumberValues = spacingFunc(realNumberMin, realNumberMax, width)[xIndexes]
-        imaginaryNumberValues = spacingFunc(imaginaryNumberMin, imaginaryNumberMax, height)[yIndexes]
+        real_number_values = spacing_func(min_real_number, max_real_number, width)[x_indexes]
+        imaginary_number_values = spacing_func(min_imaginary_number, max_imaginary_number, height)[y_indexes]
 
-        self._xIndexes = xIndexes
-        self._yIndexes = yIndexes
-        self._minRealNumber = realNumberMin
-        self._maxRealNumber = realNumberMax
-        self._minImaginaryNumber = imaginaryNumberMin
-        self._maxImaginaryNumber = imaginaryNumberMax
-        self._realNumberValues = realNumberValues
-        self._imaginaryNumberValues = imaginaryNumberValues
+        self._xIndexes = x_indexes
+        self._yIndexes = y_indexes
+        self._min_real_number = min_real_number
+        self._max_real_number = max_real_number
+        self._min_imaginary_number = min_imaginary_number
+        self._max_imaginary_number = max_imaginary_number
+        self._real_number_values = real_number_values
+        self._imaginary_number_values = imaginary_number_values
 
-    def zoomIn(self, startX, startY, endX, endY):
-        prevZoom = zoomCacheItem(self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber, self._maxImaginaryNumber)
+    def zoom_in(self, top_left_x, top_left_y, bottom_right_x, bottom_right_y):
+        prevZoom = ZoomCacheItem(self._min_real_number, self._max_real_number, self._min_imaginary_number, self._max_imaginary_number)
 
-        minRealNumber = self._realNumberValues[startX][startY]
-        maxRealNumber = self._realNumberValues[endX][endY]
-        minImaginaryNumber = self._imaginaryNumberValues[startX][startY]
-        maxImaginaryNumber = self._imaginaryNumberValues[endX][endY]
+        min_real_number = self._real_number_values[top_left_x][top_left_y]
+        max_real_number = self._real_number_values[bottom_right_x][bottom_right_y]
+        min_imaginary_number = self._imaginary_number_values[top_left_x][top_left_y]
+        max_imaginary_number = self._imaginary_number_values[bottom_right_x][bottom_right_y]
         print("ZoomIn Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber))
+              .format(min_real_number, max_real_number, min_imaginary_number, max_imaginary_number))
 
-        self._minRealNumber = minRealNumber
-        self._maxRealNumber = maxRealNumber
-        self._minImaginaryNumber = minImaginaryNumber
-        self._maxImaginaryNumber = maxImaginaryNumber
+        self._min_real_number = min_real_number
+        self._max_real_number = max_real_number
+        self._min_imaginary_number = min_imaginary_number
+        self._max_imaginary_number = max_imaginary_number
 
         self.reinitialize()
-        self._zoomCache.append(prevZoom)
+        self._zoom_cache.append(prevZoom)
 
-    def zoomOut(self):
-        if len(self._zoomCache) < 1:
+    def zoom_out(self):
+        if len(self._zoom_cache) < 1:
             return False
 
-        prevZoom = self._zoomCache.pop()
+        prevZoom = self._zoom_cache.pop()
         print("ZoomOut Parameters (minReal, maxReal) -> (minImaginary, maxImaginary) : ({}, {}) -> ({}, {})"
-              .format(prevZoom.minRealNumber, prevZoom.maxRealNumber, prevZoom.minImaginaryNumber, prevZoom.maxImaginaryNumber))
+              .format(prevZoom.min_real_number, prevZoom.max_real_number, prevZoom.min_imaginary_number, prevZoom.max_imaginary_number))
 
-        self._minRealNumber = prevZoom.minRealNumber
-        self._maxRealNumber = prevZoom.maxRealNumber
-        self._minImaginaryNumber = prevZoom.minImaginaryNumber
-        self._maxImaginaryNumber = prevZoom.maxImaginaryNumber
+        self._min_real_number = prevZoom.min_real_number
+        self._max_real_number = prevZoom.max_real_number
+        self._min_imaginary_number = prevZoom.min_imaginary_number
+        self._max_imaginary_number = prevZoom.max_imaginary_number
 
         self.reinitialize()
         return True
@@ -67,12 +71,14 @@ class ZoomableComplexRange(ABC):
     def reinitialize(self):
         pass
 
-class zoomCacheItem(object):
-    minRealNumber = maxRealNumber = None
-    minImaginaryNumber = maxImaginaryNumber = None
+class ZoomCacheItem(object):
+    min_real_number = None
+    max_real_number = None
+    min_imaginary_number = None
+    max_imaginary_number = None
 
-    def __init__(self, minRealNumber, maxRealNumber, minImaginaryNumber, maxImaginaryNumber):
-        self.minRealNumber = minRealNumber
-        self.maxRealNumber = maxRealNumber
-        self.minImaginaryNumber = minImaginaryNumber
-        self.maxImaginaryNumber = maxImaginaryNumber
+    def __init__(self, min_real_number, max_real_number, min_imaginary_number, max_imaginary_number):
+        self.min_real_number = min_real_number
+        self.max_real_number = max_real_number
+        self.min_imaginary_number = min_imaginary_number
+        self.max_imaginary_number = max_imaginary_number

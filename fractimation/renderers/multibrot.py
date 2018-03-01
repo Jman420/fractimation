@@ -79,9 +79,9 @@ class Multibrot(CachedImageRenderer, ZoomableComplexRange):
     def iterate(self):
         if len(self._zValues) <= 0:
             # Nothing left to calculate, so just store the last image in the cache
-            finalImage = self._renderCache[len(self._renderCache) - 1]
-            self._renderCache.update({ self._nextIterationIndex : finalImage })
-            self._nextIterationIndex += 1
+            finalImage = self._render_cache[len(self._render_cache) - 1]
+            self._render_cache.update({ self._nextIterationIndex : finalImage })
+            self._next_iteration_index += 1
             return
 
         # Apply Multibrot Algorithm
@@ -89,15 +89,15 @@ class Multibrot(CachedImageRenderer, ZoomableComplexRange):
 
         # Update indexes which have exceeded the Escape Value
         explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
-        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
+        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._next_iteration_index
 
         # Recolor Indexes which have not exceeded the Escape Value
-        recoloredImage = update_indexes_with_value(self._imageArray, -1, self._nextIterationIndex + 1)
+        recoloredImage = update_indexes_with_value(self._imageArray, -1, self._next_iteration_index + 1)
         finalImage = recoloredImage.T
 
         # Update cache and prepare for next iteration
-        self._renderCache.update({ self._nextIterationIndex : finalImage })
-        self._nextIterationIndex += 1
+        self._render_cache.update({ self._next_iteration_index : finalImage })
+        self._next_iteration_index += 1
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes

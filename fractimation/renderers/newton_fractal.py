@@ -36,9 +36,9 @@ class NewtonFractal(ComplexPolynomial):
     def iterate(self):
         if len(self._zValues) <= 0:
             # Nothing left to calculate, so just store the last image in the cache
-            finalImage = self._renderCache[len(self._renderCache) - 1]
-            self._renderCache.update({ self._nextIterationIndex : finalImage })
-            self._nextIterationIndex += 1
+            finalImage = self._render_cache[len(self._render_cache) - 1]
+            self._render_cache.update({ self._nextIterationIndex : finalImage })
+            self._next_iteration_index += 1
             return
         
         # Perform Newton Method
@@ -48,13 +48,13 @@ class NewtonFractal(ComplexPolynomial):
                                                             self._cValue)
 
         # Update indexes which have exceeded the Escape Value
-        explodedIndexes = numpy.abs(iterationDiff) < self._escapeValue
-        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._nextIterationIndex
+        explodedIndexes = numpy.abs(iterationDiff) < self._escape_value
+        self._image_array[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._next_iteration_index
 
         # Update cache and prepare for next iteration
-        finalImage = numpy.copy(self._imageArray.T)
-        self._renderCache.update({ self._nextIterationIndex : finalImage })
-        self._nextIterationIndex += 1
+        finalImage = numpy.copy(self._image_array.T)
+        self._render_cache.update({ self._next_iteration_index : finalImage })
+        self._next_iteration_index += 1
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
         remainingIndexes = ~explodedIndexes

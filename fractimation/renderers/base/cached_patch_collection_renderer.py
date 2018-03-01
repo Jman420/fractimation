@@ -5,31 +5,31 @@ from .cached_renderer import CachedRenderer
 class CachedPatchCollectionRenderer(CachedRenderer, ABC):
     """Base class for Fratal Renderers using Matpotlib PatchCollections for rendering"""
 
-    _cacheAddedToAxes = False
+    _cache_added_to_axes = False
 
     def initialize(self):
         super().initialize()
 
-        self._cacheAddedToAxes = False
+        self._cache_added_to_axes = False
 
     @abstractmethod
     def iterate(self):
         super().iterate()
 
-    def render(self, frameNumber, axes):
-        if not self._cacheAddedToAxes:
-            for frameCounter in range(0, len(self._renderCache)):
-                framePatches = self._renderCache[frameCounter]
-                axes.add_collection(framePatches)
-            self._cacheAddedToAxes = True
+    def render(self, frame_num, axes):
+        if not self._cache_added_to_axes:
+            for frame_counter in range(0, len(self._render_cache)):
+                frame_patches = self._render_cache[frame_counter]
+                axes.add_collection(frame_patches)
+            self._cache_added_to_axes = True
         
-        if not frameNumber in self._renderCache:
-            for frameCounter in range(self._nextIterationIndex, frameNumber + 1):
+        if not frame_num in self._render_cache:
+            for frame_counter in range(self._next_iteration_index, frame_num + 1):
                 self.iterate()
 
-                framePatches = self._renderCache[frameCounter]
-                axes.add_collection(framePatches)
+                frame_patches = self._render_cache[frame_counter]
+                axes.add_collection(frame_patches)
 
-        for frameCounter in range(0, len(self._renderCache)):
-            framePatches = self._renderCache[frameCounter]
-            framePatches.set_visible(frameCounter <= frameNumber)
+        for frame_counter in range(0, len(self._render_cache)):
+            frame_patches = self._render_cache[frame_counter]
+            frame_patches.set_visible(frame_counter <= frame_num)

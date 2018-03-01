@@ -5,20 +5,20 @@ from .fractimation_renderer import FractimationRenderer
 class CachedRenderer(FractimationRenderer, ABC):
     """Base class for Cached Fractal Renderers"""
 
-    _renderCache = None
+    _render_cache = None
 
     def initialize(self):
         FractimationRenderer.initialize(self)
 
-        self._renderCache = { }
+        self._render_cache = { }
 
-    def preheatRenderCache(self, maxIterations):
-        if maxIterations < len(self._renderCache):
+    def preheat_render_cache(self, max_iterations):
+        if max_iterations < len(self._render_cache):
             return
 
-        print("Preheating Cache to {} iterations...".format(maxIterations))
-        for iterationCounter in range(len(self._renderCache), maxIterations):
-            print("Iteration {} processing...".format(iterationCounter))
+        print("Preheating Cache to {} iterations...".format(max_iterations))
+        for iteration_counter in range(len(self._render_cache), max_iterations):
+            print("Iteration {} processing...".format(iteration_counter))
             self.iterate()
 
         print("Completed preheating cache!")
@@ -28,5 +28,5 @@ class CachedRenderer(FractimationRenderer, ABC):
         super().iterate()
 
     @abstractmethod
-    def render(self, frameNumber, axes):
-        super().render(frameNumber, axes)
+    def render(self, frame_num, axes):
+        super().render(frame_num, axes)
