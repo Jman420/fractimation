@@ -35,8 +35,8 @@ class CachedImageRenderer(CachedRenderer, ABC):
                 self.iterate()
             
         final_image = self._render_cache[frame_num]
-        if self._image_canvas == None:
-            self._imageCanvas = axes.imshow(final_image, cmap=self._color_map, origin="upper")
+        if self._image_canvas is None:
+            self._image_canvas = axes.imshow(final_image, cmap=self._color_map, origin="upper")
         else:
             self._image_canvas.set_data(final_image)
             self._image_canvas.autoscale()

@@ -19,59 +19,58 @@ INITIAL_ANGLES = [ 270, 0 ]
 class GoldenSpiral(CachedPatchCollectionRenderer):
     """Fractal Renderer for the Golden Spiral"""
 
-    _sizeScalar = None
-    _lineWidths = None
-    _nextWedgeLocation = None
-    _nextMoveMode = None
-    _nextWedgeAngles = None
+    _size_scalar = None
+    _line_widths = None
+    _next_wedge_location = None
+    _next_move_mode = None
+    _next_wedge_angles = None
 
-    def __init__(self, lineWidths, sizeScalar=SIZE_SCALAR):
+    def __init__(self, line_widths, size_scalar=SIZE_SCALAR):
         self._wedgesAddedToAxes = False
-        self.initialize(lineWidths, sizeScalar)
+        self.initialize(line_widths, size_scalar)
 
-    def initialize(self, lineWidths, sizeScalar=SIZE_SCALAR):
+    def initialize(self, line_widths, size_scalar=SIZE_SCALAR):
         super().initialize()
 
-        self._lineWidths = lineWidths
-        self._sizeScalar = sizeScalar
+        self._line_widths = line_widths
+        self._size_scalar = size_scalar
         
-        self._nextWedgeLocation = numpy.array(INITIAL_LOCATION)
-        self._nextWedgeAngles = numpy.array(INITIAL_ANGLES)
-        self._nextMoveMode = 1
+        self._next_wedge_location = numpy.array(INITIAL_LOCATION)
+        self._next_wedge_angles = numpy.array(INITIAL_ANGLES)
+        self._next_move_mode = 1
 
-        emptyPatches = build_patch_collection([ ])
-        self._render_cache.update({ 0 : emptyPatches })
+        empty_patches = build_patch_collection([ ])
+        self._render_cache.update({ 0 : empty_patches })
 
-        self._nextIterationIndex = 1
+        self._next_iteration_index = 1
 
-    def preheatRenderCache(self, maxIterations):
+    def preheat_render_cache(self, max_iterations):
         print("Preheating Golden Spiral Render Cache")
-        super().preheatRenderCache(maxIterations)
+        super().preheat_render_cache(max_iterations)
 
     def iterate(self):
-        self._nextWedgeAngles += 90
-        currentFibNumber = get_fibonocci_number(self._next_iteration_index) * self._sizeScalar
-        wedgeLocation = self._nextWedgeLocation
+        self._next_wedge_angles += 90
+        current_fib_number = get_fibonocci_number(self._next_iteration_index) * self._size_scalar
+        wedge_location = self._next_wedge_location
 
-        secondPrevFibNum = get_fibonocci_number(self._next_iteration_index - 2) * self._sizeScalar
-        prevFibNum = get_fibonocci_number(self._next_iteration_index - 1) * self._sizeScalar
-        if self._nextMoveMode == 1:
-            moveDeviation = [ -secondPrevFibNum, 0 ]
-        elif self._nextMoveMode == 2:
-            moveDeviation = [ 0, -secondPrevFibNum ]
-        elif self._nextMoveMode == 3:
-            moveDeviation = [ secondPrevFibNum, 0 ]
-        elif self._nextMoveMode == 4:
-            moveDeviation = [ 0, secondPrevFibNum ]
+        second_prev_fib_num = get_fibonocci_number(self._next_iteration_index - 2) * self._size_scalar
+        if self._next_move_mode == 1:
+            move_deviation = [ -second_prev_fib_num, 0 ]
+        elif self._next_move_mode == 2:
+            move_deviation = [ 0, -second_prev_fib_num ]
+        elif self._next_move_mode == 3:
+            move_deviation = [ second_prev_fib_num, 0 ]
+        elif self._next_move_mode == 4:
+            move_deviation = [ 0, second_prev_fib_num ]
 
-        self._nextWedgeLocation = wedgeLocation + moveDeviation
-        lineWidth = self._lineWidths[self._next_iteration_index]
-        newWedge = build_wedge(self._nextWedgeLocation[X_VALUE_INDEX], self._nextWedgeLocation[Y_VALUE_INDEX], currentFibNumber,
-                              self._nextWedgeAngles[THETA1_INDEX], self._nextWedgeAngles[THETA2_INDEX], lineWidth)
-        patchCollection = build_patch_collection([ newWedge ])
-        self._render_cache.update({ self._next_iteration_index : patchCollection })
+        self._next_wedge_location = wedge_location + move_deviation
+        line_width = self._line_widths[self._next_iteration_index]
+        new_wedge = build_wedge(self._next_wedge_location[X_VALUE_INDEX], self._next_wedge_location[Y_VALUE_INDEX], current_fib_number,
+                              self._next_wedge_angles[THETA1_INDEX], self._next_wedge_angles[THETA2_INDEX], line_width)
+        patch_collection = build_patch_collection([ new_wedge ])
+        self._render_cache.update({ self._next_iteration_index : patch_collection })
 
         self._next_iteration_index += 1
-        self._nextMoveMode += 1
-        if self._nextMoveMode > 4:
-            self._nextMoveMode = 1
+        self._next_move_mode += 1
+        if self._next_move_mode > 4:
+            self._next_move_mode = 1

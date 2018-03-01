@@ -1,5 +1,3 @@
-import numpy
-
 from matplotlib.patches import Polygon
 from matplotlib.patches import Rectangle
 from matplotlib.patches import Wedge

@@ -16,6 +16,12 @@ class CachedPatchCollectionRenderer(CachedRenderer, ABC):
     def iterate(self):
         super().iterate()
 
+    @abstractmethod
+    def preheat_render_cache(self, max_iterations):
+        super().preheat_render_cache(max_iterations)
+
+        self._cache_added_to_axes = False
+
     def render(self, frame_num, axes):
         if not self._cache_added_to_axes:
             for frame_counter in range(0, len(self._render_cache)):

@@ -14,83 +14,82 @@ INITIAL_ELIGIBLE_VERTICES = [
                                 [ 1, 0 ]
                             ]
 
-def calculateSubdivisions(vertices):
-    firstTriangle = vertices[0]
-    largeSubdivision = (firstTriangle[LAST_VERTEX_INDEX, X_VALUE_INDEX] - firstTriangle[FIRST_VERTEX_INDEX, X_VALUE_INDEX]) / 2
-    smallSubdivision = largeSubdivision / 2
+def calculate_subdivisions(vertices):
+    first_triangle = vertices[0]
+    large_subdivision = (first_triangle[LAST_VERTEX_INDEX, X_VALUE_INDEX] - first_triangle[FIRST_VERTEX_INDEX, X_VALUE_INDEX]) / 2
+    small_subdivision = large_subdivision / 2
 
-    leftSubdivisionMod = [
+    left_subdivision_mod = [
                             [ 0, 0 ],
-                            [ -smallSubdivision, -largeSubdivision ],
-                            [ -largeSubdivision, 0 ]
+                            [ -small_subdivision, -large_subdivision ],
+                            [ -large_subdivision, 0 ]
                          ]
-    topSubdivisionMod = [
-                            [ smallSubdivision, largeSubdivision ],
+    top_subdivision_mod = [
+                            [ small_subdivision, large_subdivision ],
                             [ 0, 0 ],
-                            [ -smallSubdivision, largeSubdivision ]
+                            [ -small_subdivision, large_subdivision ]
                         ]
-    rightSubdivisionMod = [
-                            [ largeSubdivision, 0 ],
-                            [ smallSubdivision, -largeSubdivision ],
+    right_subdivision_mod = [
+                            [ large_subdivision, 0 ],
+                            [ small_subdivision, -large_subdivision ],
                             [ 0, 0 ]
                           ]
 
-    leftSubdivision = vertices + leftSubdivisionMod
-    topSubdivision = vertices + topSubdivisionMod
-    rightSubdivision = vertices + rightSubdivisionMod
+    left_subdivision = vertices + left_subdivision_mod
+    top_subdivision = vertices + top_subdivision_mod
+    right_subdivision = vertices + right_subdivision_mod
 
-    return numpy.concatenate((leftSubdivision, topSubdivision, rightSubdivision))
+    return numpy.concatenate((left_subdivision, top_subdivision, right_subdivision))
 
 class SierpinskiTriangle(CachedPatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Triangle"""
 
-    _eligibleVertices = None
-    _lineWidths = None
+    _eligible_vertices = None
+    _line_widths = None
 
-    def __init__(self, lineWidths, eligibleRects=None):
-        self.initialize(lineWidths, eligibleRects)
+    def __init__(self, line_widths, eligible_rects=None):
+        self.initialize(line_widths, eligible_rects)
 
     # eligibleVertices is an array of three vertices that describe the points of a triangle as percentages of screen space.
     #    These vertices must be defined from left to right; ie. [ [ left vertex ], [ top vertex ], [ right vertex ] ]
-    def initialize(self, lineWidths, eligibleVertices=None):
+    def initialize(self, line_widths, eligible_vertices=None):
         super().initialize()
 
-        self._lineWidths = lineWidths
+        self._line_widths = line_widths
         
-        if eligibleVertices == None:
-            eligibleVertices = INITIAL_ELIGIBLE_VERTICES
-        self._eligibleVertices = numpy.array([ eligibleVertices ])
+        if eligible_vertices == None:
+            eligible_vertices = INITIAL_ELIGIBLE_VERTICES
+        self._eligible_vertices = numpy.array([ eligible_vertices ])
 
-        initialPatches = [ ]
-        for eligibleTriangle in self._eligibleVertices:
-            newPatch = build_triangle(eligibleTriangle, lineWidth=lineWidths[0])
-            initialPatches.append(newPatch)
+        initial_patches = [ ]
+        for eligible_triangle in self._eligible_vertices:
+            new_patch = build_triangle(eligible_triangle, lineWidth=line_widths[0])
+            initial_patches.append(new_patch)
 
-        self._renderCache = { }
-        initialPatchCollection = build_patch_collection(initialPatches)
-        self._render_cache.update({ 0 : initialPatchCollection })
+        self._render_cache = { }
+        initial_patch_collection = build_patch_collection(initial_patches)
+        self._render_cache.update({ 0 : initial_patch_collection })
 
-        self._cacheAddedToAxes = False
-        self._nextIterationIndex = 1
+        self._cache_added_to_axes = False
+        self._next_iteration_index = 1
 
-    def preheatRenderCache(self, maxIterations):
+    def preheat_render_cache(self, max_iterations):
         print("Preheating Sierpinski Triangle Render Cache")
-        super().preheatRenderCache(maxIterations)
-        self._cacheAddedToAxes = False
+        super().preheat_render_cache(max_iterations)
 
     def iterate(self):
-        if len(self._eligibleVertices) < 1:
+        if len(self._eligible_vertices) < 1:
             return
         
-        newTrianglePatches = [ ]
-        newSubdivisions = calculateSubdivisions(self._eligibleVertices)
-        lineWidth = self._lineWidths[self._next_iteration_index]
-        for triangleVertices in newSubdivisions:
-            newPatch = build_triangle(triangleVertices, lineWidth)
-            newTrianglePatches.append(newPatch)
+        new_triangle_patches = [ ]
+        new_subdivisions = calculate_subdivisions(self._eligible_vertices)
+        line_width = self._line_widths[self._next_iteration_index]
+        for triangleVertices in new_subdivisions:
+            new_patch = build_triangle(triangleVertices, line_width)
+            new_triangle_patches.append(new_patch)
 
-        iterationPatchCollection = build_patch_collection(newTrianglePatches)
-        self._render_cache.update({ self._next_iteration_index : iterationPatchCollection })
+        iteration_patch_collection = build_patch_collection(new_triangle_patches)
+        self._render_cache.update({ self._next_iteration_index : iteration_patch_collection })
 
-        self._eligibleVertices = newSubdivisions
+        self._eligible_vertices = new_subdivisions
         self._next_iteration_index += 1

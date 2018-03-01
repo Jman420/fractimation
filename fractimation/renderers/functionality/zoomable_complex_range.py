@@ -16,7 +16,7 @@ class ZoomableComplexRange(ABC):
     _zoom_cache = None
 
     def __init__(self):
-        self._zoomCache = [ ]
+        self._zoom_cache = [ ]
 
     def initialize(self, width, height, min_real_number, max_real_number, min_imaginary_number, max_imaginary_number, spacing_func=numpy.linspace):
         x_indexes, y_indexes = numpy.mgrid[0:width, 0:height]
@@ -24,8 +24,8 @@ class ZoomableComplexRange(ABC):
         real_number_values = spacing_func(min_real_number, max_real_number, width)[x_indexes]
         imaginary_number_values = spacing_func(min_imaginary_number, max_imaginary_number, height)[y_indexes]
 
-        self._xIndexes = x_indexes
-        self._yIndexes = y_indexes
+        self._x_indexes = x_indexes
+        self._y_indexes = y_indexes
         self._min_real_number = min_real_number
         self._max_real_number = max_real_number
         self._min_imaginary_number = min_imaginary_number
@@ -34,7 +34,7 @@ class ZoomableComplexRange(ABC):
         self._imaginary_number_values = imaginary_number_values
 
     def zoom_in(self, top_left_x, top_left_y, bottom_right_x, bottom_right_y):
-        prevZoom = ZoomCacheItem(self._min_real_number, self._max_real_number, self._min_imaginary_number, self._max_imaginary_number)
+        prev_zoom = ZoomCacheItem(self._min_real_number, self._max_real_number, self._min_imaginary_number, self._max_imaginary_number)
 
         min_real_number = self._real_number_values[top_left_x][top_left_y]
         max_real_number = self._real_number_values[bottom_right_x][bottom_right_y]
@@ -49,7 +49,7 @@ class ZoomableComplexRange(ABC):
         self._max_imaginary_number = max_imaginary_number
 
         self.reinitialize()
-        self._zoom_cache.append(prevZoom)
+        self._zoom_cache.append(prev_zoom)
 
     def zoom_out(self):
         if len(self._zoom_cache) < 1:

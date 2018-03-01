@@ -3,7 +3,9 @@ import matplotlib.widgets as widgets
 LEFT_MOUSE_BUTTON = 1
 RIGHT_MOUSE_BUTTON = 3
 
-def restartPlayback(viewer):
+MATPLOTLIB_PAN_ZOOM_MODE = "pan/zoom"
+
+def restart_playback(viewer):
     viewer.stop()
     viewer.get_render_manager().get_animation_axes().autoscale(True)
     viewer.get_animation_manager().render(0)
@@ -12,56 +14,62 @@ def restartPlayback(viewer):
 class ZoomHandler(object):
     """Class to handle Fractimation Zoom UI"""
     
-    _renderer = _viewer = None
+    _renderer = None
+    _viewer = None
 
-    _startX = _startY = None
-    _endX = _endY = None
-    _zoomReady = False
-    _zoomBox = _zoomStack = None
+    _x_start = None
+    _y_start = None
+    _x_end = None
+    _y_end = None
+    _zoom_ready = False
+    _zoom_box = None
+    _zoom_stack = None
 
-    def __init__(self, renderer, viewer, minZoomWidth=10, minZoomHeight=10):
+    def __init__(self, renderer, viewer, min_zoom_width=10, min_zoom_height=10):
         self._renderer = renderer
         self._viewer = viewer
 
-        self._zoomBox = widgets.RectangleSelector(self._viewer.get_render_manager().get_animation_axes(), self.selectZoomCoords,
-                                                  useblit=True, minspanx=minZoomWidth, minspany=minZoomHeight,
+        self._zoom_box = widgets.RectangleSelector(self._viewer.get_render_manager().get_animation_axes(), self.select_zoom_coords,
+                                                  useblit=True, minspanx=min_zoom_width, minspany=min_zoom_height,
                                                   button=[ LEFT_MOUSE_BUTTON ], interactive=True)
 
         figure = viewer.get_window_manager().get_figure()
-        figure.canvas.mpl_connect('button_press_event', self.handleMouseButtonPress)
-        figure.canvas.mpl_connect('button_release_event', self.handleMouseButtonRelease)
+        figure.canvas.mpl_connect('button_press_event', self.handle_mouse_button_press)
+        figure.canvas.mpl_connect('button_release_event', self.handle_mouse_button_release)
 
-    def selectZoomCoords(self, startCoords, endCoords):
-        startX = int(max(startCoords.xdata, 0))
-        startY = int(max(startCoords.ydata, 0))
-        endX = int(max(endCoords.xdata, 0))
-        endY = int(max(endCoords.ydata, 0))
+    def select_zoom_coords(self, start_coords, end_coords):
+        x_start = int(max(start_coords.xdata, 0))
+        y_start = int(max(start_coords.ydata, 0))
+        x_end = int(max(end_coords.xdata, 0))
+        y_end = int(max(end_coords.ydata, 0))
 
-        self._startX, self._startY = startX, startY
-        self._endX, self._endY = endX, endY
-        self._zoomReady = True
+        self._x_start = x_start
+        self._y_start = y_start
+        self._x_end = x_end
+        self._y_end = y_end
+        self._zoom_ready = True
 
-    def confirmZoomCoords(self):
-        if not self._zoomReady:
+    def confirm_zoom_coords(self):
+        if not self._zoom_ready:
             return
 
-        self._renderer.zoomIn(self._startX, self._startY, self._endX, self._endY)
-        self._zoomReady = False
-        self._zoomBox.extents = (0, 0, 0, 0)
+        self._renderer.zoom_in(self._x_start, self._y_start, self._x_end, self._y_end)
+        self._zoom_ready = False
+        self._zoom_box.extents = (0, 0, 0, 0)
 
-        restartPlayback(self._viewer)
+        restart_playback(self._viewer)
 
-    def undoCurrentZoom(self):
-        if self._renderer.zoomOut():
-            restartPlayback(self._viewer)
+    def undo_current_zoom(self):
+        if self._renderer.zoom_out():
+            restart_playback(self._viewer)
 
-    def handleMouseButtonPress(self, eventData):
+    def handle_mouse_button_press(self, eventData):
         if eventData.dblclick:
-            self.confirmZoomCoords()
+            self.confirm_zoom_coords()
 
-    def handleMouseButtonRelease(self, eventData):
-        if self._viewer.get_window_manager().get_figure().canvas.toolbar.mode == "pan/zoom":
+    def handle_mouse_button_release(self, eventData):
+        if self._viewer.get_window_manager().get_figure().canvas.toolbar.mode == MATPLOTLIB_PAN_ZOOM_MODE:
             return
 
         if eventData.button == RIGHT_MOUSE_BUTTON:
-            self.undoCurrentZoom()
+            self.undo_current_zoom()

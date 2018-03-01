@@ -25,7 +25,7 @@ class ComplexPolynomial(CachedImageRenderer, ZoomableComplexRange):
                         coefficient_array, constant_real_number, constant_imaginary_number, escapeV_value, color_map)
 
     def initialize(self, width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
-                   coefficient_array, constant_real_number, constant_imaginary_number, escapeV_value, color_map = "viridis"):
+                   coefficient_array, constant_real_number, constant_imaginary_number, escape_value, color_map = "viridis"):
         # Setup Included Indexes and the Real and Imaginary Number Spaces
         ZoomableComplexRange.initialize(self, width, height, real_number_min, real_number_max, imaginary_number_min,
                                        imaginary_number_max)
@@ -36,8 +36,8 @@ class ComplexPolynomial(CachedImageRenderer, ZoomableComplexRange):
         z_values = numpy.multiply(numpy.complex(0,1), self._imaginary_number_values)
         z_values = numpy.add(z_values, self._real_number_values)
 
-        self._zValues = z_values
-        self._cValue = c_value
+        self._z_values = z_values
+        self._c_value = c_value
 
         # Initialize Image Cache
         CachedImageRenderer.initialize(self, width, height, z_values.shape, color_map)
@@ -45,11 +45,11 @@ class ComplexPolynomial(CachedImageRenderer, ZoomableComplexRange):
         self._constant_real_number = constant_real_number
         self._constant_imaginary_number = constant_imaginary_number
         self._coefficient_array = coefficient_array
-        self._escape_value = _escape_value
+        self._escape_value = escape_value
         
     def reinitialize(self):
-        self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
-                       self._maxImaginaryNumber, self._coefficient_array, self._constant_real_number, self._constant_imaginary_number,
+        self.initialize(self._width, self._height, self._min_real_number, self._max_real_number, self._min_imaginary_number,
+                       self._max_imaginary_number, self._coefficient_array, self._constant_real_number, self._constant_imaginary_number,
                        self._escape_value, self._color_map)
 
     def preheat_render_cache(self, max_iterations):

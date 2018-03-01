@@ -11,105 +11,105 @@ WIDTH_INDEX = 2
 HEIGHT_INDEX = 3
 INITIAL_RECTS = [ [ 0.01, 0.01, 0.98, 0.98 ] ]
 
-def calculateSubdivisions(rectangles):
-    firstRect = rectangles[0]
-    oneThirdWidth = firstRect[WIDTH_INDEX] * (1 / 3)
-    twoThirdsWidth = firstRect[WIDTH_INDEX] * (2 / 3)
-    oneThirdHeight = firstRect[HEIGHT_INDEX] * (1 / 3)
-    twoThirdsHeight = firstRect[HEIGHT_INDEX] * (2 / 3)
+def calculate_subdivisions(rectangles):
+    first_rect = rectangles[0]
+    one_third_width = first_rect[WIDTH_INDEX] * (1 / 3)
+    two_thirds_width = first_rect[WIDTH_INDEX] * (2 / 3)
+    one_third_height = first_rect[HEIGHT_INDEX] * (1 / 3)
+    two_thirds_height = first_rect[HEIGHT_INDEX] * (2 / 3)
 
     # Top Subdivisions
-    topRightSubdivision = rectangles + [ 0,
+    top_right_subdivision = rectangles + [ 0,
                                          0,
-                                         -twoThirdsWidth, -twoThirdsHeight
+                                         -two_thirds_width, -two_thirds_height
                                        ]
-    topMiddleSubdivision = rectangles + [ oneThirdWidth,
+    top_middle_subdivision = rectangles + [ one_third_width,
                                           0,
-                                          -twoThirdsWidth, -twoThirdsHeight
+                                          -two_thirds_width, -two_thirds_height
                                         ]
-    topLeftSubdivision = rectangles + [ twoThirdsWidth,
+    top_left_subdivision = rectangles + [ two_thirds_width,
                                         0,
-                                        -twoThirdsWidth, -twoThirdsHeight
+                                        -two_thirds_width, -two_thirds_height
                                       ]
 
     # Middle Subdivisions
-    middleRightSubdivision = rectangles + [ 0,
-                                            oneThirdHeight,
-                                            -twoThirdsHeight, -twoThirdsHeight
+    middle_right_subdivision = rectangles + [ 0,
+                                            one_third_height,
+                                            -two_thirds_height, -two_thirds_height
                                           ]
-    middleLeftSubdivision = rectangles + [ twoThirdsWidth,
-                                           oneThirdHeight,
-                                           -twoThirdsHeight, -twoThirdsHeight
+    middle_left_subdivision = rectangles + [ two_thirds_width,
+                                           one_third_height,
+                                           -two_thirds_height, -two_thirds_height
                                          ]
 
     # Bottom Subdivisions
-    bottomLeftSubdivision = rectangles + [ 0,
-                                           twoThirdsHeight,
-                                           -twoThirdsHeight, -twoThirdsHeight
+    bottom_left_subdivision = rectangles + [ 0,
+                                           two_thirds_height,
+                                           -two_thirds_height, -two_thirds_height
                                          ]
-    bottomMiddleSubdivision = rectangles + [ oneThirdWidth,
-                                             twoThirdsHeight,
-                                             -twoThirdsHeight, -twoThirdsHeight
+    bottom_middle_subdivision = rectangles + [ one_third_width,
+                                             two_thirds_height,
+                                             -two_thirds_height, -two_thirds_height
                                            ]
-    bottomRightSubdivision = rectangles + [ twoThirdsWidth,
-                                            twoThirdsHeight,
-                                            -twoThirdsHeight, -twoThirdsHeight
+    bottom_right_subdivision = rectangles + [ two_thirds_width,
+                                            two_thirds_height,
+                                            -two_thirds_height, -two_thirds_height
                                           ]
 
-    allSubdivisions = numpy.concatenate((topLeftSubdivision, topMiddleSubdivision, topRightSubdivision,
-                              middleLeftSubdivision, middleRightSubdivision,
-                              bottomLeftSubdivision, bottomMiddleSubdivision, bottomRightSubdivision))
-    return allSubdivisions
+    all_subdivisions = numpy.concatenate((top_left_subdivision, top_middle_subdivision, top_right_subdivision,
+                              middle_left_subdivision, middle_right_subdivision,
+                              bottom_left_subdivision, bottom_middle_subdivision, bottom_right_subdivision))
+    return all_subdivisions
 
 class SierpinskiCarpet(CachedPatchCollectionRenderer):
     """Fractal Renderer for Sierpinski Carpet (aka Sierpinski Square)"""
 
-    _eligibleRects = None
-    _lineWidths = None
+    _eligible_rects = None
+    _line_widths = None
 
-    def __init__(self, lineWidths, eligibleRects=None):
-        self.initialize(lineWidths, eligibleRects)
+    def __init__(self, line_widths, eligible_rects=None):
+        self.initialize(line_widths, eligible_rects)
 
     # eligibleRects is an array of arrays of x, y, width and height describing the initial rectangles
     #   as percentages of screen space.
-    def initialize(self, lineWidths, eligibleRects=None):
+    def initialize(self, line_widths, eligible_rects=None):
         super().initialize()
 
-        self._lineWidths = lineWidths
+        self._line_widths = line_widths
 
-        if eligibleRects == None:
-            eligibleRects = INITIAL_RECTS
-        self._eligibleRects = numpy.array(eligibleRects)
+        if eligible_rects == None:
+            eligible_rects = INITIAL_RECTS
+        self._eligible_rects = numpy.array(eligible_rects)
 
-        initialPatches = [ ]
-        for eligibleRect in eligibleRects:
-            newPatch = build_rectangle(eligibleRect[X_VALUE_INDEX], eligibleRect[Y_VALUE_INDEX],
-                                                   eligibleRect[WIDTH_INDEX], eligibleRect[HEIGHT_INDEX], lineWidths[0])
-            initialPatches.append(newPatch)
+        initial_patches = [ ]
+        for eligible_rect in eligible_rects:
+            new_patch = build_rectangle(eligible_rect[X_VALUE_INDEX], eligible_rect[Y_VALUE_INDEX],
+                                                   eligible_rect[WIDTH_INDEX], eligible_rect[HEIGHT_INDEX], line_widths[0])
+            initial_patches.append(new_patch)
 
-        initialPatchCollection = build_patch_collection(initialPatches)
-        self._render_cache.update({ 0 : initialPatchCollection })
+        initial_patch_collection = build_patch_collection(initial_patches)
+        self._render_cache.update({ 0 : initial_patch_collection })
 
-        self._nextIterationIndex = 1
+        self._next_iteration_index = 1
 
-    def preheatRenderCache(self, maxIterations):
+    def preheat_render_cache(self, max_iterations):
         print("Preheating Sierpinski Carpet Render Cache")
-        super().preheatRenderCache(maxIterations)
+        super().preheat_render_cache(max_iterations)
 
     def iterate(self):
-        if (len(self._eligibleRects)) < 1:
+        if (len(self._eligible_rects)) < 1:
             return
 
-        newRectanglePatches = [ ]
-        subdivisions = calculateSubdivisions(self._eligibleRects)
-        lineWidth = self._lineWidths[self._next_iteration_index]
-        for newRect in subdivisions:
-            newPatch = build_rectangle(newRect[X_VALUE_INDEX], newRect[Y_VALUE_INDEX],
-                                                   newRect[WIDTH_INDEX], newRect[HEIGHT_INDEX], lineWidth)
-            newRectanglePatches.append(newPatch)
+        new_rectangle_patches = [ ]
+        subdivisions = calculate_subdivisions(self._eligible_rects)
+        line_width = self._line_widths[self._next_iteration_index]
+        for new_rect in subdivisions:
+            new_patch = build_rectangle(new_rect[X_VALUE_INDEX], new_rect[Y_VALUE_INDEX],
+                                                   new_rect[WIDTH_INDEX], new_rect[HEIGHT_INDEX], line_width)
+            new_rectangle_patches.append(new_patch)
 
-        iterationPatchCollection = build_patch_collection(newRectanglePatches)
-        self._render_cache.update({ self._next_iteration_index : iterationPatchCollection })
+        iteration_patch_collection = build_patch_collection(new_rectangle_patches)
+        self._render_cache.update({ self._next_iteration_index : iteration_patch_collection })
 
-        self._eligibleRects = subdivisions
+        self._eligible_rects = subdivisions
         self._next_iteration_index += 1

@@ -32,75 +32,78 @@ DEFAULT_COLOR_MAP = "viridis"
 class Multijulia(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Multi-Julia Sets"""
 
-    _constantRealNumber = _constantImaginaryNumber = None
-    _power = _escapeValue = None
+    _constant_real_number = None
+    _constant_imaginary_number = None
+    _power = None
+    _escape_value = None
 
-    _zValues = _cValue = None
+    _z_values = None
+    _c_value = None
 
-    def __init__(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
-                 constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
+    def __init__(self, width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
+                constant_real_number, constant_imaginary_number, power, escape_value, color_map = DEFAULT_COLOR_MAP):
         CachedImageRenderer.__init__(self)
         ZoomableComplexRange.__init__(self)
 
-        self.initialize(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                       constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
+        self.initialize(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
+                        constant_real_number, constant_imaginary_number, power, escape_value, color_map)
 
-    def initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                  constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap = DEFAULT_COLOR_MAP):
+    def initialize(self, width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
+                constant_real_number, constant_imaginary_number, power, escape_value, color_map = DEFAULT_COLOR_MAP):
         # Setup Included Indexes and the Real and Imaginary Number Spaces
-        ZoomableComplexRange.initialize(self, width, height, realNumberMin, realNumberMax, imaginaryNumberMin,
-                                       imaginaryNumberMax)
+        ZoomableComplexRange.initialize(self, width, height, real_number_min, real_number_max, imaginary_number_min,
+                                        imaginary_number_max)
 
         # Calculate C Value and Initial Z Values
-        cValue = numpy.complex(constantRealNumber, constantImaginaryNumber)
+        c_value = numpy.complex(constant_real_number, constant_imaginary_number)
 
-        zValues = numpy.multiply(numpy.complex(0,1), self._imaginaryNumberValues)
-        zValues = numpy.add(zValues, self._realNumberValues)
+        z_values = numpy.multiply(numpy.complex(0,1), self._imaginary_number_values)
+        z_values = numpy.add(z_values, self._real_number_values)
 
-        self._zValues = zValues
-        self._cValue = cValue
+        self._z_values = z_values
+        self._c_value = c_value
 
         # Initialize Image Cache
-        CachedImageRenderer.initialize(self, width, height, zValues.shape, colorMap)
+        CachedImageRenderer.initialize(self, width, height, z_values.shape, color_map)
         
-        self._constantRealNumber = constantRealNumber
-        self._constantImaginaryNumber = constantImaginaryNumber
+        self._constant_real_number = constant_real_number
+        self._constant_imaginary_number = constant_imaginary_number
         self._power = power
-        self._escapeValue = escapeValue
+        self._escape_value = escape_value
 
     def reinitialize(self):
-        self.initialize(self._width, self._height, self._minRealNumber, self._maxRealNumber, self._minImaginaryNumber,
-                       self._maxImaginaryNumber, self._constantRealNumber, self._constantImaginaryNumber, self._power,
-                       self._escapeValue, self._colorMap)
+        self.initialize(self._width, self._height, self._min_real_number, self._max_real_number, self._min_imaginary_number,
+                       self._max_imaginary_number, self._constant_real_number, self._constant_imaginary_number, self._power,
+                       self._escape_value, self._color_map)
 
-    def preheatRenderCache(self, maxIterations):
+    def preheat_render_cache(self, max_iterations):
         print("Preheating Multi-Julia Render Cache")
-        super().preheatRenderCache(maxIterations)
+        super().preheat_render_cache(max_iterations)
 
     def iterate(self):
-        if len(self._zValues) <= 0:
+        if len(self._z_values) <= 0:
             # Nothing left to calculate, so just store the last image in the cache
-            finalImage = self._render_cache[len(self._render_cache) - 1]
-            self._render_cache.update({ self._nextIterationIndex : finalImage })
+            final_image = self._render_cache[len(self._render_cache) - 1]
+            self._render_cache.update({ self._next_iteration_index : final_image })
             self._next_iteration_index += 1
             return
 
         # Apply Multibrot Algorithm (Julia Set is a different initialization of Multibrot Algorithm)
-        zValuesNew = multibrot_algorithm(self._zValues, self._cValue, self._power)
+        z_values_new = multibrot_algorithm(self._z_values, self._c_value, self._power)
 
         # Update indexes which have exceeded the Escape Value
-        explodedIndexes = numpy.abs(zValuesNew) > self._escapeValue
-        self._imageArray[self._xIndexes[explodedIndexes], self._yIndexes[explodedIndexes]] = self._next_iteration_index
+        exploded_indexes = numpy.abs(z_values_new) > self._escape_value
+        self._image_array[self._x_indexes[exploded_indexes], self._y_indexes[exploded_indexes]] = self._next_iteration_index
 
         # Recolor Indexes which have not exceeded the Escape Value
-        recoloredImage = update_indexes_with_value(self._imageArray, -1, self._next_iteration_index + 1)
-        finalImage = recoloredImage.T
+        recolored_image = update_indexes_with_value(self._image_array, -1, self._next_iteration_index + 1)
+        final_image = recolored_image.T
 
         # Update cache and prepare for next iteration
-        self._render_cache.update({ self._next_iteration_index : finalImage })
+        self._render_cache.update({ self._next_iteration_index : final_image })
         self._next_iteration_index += 1
 
         # Remove Exploded Indexes since we don't need to calculate them anymore
-        remainingIndexes = ~explodedIndexes
-        self._xIndexes, self._yIndexes, self._zValues = remove_indexes([ self._xIndexes, self._yIndexes,
-                                                                                             zValuesNew ], remainingIndexes)
+        remaining_indexes = ~exploded_indexes
+        self._x_indexes, self._y_indexes, self._z_values = remove_indexes([ self._x_indexes, self._y_indexes,
+                                                                                             z_values_new ], remaining_indexes)

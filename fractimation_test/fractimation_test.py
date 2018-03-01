@@ -18,94 +18,94 @@ from fractimation.ui.zoom_handler import ZoomHandler
 # General Brot & Julia Fractal Parameters
 width, height = 1280, 720                              # Width and Height of the image
                                                        # ^^ quick ref : 480p;(640, 480) 720p;(1280, 720) 1080p;(1920, 1080) UHD/4K;(3840, 2160) 8K;(7680, 4320)
-maxIterations = 50                                     # Total number of iterations of fractal equation
+max_iterations = 50                                    # Total number of iterations of fractal equation
                                                        # ^^ Careful with this value; we are caching each frame
-colorMap = "viridis"                                   # Any valid color map name or combination (default : viridis)
+color_map = "viridis"                                  # Any valid color map name or combination (default : viridis)
                                                        # ^^ reference : https://matplotlib.org/examples/color/colormaps_reference.html
 
 # Mandelbrot Set
-multibrotWindowMngr = WindowManager(window_title="Multibrot Set", toolbar_visible=False)
-multibrotViewer = PlotPlayer(multibrotWindowMngr)
-realNumberMin, realNumberMax = -2.0, 0.5               # Min & Max values for X values in fractal equation
-imaginaryNumberMin, imaginaryNumberMax = -1.25, 1.25   # Min & Max values for Y values in fractal equation
-constantRealNumber, constantImaginaryNumber = 0.0, 0.0 # Initial Z Value
-power = 2                                              # Power to raise Z value to for each iteration of fractal equation
-escapeValue = 2.0                                      # Limit at which Z values will reach infinity
-multibrotFractal = Multibrot(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax, 
-                                      constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-multibrotZoomHandler = ZoomHandler(multibrotFractal, multibrotViewer)
-multibrotViewer.initialize(maxIterations, multibrotFractal.render, "multibrotFractal")
-multibrotFractal.preheatRenderCache(maxIterations)
+multibrot_window_mngr = WindowManager(window_title="Multibrot Set", toolbar_visible=False)
+multibrot_viewer = PlotPlayer(multibrot_window_mngr)
+real_number_min, real_number_max = -2.0, 0.5               # Min & Max values for X values in fractal equation
+imaginary_number_min, imaginary_number_max = -1.25, 1.25   # Min & Max values for Y values in fractal equation
+constant_real_number, constant_imaginary_number = 0.0, 0.0 # Initial Z Value
+power = 2                                                  # Power to raise Z value to for each iteration of fractal equation
+escape_value = 2.0                                         # Limit at which Z values will reach infinity
+multibrot_fractal = Multibrot(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max, 
+                                      constant_real_number, constant_imaginary_number, power, escape_value, color_map)
+multibrot_zoom_handler = ZoomHandler(multibrot_fractal, multibrot_viewer)
+multibrot_viewer.initialize(max_iterations, multibrot_fractal.render, "multibrotFractal")
+multibrot_fractal.preheat_render_cache(max_iterations)
 
 # Julia Set
-multijuliaWindowMngr = WindowManager(window_title="Julia Set", toolbar_visible=False)
-multijuliaViewer = PlotPlayer(multijuliaWindowMngr)
-realNumberMin, realNumberMax = -1.5, 1.5               # Min & Max values for X values in fractal equation
-imaginaryNumberMin, imaginaryNumberMax = -1.5, 1.5     # Min & Max values for Y values in fractal equation
-constantRealNumber, constantImaginaryNumber = 0.0, 0.8 # Constant C value
-power = 2                                              # Power to raise Z value to for each iteration of fractal equation
-escapeValue = 10.0                                     # Limit at which Z values will reach infinity
-multijuliaFractal = Multijulia(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                                        constantRealNumber, constantImaginaryNumber, power, escapeValue, colorMap)
-multijuliaZoomHandler = ZoomHandler(multijuliaFractal, multijuliaViewer)
-multijuliaViewer.initialize(maxIterations, multijuliaFractal.render, "multijuliaFractal")
-multijuliaFractal.preheatRenderCache(maxIterations)
+multijulia_window_mngr = WindowManager(window_title="Julia Set", toolbar_visible=False)
+multijulia_viewer = PlotPlayer(multijulia_window_mngr)
+real_number_min, real_number_max = -1.5, 1.5               # Min & Max values for X values in fractal equation
+imaginary_number_min, imaginary_number_max = -1.5, 1.5     # Min & Max values for Y values in fractal equation
+constant_real_number, constant_imaginary_number = 0.0, 0.8 # Constant C value
+power = 2                                                  # Power to raise Z value to for each iteration of fractal equation
+escape_value = 10.0                                        # Limit at which Z values will reach infinity
+multijulia_fractal = Multijulia(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
+                                        constant_real_number, constant_imaginary_number, power, escape_value, color_map)
+multijulia_zoom_handler = ZoomHandler(multijulia_fractal, multijulia_viewer)
+multijulia_viewer.initialize(max_iterations, multijulia_fractal.render, "multijuliaFractal")
+multijulia_fractal.preheat_render_cache(max_iterations)
 
 # Newton Fractal
-newtonFractalWindowMngr = WindowManager(window_title="Newton Fractal", toolbar_visible=False)
-newtonFractalViewer = PlotPlayer(newtonFractalWindowMngr)
-realNumberMin, realNumberMax = -5, 5                 # Min & Max values for X values in fractal equation
-imaginaryNumberMin, imaginaryNumberMax = -5, 5       # Min & Max values for Y values in fractal equation
-constantRealNumber, constantImaginaryNumber = 1.0, 0.0 # Constant C value
-coefficientArray = [ -1, 0, 0, 0, 1 ]                  # Representation of polynomial equation coefficients in accending order (ie. c + x + x**2 + ... + x**n)
-escapeValue = 1e-4
-newtonFractal = NewtonFractal(width, height, realNumberMin, realNumberMax, imaginaryNumberMin, imaginaryNumberMax,
-                                      coefficientArray, constantRealNumber, constantImaginaryNumber, escapeValue, colorMap)
-newtonZoomHandler = ZoomHandler(newtonFractal, newtonFractalViewer)
-newtonFractalViewer.initialize(maxIterations, newtonFractal.render, "newtonFractal")
-newtonFractal.preheatRenderCache(maxIterations)
+newton_fractal_window_mngr = WindowManager(window_title="Newton Fractal", toolbar_visible=False)
+newton_fractal_viewer = PlotPlayer(newton_fractal_window_mngr)
+real_number_min, real_number_max = -5, 5                   # Min & Max values for X values in fractal equation
+imaginary_number_min, imaginary_number_max = -5, 5         # Min & Max values for Y values in fractal equation
+constant_real_number, constant_imaginary_number = 1.0, 0.0 # Constant C value
+coefficient_array = [ -1, 0, 0, 0, 1 ]                     # Representation of polynomial equation coefficients in accending order (ie. c + x + x**2 + ... + x**n)
+escape_value = 1e-4
+newton_fractal = NewtonFractal(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
+                                      coefficient_array, constant_real_number, constant_imaginary_number, escape_value, color_map)
+newton_zoom_handler = ZoomHandler(newton_fractal, newton_fractal_viewer)
+newton_fractal_viewer.initialize(max_iterations, newton_fractal.render, "newtonFractal")
+newton_fractal.preheat_render_cache(max_iterations)
 
 PlotPlayer.show_players()
 
 # Sierpinski Triangle (3**iteration triangles per iteration)
-sierpinskiTriangleWindowMngr = WindowManager(window_title="Sierpinski Triangle")
-sierpinskiTriangleViewer = PlotPlayer(sierpinskiTriangleWindowMngr)
-sierpinskiTriangleViewer.get_render_manager().set_slider_visible(True)
-sierpinskiTriangleIterations = 7                      # Be careful with this number; iterations explode at 3**iteration computations
-sierpinskiTriangleLineWidths = numpy.linspace(1.0, 0.1, sierpinskiTriangleIterations + 1)
-sierpinskiTriangleFractal = SierpinskiTriangle(sierpinskiTriangleLineWidths)
-sierpinskiTriangleViewer.initialize(sierpinskiTriangleIterations, sierpinskiTriangleFractal.render, "sierpinskiTriangle")
-sierpinskiTriangleFractal.preheatRenderCache(sierpinskiTriangleIterations)
+sierpinski_triangle_window_mngr = WindowManager(window_title="Sierpinski Triangle")
+sierpinski_triangle_viewer = PlotPlayer(sierpinski_triangle_window_mngr)
+sierpinski_triangle_viewer.get_render_manager().set_slider_visible(True)
+sierpinski_triangle_iterations = 7                      # Be careful with this number; iterations explode at 3**iteration computations
+sierpinski_triangle_line_widths = numpy.linspace(1.0, 0.1, sierpinski_triangle_iterations + 1)
+sierpinski_triangle_fractal = SierpinskiTriangle(sierpinski_triangle_line_widths)
+sierpinski_triangle_viewer.initialize(sierpinski_triangle_iterations, sierpinski_triangle_fractal.render, "sierpinskiTriangle")
+sierpinski_triangle_fractal.preheat_render_cache(sierpinski_triangle_iterations)
 
 # Sierpinski Carpet (8**iteration rectangles per iteration)
-sierpinskiCarpetWindowMngr = WindowManager(window_title="Sierpinski Carpet")
-sierpinskiCarpetViewer = PlotPlayer(sierpinskiCarpetWindowMngr)
-sierpinskiCarpetViewer.get_render_manager().set_slider_visible(True)
-sierpinskiCarpetIterations = 4                        # Be careful with this number; iterations explode at 8**iteration computations
-sierpinskiCarpetLineWidths = numpy.linspace(1.0, 0.1, sierpinskiCarpetIterations + 1)
-sierpinskiCarpetFractal = SierpinskiCarpet(sierpinskiCarpetLineWidths)
-sierpinskiCarpetViewer.initialize(sierpinskiCarpetIterations, sierpinskiCarpetFractal.render,  "sierpinskiCarpet")
-sierpinskiCarpetFractal.preheatRenderCache(sierpinskiCarpetIterations)
+sierpinski_carpet_window_mngr = WindowManager(window_title="Sierpinski Carpet")
+sierpinski_carpet_viewer = PlotPlayer(sierpinski_carpet_window_mngr)
+sierpinski_carpet_viewer.get_render_manager().set_slider_visible(True)
+sierpinski_carpet_iterations = 4                        # Be careful with this number; iterations explode at 8**iteration computations
+sierpinski_carpet_line_widths = numpy.linspace(1.0, 0.1, sierpinski_carpet_iterations + 1)
+sierpinski_carpet_fractal = SierpinskiCarpet(sierpinski_carpet_line_widths)
+sierpinski_carpet_viewer.initialize(sierpinski_carpet_iterations, sierpinski_carpet_fractal.render,  "sierpinskiCarpet")
+sierpinski_carpet_fractal.preheat_render_cache(sierpinski_carpet_iterations)
 
 # Fibonacci Square
-fibonacciSquareWindowMngr = WindowManager(window_title="Fibonocci Square")
-fibonacciSquareViewer = PlotPlayer(fibonacciSquareWindowMngr)
-fibonacciSquareViewer.get_render_manager().set_slider_visible(True)
-fibonacciSquareIterations = 15
-fibonacciSquareLineWidths = numpy.linspace(0.1, 1.0, fibonacciSquareIterations + 1)
-fibonacciSquareFractal = FibonacciSquare(fibonacciSquareLineWidths)
-fibonacciSquareViewer.initialize(fibonacciSquareIterations, fibonacciSquareFractal.render, "fibonocciSquare")
-fibonacciSquareFractal.preheatRenderCache(fibonacciSquareIterations)
+fibonacci_square_window_mngr = WindowManager(window_title="Fibonocci Square")
+fibonacci_square_viewer = PlotPlayer(fibonacci_square_window_mngr)
+fibonacci_square_viewer.get_render_manager().set_slider_visible(True)
+fibonacci_square_iterations = 15
+fibonacci_square_line_widths = numpy.linspace(0.1, 1.0, fibonacci_square_iterations + 1)
+fibonacci_square_fractal = FibonacciSquare(fibonacci_square_line_widths)
+fibonacci_square_viewer.initialize(fibonacci_square_iterations, fibonacci_square_fractal.render, "fibonocciSquare")
+fibonacci_square_fractal.preheat_render_cache(fibonacci_square_iterations)
 
 # Golden Spiral
-goldenSpiralWindowMngr = WindowManager(window_title="Golden Spiral")
-goldenSpiralViewer = PlotPlayer(goldenSpiralWindowMngr)
-goldenSpiralViewer.get_render_manager().set_slider_visible(True)
-goldenSpiralIterations = 15
-goldenSpiralLineWidths = numpy.linspace(0.01, 0.05, goldenSpiralIterations + 1)
-goldenSpiralFractal = GoldenSpiral(goldenSpiralLineWidths)
-goldenSpiralViewer.initialize(goldenSpiralIterations, goldenSpiralFractal.render, "goldenSpiral")
-goldenSpiralFractal.preheatRenderCache(goldenSpiralIterations)
+golden_spiral_window_mngr = WindowManager(window_title="Golden Spiral")
+golden_spiral_viewer = PlotPlayer(golden_spiral_window_mngr)
+golden_spiral_viewer.get_render_manager().set_slider_visible(True)
+golden_spiral_iterations = 15
+golden_spiral_line_widths = numpy.linspace(0.01, 0.05, golden_spiral_iterations + 1)
+golden_spiral_fractal = GoldenSpiral(golden_spiral_line_widths)
+golden_spiral_viewer.initialize(golden_spiral_iterations, golden_spiral_fractal.render, "goldenSpiral")
+golden_spiral_fractal.preheat_render_cache(golden_spiral_iterations)
 
 # Render Viewers
 PlotPlayer.show_players()
