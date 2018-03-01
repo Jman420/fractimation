@@ -63,13 +63,13 @@ class ZoomHandler(object):
         if self._renderer.zoom_out():
             restart_playback(self._viewer)
 
-    def handle_mouse_button_press(self, eventData):
-        if eventData.dblclick:
+    def handle_mouse_button_press(self, event_data):
+        if event_data.dblclick:
             self.confirm_zoom_coords()
 
-    def handle_mouse_button_release(self, eventData):
+    def handle_mouse_button_release(self, event_data):
         if self._viewer.get_window_manager().get_figure().canvas.toolbar.mode == MATPLOTLIB_PAN_ZOOM_MODE:
             return
 
-        if eventData.button == RIGHT_MOUSE_BUTTON:
+        if event_data.button == RIGHT_MOUSE_BUTTON:
             self.undo_current_zoom()

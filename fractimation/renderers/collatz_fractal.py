@@ -27,8 +27,8 @@ class CollatzFractal(CachedImageRenderer, ZoomableComplexRange):
     """Fractal Renderer for Collatz Conjecture Fractals"""
     
     _escape_value = None
-    _zValues = None
-    _cValue = None
+    _z_values = None
+    _c_value = None
 
     def __init__(self, width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
                  escape_value, color_map = "viridis"):

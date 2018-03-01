@@ -63,7 +63,7 @@ class SierpinskiTriangle(CachedPatchCollectionRenderer):
 
         initial_patches = [ ]
         for eligible_triangle in self._eligible_vertices:
-            new_patch = build_triangle(eligible_triangle, lineWidth=line_widths[0])
+            new_patch = build_triangle(eligible_triangle, line_width=line_widths[0])
             initial_patches.append(new_patch)
 
         self._render_cache = { }
