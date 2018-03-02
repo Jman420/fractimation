@@ -29,7 +29,7 @@ def newton_method_algorithm(coefficient_array, coefficient_array_derivative, z_v
 
     return iteration_diff, z_values_new
 
-# polynomialExpressionArray is an array in the format of increasing order
+# coefficient_array is an array in the format of increasing order of exponent power
 #   ie. [ 1, 2, 3 ] = c + 2z + 3z**2 ; [ 4, 0, 1, 0, 5 ] = 4c + z**2 + 5z**4
 def evaluate_polynomial_1d(coefficient_array, z_values, c_values):
     # Calculate Polynomial Constant Expression
