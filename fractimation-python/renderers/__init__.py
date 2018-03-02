@@ -1,6 +1,0 @@
-from .multibrotRenderer import MultibrotRenderer
-from .multijuliaRenderer import MultijuliaRenderer
-from .sierpinskiTriangleRenderer import SierpinskiTriangleRenderer
-from .sierpinskiCarpetRenderer import SierpinskiCarpetRenderer
-from .fibonacciSquareRenderer import FibonacciSquareRenderer
-from .goldenSpiralRenderer import GoldenSpiralRenderer
