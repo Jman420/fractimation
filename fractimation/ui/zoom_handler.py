@@ -1,18 +1,38 @@
+"""
+Fractimation specific Zoom Functionality Class
+
+Public Classes :
+  * ZoomHandler - Class to manage the Zoom Functionality for the Fractimation App
+"""
+
 import matplotlib.widgets as widgets
 
-LEFT_MOUSE_BUTTON = 1
-RIGHT_MOUSE_BUTTON = 3
+_LEFT_MOUSE_BUTTON = 1
+_RIGHT_MOUSE_BUTTON = 3
 
-MATPLOTLIB_PAN_ZOOM_MODE = "pan/zoom"
+_MATPLOTLIB_PAN_ZOOM_MODE = "pan/zoom"
 
-def restart_playback(viewer):
+def _restart_playback(viewer):
+    """
+    Method to restart playback from the beginning
+
+    Parameters :
+      * viewer - An instance of PlotPlayer
+    """
     viewer.stop()
     viewer.get_render_manager().get_animation_axes().autoscale(True)
     viewer.get_animation_manager().render(0)
     viewer.play()
 
 class ZoomHandler(object):
-    """Class to handle Fractimation Zoom UI"""
+    """
+    Zoom Functionality handler for Fractimation
+
+    Public Methods :
+      * select_zoom_coords - Sets the zoom coordinates and indicates that zoom is ready
+      * confirm_zoom_coords - Passes the zoom coordinates to the renderer and resets the Zoom UI
+      * undo_current_zoom - Returns to the previous zoom coordinatess
+    """
 
     _renderer = None
     _viewer = None
@@ -26,6 +46,15 @@ class ZoomHandler(object):
     _zoom_stack = None
 
     def __init__(self, renderer, viewer, min_zoom_width=10, min_zoom_height=10):
+        """
+        Constructor
+
+        Parameters :
+          * renderer - The fractal renderer associated with the Zoom Functionality
+          * viewer - The PlotPlayer instance used for playback
+          * min_zoom_width (optional) - Minimum zoom box width
+          * min_zoom_height (optional) - Minimum zoom box height
+        """
         self._renderer = renderer
         self._viewer = viewer
 
@@ -33,13 +62,20 @@ class ZoomHandler(object):
         self._zoom_box = widgets.RectangleSelector(animation_axes, self.select_zoom_coords,
                                                    useblit=True, minspanx=min_zoom_width,
                                                    minspany=min_zoom_height,
-                                                   button=[LEFT_MOUSE_BUTTON], interactive=True)
+                                                   button=[_LEFT_MOUSE_BUTTON], interactive=True)
 
         figure = viewer.get_window_manager().get_figure()
-        figure.canvas.mpl_connect('button_press_event', self.handle_mouse_button_press)
-        figure.canvas.mpl_connect('button_release_event', self.handle_mouse_button_release)
+        figure.canvas.mpl_connect('button_press_event', self._handle_mouse_button_press)
+        figure.canvas.mpl_connect('button_release_event', self._handle_mouse_button_release)
 
     def select_zoom_coords(self, start_coords, end_coords):
+        """
+        Store the Start and End Coordinates for later confirmation
+
+        Parameters :
+          * start_coords - Matplotlib Rectangle Selector event data object
+          * end_coords - Matplotlib Rectangle Selector event data object
+        """
         x_start = int(max(start_coords.xdata, 0))
         y_start = int(max(start_coords.ydata, 0))
         x_end = int(max(end_coords.xdata, 0))
@@ -52,6 +88,9 @@ class ZoomHandler(object):
         self._zoom_ready = True
 
     def confirm_zoom_coords(self):
+        """
+        Perform the Zoom to the stored Start and End Coordinates
+        """
         if not self._zoom_ready:
             return
 
@@ -59,20 +98,29 @@ class ZoomHandler(object):
         self._zoom_ready = False
         self._zoom_box.extents = (0, 0, 0, 0)
 
-        restart_playback(self._viewer)
+        _restart_playback(self._viewer)
 
     def undo_current_zoom(self):
+        """
+        Return to the previous Zoom Coordinates
+        """
         if self._renderer.zoom_out():
-            restart_playback(self._viewer)
+            _restart_playback(self._viewer)
 
-    def handle_mouse_button_press(self, event_data):
+    def _handle_mouse_button_press(self, event_data):
+        """
+        Handles the Mouse Button Press event
+        """
         if event_data.dblclick:
             self.confirm_zoom_coords()
 
-    def handle_mouse_button_release(self, event_data):
+    def _handle_mouse_button_release(self, event_data):
+        """
+        Handles the Mouse Button Release event
+        """
         if (self._viewer.get_window_manager().get_figure().canvas.toolbar.mode ==
-                MATPLOTLIB_PAN_ZOOM_MODE):
+                _MATPLOTLIB_PAN_ZOOM_MODE):
             return
 
-        if event_data.button == RIGHT_MOUSE_BUTTON:
+        if event_data.button == _RIGHT_MOUSE_BUTTON:
             self.undo_current_zoom()

@@ -111,6 +111,7 @@
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="data_models\" />
     <Folder Include="helpers\" />
     <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\data_models\" />
     <Folder Include="renderers\" />
