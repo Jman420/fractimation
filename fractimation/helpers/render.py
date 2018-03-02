@@ -7,16 +7,16 @@ def build_triangle(vertices, line_width):
     new_patch = Polygon(vertices, fill=False, lineWidth=line_width)
     return new_patch
 
-def build_rectangle(x, y, width, height, line_width):
-    new_patch = Rectangle((x, y), width, height, fill=False, linewidth=line_width)
+def build_rectangle(x_coord, y_coord, width, height, line_width):
+    new_patch = Rectangle((x_coord, y_coord), width, height, fill=False, linewidth=line_width)
     return new_patch
 
-def build_square(x, y, dimension, line_width):
-    new_patch = build_rectangle(x, y, dimension, dimension, line_width)
+def build_square(x_coord, y_coord, dimension, line_width):
+    new_patch = build_rectangle(x_coord, y_coord, dimension, dimension, line_width)
     return new_patch
 
-def build_wedge(x, y, radius, theta1, theta2, wedge_width):
-    new_patch = Wedge([x, y], radius, theta1, theta2, wedge_width, fill=False)
+def build_wedge(x_coord, y_coord, radius, theta1, theta2, wedge_width):
+    new_patch = Wedge([x_coord, y_coord], radius, theta1, theta2, wedge_width, fill=False)
     return new_patch
 
 def build_patch_collection(patches, visible=False):

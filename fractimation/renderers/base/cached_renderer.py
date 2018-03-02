@@ -10,7 +10,7 @@ class CachedRenderer(FractimationRenderer, ABC):
     def initialize(self):
         FractimationRenderer.initialize(self)
 
-        self._render_cache = { }
+        self._render_cache = {}
 
     def preheat_render_cache(self, max_iterations):
         if max_iterations < len(self._render_cache):

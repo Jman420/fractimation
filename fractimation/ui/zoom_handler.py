@@ -13,7 +13,7 @@ def restart_playback(viewer):
 
 class ZoomHandler(object):
     """Class to handle Fractimation Zoom UI"""
-    
+
     _renderer = None
     _viewer = None
 
@@ -29,9 +29,11 @@ class ZoomHandler(object):
         self._renderer = renderer
         self._viewer = viewer
 
-        self._zoom_box = widgets.RectangleSelector(self._viewer.get_render_manager().get_animation_axes(), self.select_zoom_coords,
-                                                  useblit=True, minspanx=min_zoom_width, minspany=min_zoom_height,
-                                                  button=[ LEFT_MOUSE_BUTTON ], interactive=True)
+        animation_axes = self._viewer.get_render_manager().get_animation_axes()
+        self._zoom_box = widgets.RectangleSelector(animation_axes, self.select_zoom_coords,
+                                                   useblit=True, minspanx=min_zoom_width,
+                                                   minspany=min_zoom_height,
+                                                   button=[LEFT_MOUSE_BUTTON], interactive=True)
 
         figure = viewer.get_window_manager().get_figure()
         figure.canvas.mpl_connect('button_press_event', self.handle_mouse_button_press)
@@ -68,7 +70,8 @@ class ZoomHandler(object):
             self.confirm_zoom_coords()
 
     def handle_mouse_button_release(self, event_data):
-        if self._viewer.get_window_manager().get_figure().canvas.toolbar.mode == MATPLOTLIB_PAN_ZOOM_MODE:
+        if (self._viewer.get_window_manager().get_figure().canvas.toolbar.mode ==
+                MATPLOTLIB_PAN_ZOOM_MODE):
             return
 
         if event_data.button == RIGHT_MOUSE_BUTTON:

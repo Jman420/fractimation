@@ -33,7 +33,7 @@ class CachedImageRenderer(CachedRenderer, ABC):
         if frame_num not in self._render_cache:
             for frame_counter in range(self._next_iteration_index, frame_num + 1):
                 self.iterate()
-            
+
         final_image = self._render_cache[frame_num]
         if self._image_canvas is None:
             self._image_canvas = axes.imshow(final_image, cmap=self._color_map, origin="upper")
