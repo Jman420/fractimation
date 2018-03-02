@@ -31,7 +31,13 @@ class ZoomHandler(object):
     Public Methods :
       * select_zoom_coords - Sets the zoom coordinates and indicates that zoom is ready
       * confirm_zoom_coords - Passes the zoom coordinates to the renderer and resets the Zoom UI
-      * undo_current_zoom - Returns to the previous zoom coordinatess
+      * undo_current_zoom - Returns to the previous zoom coordinates
+
+    Private Methods :
+      * _handle_mouse_button_press - Method to handle mouse button down events; attached to
+          Matplotlib button_press_event
+      * _handle_mouse_button_release - Method to handle mouse button release events; attached to
+          Matplotlib button_release_event
     """
 
     _renderer = None

@@ -45,6 +45,9 @@
     <Compile Include="data_models\__init__.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="iterators\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="renderers\base\fractimation_renderer.py">
       <SubType>Code</SubType>
     </Compile>
@@ -114,6 +117,7 @@
     <Folder Include="data_models\" />
     <Folder Include="helpers\" />
     <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\data_models\" />
+    <Folder Include="iterators\" />
     <Folder Include="renderers\" />
     <Folder Include="renderers\base\" />
     <Folder Include="renderers\functionality\" />
