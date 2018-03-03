@@ -18,23 +18,23 @@ class FormulaParams(object):
           associated complex values
     """
 
-    real_number = None
-    imaginary_number = None
+    coefficient_array = Non
     escape_value = None
 
-    def __init__(self, real_number, imaginary_number, escape_value):
+    def __init__(self, coefficient_array, escape_value):
         """
         Constructor
 
         Parameters :
-            * real_number - A real number value used by the formula; usually used as an initial
-                value during initialization or as a constant value within the formula
-            * imaginary_number - An imaginary number value used by the formula; usually used as an
-                initial value during initialization or as a constant value within the formula
             * escape_value - A threshold value used to determine when to stop evaluating a pixel's
                 associated complex values
         """
 
-        self.real_number = real_number
-        self.imaginary_number = imaginary_number
+        self.coefficient_array = coefficient_array
         self.escape_value = escape_value
+
+    def get_coefficient_array(self):
+        return self.coefficient_array
+
+    def get_escape_value(self):
+        return self.escape_value

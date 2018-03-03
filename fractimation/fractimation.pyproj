@@ -24,7 +24,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="data_models\complex_range.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="data_models\complex_range_params.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="data_models\dimension_params.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="data_models\formula_params.py">
@@ -43,6 +49,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="data_models\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iterators\base\fractal_formula.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iterators\base\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iterators\complex_polynomial.py" />
+    <Compile Include="iterators\multibrot.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="iterators\__init__.py">
@@ -118,6 +134,7 @@
     <Folder Include="helpers\" />
     <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\data_models\" />
     <Folder Include="iterators\" />
+    <Folder Include="iterators\base\" />
     <Folder Include="renderers\" />
     <Folder Include="renderers\base\" />
     <Folder Include="renderers\functionality\" />

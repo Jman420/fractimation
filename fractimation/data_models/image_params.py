@@ -36,3 +36,12 @@ class ImageParams(object):
         self.width = width
         self.height = height
         self.color_map = color_map
+
+    def get_width(self):
+        return self.width
+
+    def get_height(self):
+        return self.height
+
+    def get_color_map(self):
+        return self.color_map
