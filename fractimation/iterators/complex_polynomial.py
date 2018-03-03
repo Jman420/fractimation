@@ -13,19 +13,41 @@ class ComplexPolynomialIterable(FractalFormulaIterable):
 class ComplexPolynomialIterator(FractalFormulaIterator):
 
     def __next__(cls):
-        max_iterations = cls._formula_iterable.get_max_iterations()
-        if len(cls._z_values) < 1 or (max_iterations is not None and 
-                                      cls._next_iteration >= max_iterations):
-            raise StopIteration
+        super().__next__()
+
+        if len(cls._z_values) < 1:
+            return None
 
         formula_params = cls._formula_iterable.get_formula_params()
-        z_values_new = evaluate_polynomial_1d(formula_params.coefficient_array, cls._z_values,
+        z_values_new = evaluate_polynomial_1d(formula_params.coefficient_array,
+                                              cls._z_values,
                                               cls._c_values)
 
-        remaining_indexes = numpy.abs(z_values_new) > formula_params.escape_value
+        exploded_indexes = numpy.abs(z_values_new) > formula_params.escape_value
 
+        remaining_indexes = ~exploded_indexes
         reduced_arrays = remove_indexes([z_values_new, cls._c_values], remaining_indexes)
         cls._z_values, cls._c_values = reduced_arrays
+        
         cls._next_iteration += 1
+        return ComplexPolynomialIterationData(z_values_new, exploded_indexes, remaining_indexes)
 
-        return [z_values_new, remaining_indexes]
+class ComplexPolynomialIterationData(object):
+
+    z_values = None
+    exploded_indexes = None
+    remaining_indexes = None
+
+    def __init__(self, z_values, exploded_indexes, remaining_indexes):
+        self.z_values = z_values
+        self.exploded_indexes = exploded_indexes
+        self.remaining_indexes = remaining_indexes
+
+    def get_z_values(self):
+        return self.z_values
+
+    def get_exploded_indexes(self):
+        return self.exploded_indexes
+
+    def get_remaining_indexes(self):
+        return self.remaining_indexes

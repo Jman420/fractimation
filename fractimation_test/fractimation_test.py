@@ -5,15 +5,15 @@ import time
 from plotplayer.plotplayer import PlotPlayer
 from plotplayer.managers.window_manager import WindowManager
 
-from fractimation.renderers.multibrot import Multibrot
-from fractimation.renderers.multijulia import Multijulia
-from fractimation.renderers.sierpinski_triangle import SierpinskiTriangle
-from fractimation.renderers.sierpinski_carpet import SierpinskiCarpet
-from fractimation.renderers.fibonacci_square import FibonacciSquare
-from fractimation.renderers.golden_spiral import GoldenSpiral
-from fractimation.renderers.newton_fractal import NewtonFractal
-
 from fractimation.ui.zoom_handler import ZoomHandler
+
+from fractimation.data_models.complex_range_params import ComplexRangeParams
+from fractimation.data_models.dimension_params import DimensionParams
+
+from fractimation.helpers.formula_tools import generate_complex_range
+
+from fractimation.iterators.multibrot import Multibrot
+from fractimation.renderers.cached_image_renderer import CachedImageRenderer
 
 # General Brot & Julia Fractal Parameters
 width, height = 1280, 720                              # Width and Height of the image
@@ -24,18 +24,26 @@ color_map = "viridis"                                  # Any valid color map nam
                                                        # ^^ reference : https://matplotlib.org/examples/color/colormaps_reference.html
 
 # Mandelbrot Set
-multibrot_window_mngr = WindowManager(window_title="Multibrot Set", toolbar_visible=False)
-multibrot_viewer = PlotPlayer(multibrot_window_mngr)
 real_number_min, real_number_max = -2.0, 0.5               # Min & Max values for X values in fractal equation
 imaginary_number_min, imaginary_number_max = -1.25, 1.25   # Min & Max values for Y values in fractal equation
 constant_real_number, constant_imaginary_number = 0.0, 0.0 # Initial Z Value
 power = 2                                                  # Power to raise Z value to for each iteration of fractal equation
 escape_value = 2.0                                         # Limit at which Z values will reach infinity
-multibrot_fractal = Multibrot(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max, 
-                                      constant_real_number, constant_imaginary_number, power, escape_value, color_map)
-multibrot_zoom_handler = ZoomHandler(multibrot_fractal, multibrot_viewer)
-multibrot_viewer.initialize(max_iterations, multibrot_fractal.render, "multibrotFractal")
-multibrot_fractal.preheat_render_cache(max_iterations)
+
+multibrot_window_mngr = WindowManager(window_title="Multibrot Set", toolbar_visible=False)
+multibrot_viewer = PlotPlayer(multibrot_window_mngr)
+
+image_dimensions = DimensionParams(width, height)
+c_values_params = ComplexRangeParams(real_number_min, real_number_max, imaginary_number_min, imaginary_number_max)
+c_values_range = generate_complex_range(c_values_params, image_dimensions)
+
+multibrot_fractal = Multibrot(c_values_range, escape_value)
+multibrot_renderer = CachedImageRenderer(multibrot_viewer.get_render_manager().get_animation_axes(), multibrot_fractal, image_dimensions)
+multibrot_renderer.preheat_render_cache(max_iterations)
+
+multibrot_viewer.initialize(max_iterations, multibrot_renderer.render_to_canvas, "multibrotFractal")
+
+PlotPlayer.show_players()
 
 # Julia Set
 multijulia_window_mngr = WindowManager(window_title="Julia Set", toolbar_visible=False)

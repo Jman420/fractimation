@@ -18,7 +18,7 @@ class FormulaParams(object):
           associated complex values
     """
 
-    coefficient_array = Non
+    coefficient_array = None
     escape_value = None
 
     def __init__(self, coefficient_array, escape_value):

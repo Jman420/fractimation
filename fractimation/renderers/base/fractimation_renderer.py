@@ -3,15 +3,15 @@ from abc import ABC, abstractmethod
 class FractimationRenderer(ABC, object):
     """Base Class for all Fractimation Renderers"""
 
-    _next_iteration_index = None
+    _render_axes = None
+    _fractal_iterable = None
+    _next_frame_number = None
 
-    def initialize(self):
-        self._next_iteration_index = 0
+    def __init__(self, render_axes, fractal_iterable):
+        self._render_axes = render_axes
+        self._fractal_iterable = fractal_iterable
+        self._next_frame_number = 0
 
     @abstractmethod
-    def iterate(self):
-        pass
-
-    @abstractmethod
-    def render(self, frame_num, axes):
+    def render_to_canvas(self, frame_num, canvas):
         pass

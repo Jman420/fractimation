@@ -5,6 +5,8 @@ Public Classes :
   * ComplexRangeParams - Represents the parameters associated with a range of complex numbers
 """
 
+import numpy
+
 class ComplexRangeParams(object):
     """
     Parameters for creating a range of complex numbers
@@ -25,7 +27,7 @@ class ComplexRangeParams(object):
     spacing_func = None
 
     def __init__(self, min_real_number, max_real_number, min_imaginary_number,
-                 max_imaginary_number, spacing_func):
+                 max_imaginary_number, spacing_func=numpy.linspace):
         """
         Constructor
 

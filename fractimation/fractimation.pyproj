@@ -36,6 +36,9 @@
     <Compile Include="data_models\formula_params.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="helpers\formula_tools.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="helpers\fractal_algorithm.py">
       <SubType>Code</SubType>
     </Compile>
@@ -67,10 +70,10 @@
     <Compile Include="renderers\base\fractimation_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\cached_image_renderer.py">
+    <Compile Include="renderers\cached_image_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\base\cached_patch_collection_renderer.py">
+    <Compile Include="renderers\cached_patch_collection_renderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\functionality\zoomable_complex_range.py">
@@ -79,46 +82,16 @@
     <Compile Include="renderers\base\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\collatz_fractal.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\fibonacci_square.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="renderers\base\cached_renderer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\functionality\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\formula_based_fractal.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\golden_spiral.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\multibrot.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\multijulia.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="helpers\render.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\newton_fractal.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\complex_polynomial.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="renderers\__init__.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\sierpinski_carpet.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="renderers\sierpinski_triangle.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ui\__init__.py">

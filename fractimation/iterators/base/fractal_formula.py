@@ -50,7 +50,7 @@ class FractalFormulaIterator(Iterator, ABC):
         z_values = numpy.multiply(numpy.complex(0, 1), z_values_range.imaginary_number_values)
         z_values = numpy.add(z_values, z_values_range.real_number_values)
 
-        self._current_iteration = 0
+        self._next_iteration = 0
         self._formula_iterable = formula_iterable
         self._z_values = z_values
         self._c_values = c_values
@@ -61,6 +61,7 @@ class FractalFormulaIterator(Iterator, ABC):
     def get_c_values(self):
         return self._c_values
 
-    @abstractclassmethod
     def __next__(cls):
-        return super().__next__()
+        max_iterations = cls._formula_iterable.get_max_iterations()
+        if max_iterations is not None and cls._next_iteration >= max_iterations:
+            raise StopIteration
