@@ -25,46 +25,46 @@ class CachedImageRenderer(CachedRenderer):
         image_array = numpy.add(image_array, image_params.initial_value)
         self._image_array = image_array
 
-        self._image_canvas = image_axes.imshow(self._image_array, cmap=image_params.color_map,
-                                               origin=_IMAGE_ORIGIN)
+        self._image_canvas = image_axes.imshow(self._image_array, cmap=image_params.color_map)
 
         self._dimension_params = dimension_params
         self._image_params = image_params
         
     def render_to_canvas(self, frame_num, canvas):
         if frame_num not in self._render_cache:
-            self.render_to_cache(frame_num)
+            for frame_counter in range(self._next_frame_number, frame_num + 1):
+                self.render_to_cache()
 
         final_image = self._render_cache[frame_num]
         self._image_canvas.set_data(final_image)
         self._image_canvas.autoscale()
 
-    def render_to_cache(self, max_frame_num):
-        frame_counter = 0
+    def render_to_cache(self):
+        iteration_data = self._fractal_iterator.__next__()
+        frame_num = self._next_frame_number
 
-        for frame_counter in range(self._next_frame_number, max_frame_num + 1):
-            iteration_data = self._fractal_iterator.__next__()
+        if iteration_data is None:
+            last_image = self._render_cache[len(self._render_cache) - 1]
+            self._render_cache.update({frame_num : last_image})
+        else:
+            dimension_params = self._dimension_params
+            exploded_indexes = iteration_data.exploded_indexes
+            exploded_x_indexes = dimension_params.x_indexes[exploded_indexes]
+            exploded_y_indexes = dimension_params.y_indexes[exploded_indexes]
+            self._image_array[exploded_x_indexes, exploded_y_indexes] = frame_num
 
-            if iteration_data is None:
-                last_image = self._render_cache[len(self._render_cache) - 1]
-                self._render_cache.update({frame_counter : last_image})
-            else:
-                dimension_params = self._dimension_params
-                exploded_indexes = iteration_data.exploded_indexes
-                exploded_x_indexes = dimension_params.x_indexes[exploded_indexes]
-                exploded_y_indexes = dimension_params.y_indexes[exploded_indexes]
-                self._image_array[exploded_x_indexes, exploded_y_indexes] = frame_counter
+            final_image = self._image_array
+            if self._image_params.recolor_image:
+                final_image = update_indexes_with_value(final_image,
+                                                        self._image_params.initial_value,
+                                                        frame_num + 1)
 
-                final_image = self._image_array
-                if self._image_params.recolor_image:
-                    final_image = update_indexes_with_value(final_image,
-                                                            self._image_params.initial_value,
-                                                            frame_counter + 1)
+            self._render_cache.update({frame_num : final_image.T})
 
-                self._render_cache.update({final_image : reoriented_image})
+            reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
+            remaining_indexes = iteration_data.remaining_indexes
+            reduced_arrays = remove_indexes(reducable_arrays, remaining_indexes)
+            dimension_params.x_indexes = reduced_arrays[0]
+            dimension_params.y_indexes = reduced_arrays[1]
 
-                reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
-                remaining_indexes = iteration_data.remaining_indexes
-                reduced_arrays = remove_indexes(reducable_arrays, remaining_indexes)
-                dimension_params.x_indexes = reduced_arrays[0]
-                dimension_params.y_indexes = reduced_arrays[1]
+        self._next_frame_number += 1

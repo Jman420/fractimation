@@ -21,7 +21,7 @@ class CachedRenderer(FractimationRenderer, ABC):
         print("Preheating Cache to {} iterations...".format(max_iterations))
         for iteration_counter in range(len(self._render_cache), max_iterations):
             print("Iteration {} processing...".format(iteration_counter))
-            self.render_to_cache(iteration_counter)
+            self.render_to_cache()
 
         print("Completed preheating cache!")
 
@@ -30,5 +30,5 @@ class CachedRenderer(FractimationRenderer, ABC):
         super().render(frame_num, canvas)
 
     @abstractmethod
-    def render_to_cache(self, frame_num):
+    def render_to_cache(self):
         pass

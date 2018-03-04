@@ -19,7 +19,7 @@ class Multibrot(ComplexPolynomialIterable):
 
             z_values_range = ComplexRange(real_zeros, imaginary_zeros)
 
-        coefficient_array = numpy.zeros(power, dtype=int)
+        coefficient_array = numpy.zeros(power + 1, dtype=int)
         coefficient_array[0] = 1
         coefficient_array[-1] = 1
 
