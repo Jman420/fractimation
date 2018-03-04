@@ -5,12 +5,10 @@ class FractimationRenderer(ABC, object):
 
     _render_axes = None
     _fractal_iterable = None
-    _next_frame_number = None
 
     def __init__(self, render_axes, fractal_iterable):
         self._render_axes = render_axes
         self._fractal_iterable = fractal_iterable
-        self._next_frame_number = 0
 
     @abstractmethod
     def render_to_canvas(self, frame_num, canvas):

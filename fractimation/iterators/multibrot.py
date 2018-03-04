@@ -7,7 +7,6 @@ from ..data_models.complex_range import ComplexRange
 _MANDELBROT_POWER = 2
 
 class Multibrot(ComplexPolynomialIterable):
-    """description of class"""
 
     def __init__(self, c_values_range, escape_value, power=_MANDELBROT_POWER, z_values_range=None,
                  max_iterations=None):

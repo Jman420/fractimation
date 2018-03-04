@@ -4,8 +4,7 @@ from collections.abc import Iterable, Iterator
 import numpy
 
 class FractalFormulaIterable(Iterable, ABC):
-    """description of class"""
-
+    
     _max_iterations = None
     _z_values_range = None
     _c_values_range = None
@@ -34,8 +33,7 @@ class FractalFormulaIterable(Iterable, ABC):
         return super().__iter__()
 
 class FractalFormulaIterator(Iterator, ABC):
-    """description of class"""
-
+    
     _next_iteration = None
     _formula_iterable = None
     _z_values = None

@@ -12,7 +12,7 @@ class CachedRenderer(FractimationRenderer, ABC):
         super().__init__(render_axes, fractal_iterable)
 
         self._fractal_iterator = self._fractal_iterable.__iter__()
-        self._render_cache = {}
+        self._render_cache = []
 
     def preheat_render_cache(self, max_iterations):
         if max_iterations <= len(self._render_cache):
