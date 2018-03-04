@@ -8,8 +8,11 @@ class CachedRenderer(FractimationRenderer, ABC):
     _fractal_iterator = None
     _render_cache = None
 
-    def __init__(self, render_axes, fractal_iterable):
-        super().__init__(render_axes, fractal_iterable)
+    def __init__(self, render_axes):
+        super().__init__(render_axes)
+
+    def initialize(self, fractal_iterable):
+        super().initialize(fractal_iterable)
 
         self._fractal_iterator = self._fractal_iterable.__iter__()
         self._render_cache = []

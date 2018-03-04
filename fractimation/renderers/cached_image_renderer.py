@@ -15,22 +15,28 @@ class CachedImageRenderer(CachedRenderer):
     _image_canvas = None
 
     def __init__(self, image_axes, fractal_iterable, dimension_params, image_params=None):
-        super().__init__(image_axes, fractal_iterable)
+        super().__init__(image_axes)
 
         if image_params is None:
             image_params = ImageParams()
 
-        image_array = numpy.zeros([dimension_params.width, dimension_params.height], dtype=int)
-        image_array = numpy.add(image_array, image_params.initial_value)
+        self._dimension_params = dimension_params
+        self._image_params = image_params
+
+        self.initialize(fractal_iterable)
+
+    def initialize(self, fractal_iterable):
+        super().initialize(fractal_iterable)
+
+        image_array = numpy.zeros([self._dimension_params.width, self._dimension_params.height],
+                                  dtype=int)
+        image_array = numpy.add(image_array, self._image_params.initial_value)
         self._image_array = image_array
 
         initial_image = numpy.copy(self._image_array)
         rotated_image = initial_image.T
-        self._image_canvas = image_axes.imshow(rotated_image, cmap=image_params.color_map)
+        self._image_canvas = self._render_axes.imshow(rotated_image, cmap=self._image_params.color_map)
         self._render_cache.append(rotated_image)
-
-        self._dimension_params = dimension_params
-        self._image_params = image_params
         
     def render_to_canvas(self, frame_num, canvas):
         if frame_num >= len(self._render_cache):

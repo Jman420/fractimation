@@ -18,6 +18,11 @@ class FractalFormulaIterable(Iterable, ABC):
 
     def __init__(self, z_values_range_params, c_values_range_params, dimension_params,
                  formula_params, max_iterations=None):
+        self.initialize(z_values_range_params, c_values_range_params, dimension_params,
+                        formula_params, max_iterations)
+
+    def initialize(self, z_values_range_params, c_values_range_params, dimension_params,
+                   formula_params, max_iterations=None):
         self._z_values_range = generate_complex_range(z_values_range_params, dimension_params)
         self._c_values_range = generate_complex_range(c_values_range_params, dimension_params)
 
@@ -30,11 +35,20 @@ class FractalFormulaIterable(Iterable, ABC):
     def get_max_iterations(self):
         return self._max_iterations
 
+    def get_z_values_range_params(self):
+        return self._z_values_range_params
+
     def get_z_values_range(self):
         return self._z_values_range
 
+    def get_c_values_range_params(self):
+        return self._c_values_range_params
+
     def get_c_values_range(self):
         return self._c_values_range
+
+    def get_dimension_params(self):
+        return self._dimension_params
 
     def get_formula_params(self):
         return self._formula_params
