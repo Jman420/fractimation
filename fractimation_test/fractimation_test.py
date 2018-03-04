@@ -19,7 +19,7 @@ from fractimation.renderers.cached_image_renderer import CachedImageRenderer
 # General Brot & Julia Fractal Parameters
 width, height = 720, 1280                              # Width and Height of the image
                                                        # ^^ quick ref : 480p;(640, 480) 720p;(1280, 720) 1080p;(1920, 1080) UHD/4K;(3840, 2160) 8K;(7680, 4320)
-max_iterations = 5                                    # Total number of iterations of fractal equation
+max_iterations = 60                                    # Total number of iterations of fractal equation
                                                        # ^^ Careful with this value; we are caching each frame
 color_map = "viridis"                                  # Any valid color map name or combination (default : viridis)
                                                        # ^^ reference : https://matplotlib.org/examples/color/colormaps_reference.html
