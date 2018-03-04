@@ -3,18 +3,29 @@ from collections.abc import Iterable, Iterator
 
 import numpy
 
+from ...helpers.formula_tools import generate_complex_range
+
 class FractalFormulaIterable(Iterable, ABC):
     
     _max_iterations = None
-    _z_values_range = None
-    _c_values_range = None
+    _z_values_range_params = None
+    _c_values_range_params = None
+    _dimension_params = None
     _formula_params = None
 
-    def __init__(self, z_values_range, c_values_range, formula_params, max_iterations=None):
-        self._max_iterations = max_iterations
-        self._z_values_range = z_values_range
-        self._c_values_range = c_values_range
+    _z_values_range = None
+    _c_values_range = None
+
+    def __init__(self, z_values_range_params, c_values_range_params, dimension_params,
+                 formula_params, max_iterations=None):
+        self._z_values_range = generate_complex_range(z_values_range_params, dimension_params)
+        self._c_values_range = generate_complex_range(c_values_range_params, dimension_params)
+
+        self._z_values_range_params = z_values_range_params
+        self._c_values_range_params = c_values_range_params
+        self._dimension_params = dimension_params
         self._formula_params = formula_params
+        self._max_iterations = max_iterations
 
     def get_max_iterations(self):
         return self._max_iterations

@@ -17,7 +17,7 @@ from fractimation.iterators.multibrot import Multibrot
 from fractimation.renderers.cached_image_renderer import CachedImageRenderer
 
 # General Brot & Julia Fractal Parameters
-width, height = 720, 1280                              # Width and Height of the image
+width, height = 1280, 720                              # Width and Height of the image
                                                        # ^^ quick ref : 480p;(640, 480) 720p;(1280, 720) 1080p;(1920, 1080) UHD/4K;(3840, 2160) 8K;(7680, 4320)
 max_iterations = 60                                    # Total number of iterations of fractal equation
                                                        # ^^ Careful with this value; we are caching each frame
@@ -36,8 +36,7 @@ multibrot_viewer = PlotPlayer(multibrot_window_mngr)
 
 image_dimensions = DimensionParams(width, height)
 c_values_params = ComplexRangeParams(real_number_min, real_number_max, imaginary_number_min, imaginary_number_max)
-c_values_range = generate_complex_range(c_values_params, image_dimensions)
-multibrot_fractal = Multibrot(c_values_range, escape_value)
+multibrot_fractal = Multibrot(c_values_params, image_dimensions, escape_value)
 
 multibrot_image_params = ImageParams(recolor_image=True)
 multibrot_renderer = CachedImageRenderer(multibrot_viewer.get_render_manager().get_animation_axes(), multibrot_fractal, image_dimensions, multibrot_image_params)

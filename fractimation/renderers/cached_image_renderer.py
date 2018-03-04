@@ -25,8 +25,9 @@ class CachedImageRenderer(CachedRenderer):
         self._image_array = image_array
 
         initial_image = numpy.copy(self._image_array)
-        self._image_canvas = image_axes.imshow(initial_image, cmap=image_params.color_map)
-        self._render_cache.append(initial_image.T)
+        rotated_image = initial_image.T
+        self._image_canvas = image_axes.imshow(rotated_image, cmap=image_params.color_map)
+        self._render_cache.append(rotated_image)
 
         self._dimension_params = dimension_params
         self._image_params = image_params
@@ -60,7 +61,8 @@ class CachedImageRenderer(CachedRenderer):
                                                         frame_num + 1)
             else:
                 final_image = numpy.copy(self._image_array)
-            self._render_cache.append(final_image.T)
+            rotated_image = final_image.T
+            self._render_cache.append(rotated_image)
 
             reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
             remaining_indexes = iteration_data.remaining_indexes

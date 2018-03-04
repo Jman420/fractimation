@@ -2,21 +2,16 @@ import numpy
 
 from .complex_polynomial import ComplexPolynomialIterable
 from ..data_models.formula_params import FormulaParams
-from ..data_models.complex_range import ComplexRange
+from ..data_models.complex_range_params import ComplexRangeParams
 
 _MANDELBROT_POWER = 2
 
 class Multibrot(ComplexPolynomialIterable):
 
-    def __init__(self, c_values_range, escape_value, power=_MANDELBROT_POWER, z_values_range=None,
-                 max_iterations=None):
-        if z_values_range is None:
-            range_shape = [len(c_values_range.real_number_values),
-                           len(c_values_range.real_number_values[0])]
-            real_zeros = numpy.zeros(range_shape, int)
-            imaginary_zeros = numpy.zeros(range_shape, int)
-
-            z_values_range = ComplexRange(real_zeros, imaginary_zeros)
+    def __init__(self, c_values_range_params, dimension_params, escape_value,
+                 power=_MANDELBROT_POWER, z_values_range_params=None, max_iterations=None):
+        if z_values_range_params is None:
+            z_values_range_params = ComplexRangeParams(0, 0, 0, 0)
 
         coefficient_array = numpy.zeros(power + 1, dtype=int)
         coefficient_array[0] = 1
@@ -24,4 +19,5 @@ class Multibrot(ComplexPolynomialIterable):
 
         formula_params = FormulaParams(coefficient_array, escape_value)
 
-        super().__init__(z_values_range, c_values_range, formula_params, max_iterations)
+        super().__init__(z_values_range_params, c_values_range_params, dimension_params,
+                         formula_params, max_iterations)
