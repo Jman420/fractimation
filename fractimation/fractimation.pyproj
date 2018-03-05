@@ -24,6 +24,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="data_models\complex_polynomial_iteration_data.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="data_models\complex_range.py">
       <SubType>Code</SubType>
     </Compile>
@@ -63,6 +66,9 @@
     <Compile Include="iterators\complex_polynomial.py" />
     <Compile Include="iterators\multijulia.py" />
     <Compile Include="iterators\multibrot.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="iterators\newton_method.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="iterators\__init__.py">

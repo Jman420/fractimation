@@ -11,11 +11,13 @@ from fractimation.functionality.zoomable_complex_range import ZoomableComplexRan
 from fractimation.data_models.complex_range_params import ComplexRangeParams
 from fractimation.data_models.dimension_params import DimensionParams
 from fractimation.data_models.image_params import ImageParams
+from fractimation.data_models.formula_params import FormulaParams
 
 from fractimation.helpers.formula_tools import generate_complex_range
 
 from fractimation.iterators.multibrot import Multibrot
 from fractimation.iterators.multijulia import Multijulia
+from fractimation.iterators.newton_method import NewtonMethod
 
 from fractimation.renderers.cached_image_renderer import CachedImageRenderer
 
@@ -75,21 +77,29 @@ zoom_handler = ZoomHandler(zoom_backend, viewer)
 
 viewer.initialize(max_iterations, renderer.render_to_canvas, "multijuliaFractal")
 
-PlotPlayer.show_players()
-
 # Newton Fractal
-newton_fractal_window_mngr = WindowManager(window_title="Newton Fractal", toolbar_visible=False)
-newton_fractal_viewer = PlotPlayer(newton_fractal_window_mngr)
 real_number_min, real_number_max = -5, 5                   # Min & Max values for X values in fractal equation
 imaginary_number_min, imaginary_number_max = -5, 5         # Min & Max values for Y values in fractal equation
 constant_real_number, constant_imaginary_number = 1.0, 0.0 # Constant C value
 coefficient_array = [ -1, 0, 0, 0, 1 ]                     # Representation of polynomial equation coefficients in accending order (ie. c + x + x**2 + ... + x**n)
 escape_value = 1e-4
-newton_fractal = NewtonFractal(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
-                                      coefficient_array, constant_real_number, constant_imaginary_number, escape_value, color_map)
-newton_zoom_handler = ZoomHandler(newton_fractal, newton_fractal_viewer)
-newton_fractal_viewer.initialize(max_iterations, newton_fractal.render, "newtonFractal")
-newton_fractal.preheat_render_cache(max_iterations)
+
+window_mngr = WindowManager(window_title="Newton Fractal", toolbar_visible=False)
+viewer = PlotPlayer(window_mngr)
+
+image_dimensions = DimensionParams(width, height)
+z_values_params = ComplexRangeParams(real_number_min, real_number_max, imaginary_number_min, imaginary_number_max)
+c_values_params = ComplexRangeParams(constant_real_number, constant_real_number, constant_imaginary_number, constant_imaginary_number)
+formula_params = FormulaParams(coefficient_array, escape_value)
+fractal = NewtonMethod(z_values_params, c_values_params, image_dimensions, formula_params)
+
+renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
+renderer.preheat_render_cache(max_iterations)
+
+zoom_backend = ZoomableComplexRange(renderer)
+zoom_handler = ZoomHandler(zoom_backend, viewer)
+
+viewer.initialize(max_iterations, renderer.render_to_canvas, "newtonFractal")
 
 PlotPlayer.show_players()
 
