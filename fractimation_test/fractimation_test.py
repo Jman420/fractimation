@@ -45,7 +45,6 @@ multibrot_renderer.preheat_render_cache(max_iterations)
 
 multibrot_zoom_backend = ZoomableComplexRange(multibrot_renderer)
 multibrot_zoom_handler = ZoomHandler(multibrot_zoom_backend, multibrot_viewer)
-#multibrot_zoom_backend.zoom_in(0, 0, 10, 10)
 
 multibrot_viewer.initialize(max_iterations, multibrot_renderer.render_to_canvas, "multibrotFractal")
 
