@@ -15,6 +15,8 @@ from fractimation.data_models.image_params import ImageParams
 from fractimation.helpers.formula_tools import generate_complex_range
 
 from fractimation.iterators.multibrot import Multibrot
+from fractimation.iterators.multijulia import Multijulia
+
 from fractimation.renderers.cached_image_renderer import CachedImageRenderer
 
 # General Brot & Julia Fractal Parameters
@@ -32,37 +34,48 @@ constant_real_number, constant_imaginary_number = 0.0, 0.0 # Initial Z Value
 power = 2                                                  # Power to raise Z value to for each iteration of fractal equation
 escape_value = 2.0                                         # Limit at which Z values will reach infinity
 
-multibrot_window_mngr = WindowManager(window_title="Multibrot Set", toolbar_visible=False)
-multibrot_viewer = PlotPlayer(multibrot_window_mngr)
+window_mngr = WindowManager(window_title="Multibrot Set", toolbar_visible=False)
+viewer = PlotPlayer(window_mngr)
 
 image_dimensions = DimensionParams(width, height)
+z_values_params = ComplexRangeParams(constant_real_number, constant_real_number, constant_imaginary_number, constant_imaginary_number)
 c_values_params = ComplexRangeParams(real_number_min, real_number_max, imaginary_number_min, imaginary_number_max)
-multibrot_fractal = Multibrot(c_values_params, image_dimensions, escape_value)
+fractal = Multibrot(c_values_params, image_dimensions, escape_value, z_values_range_params=z_values_params)
 
-multibrot_image_params = ImageParams(recolor_image=True)
-multibrot_renderer = CachedImageRenderer(multibrot_viewer.get_render_manager().get_animation_axes(), multibrot_fractal, image_dimensions, multibrot_image_params)
-multibrot_renderer.preheat_render_cache(max_iterations)
+image_params = ImageParams(recolor_image=True)
+renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
+renderer.preheat_render_cache(max_iterations)
 
-multibrot_zoom_backend = ZoomableComplexRange(multibrot_renderer)
-multibrot_zoom_handler = ZoomHandler(multibrot_zoom_backend, multibrot_viewer)
+zoom_backend = ZoomableComplexRange(renderer)
+zoom_handler = ZoomHandler(zoom_backend, viewer)
 
-multibrot_viewer.initialize(max_iterations, multibrot_renderer.render_to_canvas, "multibrotFractal")
-
-PlotPlayer.show_players()
+viewer.initialize(max_iterations, renderer.render_to_canvas, "multibrotFractal")
 
 # Julia Set
-multijulia_window_mngr = WindowManager(window_title="Julia Set", toolbar_visible=False)
-multijulia_viewer = PlotPlayer(multijulia_window_mngr)
 real_number_min, real_number_max = -1.5, 1.5               # Min & Max values for X values in fractal equation
 imaginary_number_min, imaginary_number_max = -1.5, 1.5     # Min & Max values for Y values in fractal equation
 constant_real_number, constant_imaginary_number = 0.0, 0.8 # Constant C value
 power = 2                                                  # Power to raise Z value to for each iteration of fractal equation
 escape_value = 10.0                                        # Limit at which Z values will reach infinity
-multijulia_fractal = Multijulia(width, height, real_number_min, real_number_max, imaginary_number_min, imaginary_number_max,
-                                        constant_real_number, constant_imaginary_number, power, escape_value, color_map)
-multijulia_zoom_handler = ZoomHandler(multijulia_fractal, multijulia_viewer)
-multijulia_viewer.initialize(max_iterations, multijulia_fractal.render, "multijuliaFractal")
-multijulia_fractal.preheat_render_cache(max_iterations)
+
+window_mngr = WindowManager(window_title="Julia Set", toolbar_visible=False)
+viewer = PlotPlayer(window_mngr)
+
+image_dimensions = DimensionParams(width, height)
+z_values_params = ComplexRangeParams(real_number_min, real_number_max, imaginary_number_min, imaginary_number_max)
+c_values_params = ComplexRangeParams(constant_real_number, constant_real_number, constant_imaginary_number, constant_imaginary_number)
+fractal = Multijulia(z_values_params, image_dimensions, escape_value, c_values_range_params=c_values_params)
+
+image_params = ImageParams(recolor_image=True)
+renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
+renderer.preheat_render_cache(max_iterations)
+
+zoom_backend = ZoomableComplexRange(renderer)
+zoom_handler = ZoomHandler(zoom_backend, viewer)
+
+viewer.initialize(max_iterations, renderer.render_to_canvas, "multijuliaFractal")
+
+PlotPlayer.show_players()
 
 # Newton Fractal
 newton_fractal_window_mngr = WindowManager(window_title="Newton Fractal", toolbar_visible=False)
