@@ -54,6 +54,10 @@ class FractalFormulaIterable(Iterable, ABC):
         return self._formula_params
 
     @abstractclassmethod
+    def get_fractal_name(self):
+        raise NotImplementedError()
+
+    @abstractclassmethod
     def __iter__(cls):
         return super().__iter__()
 

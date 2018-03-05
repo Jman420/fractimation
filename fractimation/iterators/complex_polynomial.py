@@ -5,8 +5,13 @@ from .base.fractal_formula import FractalFormulaIterable, FractalFormulaIterator
 from ..helpers.fractal_algorithm import evaluate_polynomial_1d
 from ..helpers.list_tools import remove_indexes
 
+_FRACTAL_NAME = "Generic Complex Polynomial"
+
 class ComplexPolynomialIterable(FractalFormulaIterable):
-    
+
+    def get_fractal_name(self):
+        return _FRACTAL_NAME
+
     def __iter__(cls):
         return ComplexPolynomialIterator(cls)
 

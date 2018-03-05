@@ -23,12 +23,13 @@ class CachedRenderer(FractimationRenderer, ABC):
         if max_iterations <= len(self._render_cache):
             return
 
-        print("Preheating Cache to {} iterations...".format(max_iterations))
+        fractal_name = self._fractal_iterable.get_fractal_name()
+        print("Preheating {} Render Cache to {} iterations...".format(fractal_name, max_iterations))
         for iteration_counter in range(len(self._render_cache), max_iterations):
             print("Iteration {} processing...".format(iteration_counter))
             self.render_to_cache()
 
-        print("Completed preheating cache!")
+        print("Completed preheating {} Render Cache!".format(fractal_name))
 
     @abstractmethod
     def render_to_canvas(self, frame_num, canvas):

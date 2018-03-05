@@ -5,6 +5,7 @@ from ..data_models.formula_params import FormulaParams
 from ..data_models.complex_range_params import ComplexRangeParams
 
 _MANDELBROT_POWER = 2
+_FRACTAL_NAME = "Multibrot"
 
 class Multibrot(ComplexPolynomialIterable):
 
@@ -21,3 +22,6 @@ class Multibrot(ComplexPolynomialIterable):
 
         super().__init__(z_values_range_params, c_values_range_params, dimension_params,
                          formula_params, max_iterations)
+
+    def get_fractal_name(self):
+        return _FRACTAL_NAME
