@@ -23,6 +23,10 @@ class CachedImageRenderer(CachedRenderer):
         self._dimension_params = dimension_params
         self._image_params = image_params
 
+        temp_image = numpy.zeros([self._dimension_params.width, self._dimension_params.height],
+                                  dtype=int)
+        self._image_canvas = self._render_axes.imshow(temp_image.T, cmap=self._image_params.color_map)
+
         self.initialize(fractal_iterable)
 
     def initialize(self, fractal_iterable):
@@ -35,8 +39,9 @@ class CachedImageRenderer(CachedRenderer):
 
         initial_image = numpy.copy(self._image_array)
         rotated_image = initial_image.T
-        self._image_canvas = self._render_axes.imshow(rotated_image, cmap=self._image_params.color_map)
         self._render_cache.append(rotated_image)
+        self._image_canvas.set_data(rotated_image)
+        self._image_canvas.autoscale()
         
     def render_to_canvas(self, frame_num, canvas):
         if frame_num >= len(self._render_cache):

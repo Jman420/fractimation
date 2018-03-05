@@ -40,7 +40,7 @@ class ZoomHandler(object):
           Matplotlib button_release_event
     """
 
-    _renderer = None
+    _zoomable_backend = None
     _viewer = None
 
     _x_start = None
@@ -51,7 +51,7 @@ class ZoomHandler(object):
     _zoom_box = None
     _zoom_stack = None
 
-    def __init__(self, renderer, viewer, min_zoom_width=10, min_zoom_height=10):
+    def __init__(self, zoomable_backend, viewer, min_zoom_width=10, min_zoom_height=10):
         """
         Constructor
 
@@ -61,7 +61,7 @@ class ZoomHandler(object):
           * min_zoom_width (optional) - Minimum zoom box width
           * min_zoom_height (optional) - Minimum zoom box height
         """
-        self._renderer = renderer
+        self._zoomable_backend = zoomable_backend
         self._viewer = viewer
 
         animation_axes = self._viewer.get_render_manager().get_animation_axes()
@@ -100,7 +100,7 @@ class ZoomHandler(object):
         if not self._zoom_ready:
             return
 
-        self._renderer.zoom_in(self._x_start, self._y_start, self._x_end, self._y_end)
+        self._zoomable_backend.zoom_in(self._x_start, self._y_start, self._x_end, self._y_end)
         self._zoom_ready = False
         self._zoom_box.extents = (0, 0, 0, 0)
 
@@ -110,7 +110,7 @@ class ZoomHandler(object):
         """
         Return to the previous Zoom Coordinates
         """
-        if self._renderer.zoom_out():
+        if self._zoomable_backend.zoom_out():
             _restart_playback(self._viewer)
 
     def _handle_mouse_button_press(self, event_data):

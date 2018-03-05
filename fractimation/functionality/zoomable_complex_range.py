@@ -1,6 +1,16 @@
 import numpy
 
-from ...data_models.complex_range_params import ComplexRangeParams
+from ..data_models.complex_range_params import ComplexRangeParams
+from ..data_models.dimension_params import DimensionParams
+
+def _reinitialize_renderer(renderer, fractal_iterable, z_values_range_params,
+                           c_values_range_params):
+    dimension_params = fractal_iterable.get_dimension_params()
+    dimension_params.initialize()
+    fractal_iterable.initialize(z_values_range_params, c_values_range_params, dimension_params,
+                                fractal_iterable.get_formula_params(),
+                                fractal_iterable.get_max_iterations())
+    renderer.initialize(fractal_iterable)
 
 class ZoomableComplexRange():
     """Base Class for Zoomable Complex Polynomial Fractal Equation Renderers"""
@@ -8,10 +18,8 @@ class ZoomableComplexRange():
     _renderer = None
     _zoom_cache = None
 
-    def __init__(self):
+    def __init__(self, renderer):
         self._zoom_cache = []
-
-    def initialize(self, renderer):
         self._renderer = renderer
 
     def zoom_in(self, top_left_x, top_left_y, bottom_right_x, bottom_right_y):
@@ -42,11 +50,8 @@ class ZoomableComplexRange():
                                                        c_min_imaginary_num, c_max_imaginary_num,
                                                        c_values_range_params.spacing_func)
 
-        fractal_iterable.initialize(new_z_values_range_params, new_c_values_range_params,
-                                    fractal_iterable.get_dimension_params(),
-                                    fractal_iterable.get_formula_params(),
-                                    fractal_iterable.get_max_iterations())
-        self._renderer.initialize(fractal_iterable)
+        _reinitialize_renderer(self._renderer, fractal_iterable, new_z_values_range_params,
+                               new_c_values_range_params)
         self._zoom_cache.append(prev_zoom)
 
     def zoom_out(self):
@@ -55,12 +60,8 @@ class ZoomableComplexRange():
 
         prev_zoom = self._zoom_cache.pop()
         fractal_iterable = self._renderer.get_fractal_iterable()
-        fractal_iterable.initialize(prev_zoom.z_values_range_params,
-                                    prev_zoom.c_values_range_params,
-                                    fractal_iterable.get_dimension_params(),
-                                    fractal_iterable.get_formula_params(),
-                                    fractal_iterable.get_max_iterations())
-        self._renderer.initialize(fractal_iterable)
+        _reinitialize_renderer(self._renderer, fractal_iterable, prev_zoom.z_values_range_params,
+                               prev_zoom.c_values_range_params)
         return True
 
 class ZoomCacheItem(object):

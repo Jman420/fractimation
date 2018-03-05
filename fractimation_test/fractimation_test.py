@@ -6,6 +6,7 @@ from plotplayer.plotplayer import PlotPlayer
 from plotplayer.managers.window_manager import WindowManager
 
 from fractimation.ui.zoom_handler import ZoomHandler
+from fractimation.functionality.zoomable_complex_range import ZoomableComplexRange
 
 from fractimation.data_models.complex_range_params import ComplexRangeParams
 from fractimation.data_models.dimension_params import DimensionParams
@@ -41,6 +42,10 @@ multibrot_fractal = Multibrot(c_values_params, image_dimensions, escape_value)
 multibrot_image_params = ImageParams(recolor_image=True)
 multibrot_renderer = CachedImageRenderer(multibrot_viewer.get_render_manager().get_animation_axes(), multibrot_fractal, image_dimensions, multibrot_image_params)
 multibrot_renderer.preheat_render_cache(max_iterations)
+
+multibrot_zoom_backend = ZoomableComplexRange(multibrot_renderer)
+multibrot_zoom_handler = ZoomHandler(multibrot_zoom_backend, multibrot_viewer)
+#multibrot_zoom_backend.zoom_in(0, 0, 10, 10)
 
 multibrot_viewer.initialize(max_iterations, multibrot_renderer.render_to_canvas, "multibrotFractal")
 

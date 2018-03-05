@@ -6,7 +6,7 @@ Public Classes :
 """
 
 _DEFAULT_COLOR_MAP = "viridis"
-_DEFAULT_IMAGE_ARRAY_VALUE = -1
+_DEFAULT_IMAGE_ARRAY_VALUE = 0
 
 class ImageParams(object):
     """

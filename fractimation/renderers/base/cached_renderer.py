@@ -11,11 +11,13 @@ class CachedRenderer(FractimationRenderer, ABC):
     def __init__(self, render_axes):
         super().__init__(render_axes)
 
+        self._render_cache = list()
+
     def initialize(self, fractal_iterable):
         super().initialize(fractal_iterable)
 
         self._fractal_iterator = self._fractal_iterable.__iter__()
-        self._render_cache = []
+        self._render_cache.clear()
 
     def preheat_render_cache(self, max_iterations):
         if max_iterations <= len(self._render_cache):
@@ -30,7 +32,7 @@ class CachedRenderer(FractimationRenderer, ABC):
 
     @abstractmethod
     def render_to_canvas(self, frame_num, canvas):
-        super().render(frame_num, canvas)
+        super().render_to_canvas(frame_num, canvas)
 
     @abstractmethod
     def render_to_cache(self):

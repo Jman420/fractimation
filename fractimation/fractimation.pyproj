@@ -76,7 +76,7 @@
     <Compile Include="renderers\cached_patch_collection_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\functionality\zoomable_complex_range.py">
+    <Compile Include="functionality\zoomable_complex_range.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="renderers\base\__init__.py">
@@ -91,7 +91,7 @@
     <Compile Include="renderers\__init__.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ui\functionality\__init__.py" />
+    <Compile Include="functionality\__init__.py" />
     <Compile Include="ui\__init__.py">
       <SubType>Code</SubType>
     </Compile>
@@ -108,7 +108,7 @@
     <Folder Include="iterators\base\" />
     <Folder Include="renderers\" />
     <Folder Include="renderers\base\" />
-    <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\ui\functionality\" />
+    <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\functionality\" />
     <Folder Include="ui\" />
   </ItemGroup>
   <ItemGroup>
