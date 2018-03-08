@@ -1,3 +1,4 @@
+from .base.fractimation_functionality import FractimationFunctionality
 from ..data_models.complex_range_params import ComplexRangeParams
 
 def _reinitialize_renderer(renderer, fractal_iterable, z_values_range_params,
@@ -9,12 +10,7 @@ def _reinitialize_renderer(renderer, fractal_iterable, z_values_range_params,
                                 fractal_iterable.get_max_iterations())
     renderer.initialize(fractal_iterable)
 
-class PannableComplexRange(object):
-
-    _renderer = None
-
-    def __init__(self, renderer):
-        self._renderer = renderer
+class PannableComplexRange(FractimationFunctionality):
 
     def pan_range(self, real_range_diff, imaginary_range_diff):
         fractal_iterable = self._renderer.get_fractal_iterable()
@@ -58,4 +54,4 @@ class PannableComplexRange(object):
                                                        c_values_range_params.spacing_func)
 
         _reinitialize_renderer(self._renderer, fractal_iterable, z_values_range_params_new,
-                               c_values_range_params)
+                               c_values_range_params_new)

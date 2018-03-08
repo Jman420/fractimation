@@ -40,13 +40,9 @@ class CachedImageRenderer(CachedRenderer):
         initial_image = numpy.copy(self._image_array)
         rotated_image = initial_image.T
         self._render_cache.append(rotated_image)
-        self._image_canvas.set_data(rotated_image)
-        self._image_canvas.autoscale()
         
     def render_to_canvas(self, frame_num, canvas):
-        if frame_num >= len(self._render_cache):
-            for frame_counter in range(len(self._render_cache), frame_num + 1):
-                self.render_to_cache()
+        super().render_to_canvas(frame_num, canvas)
 
         frame_image = self._render_cache[frame_num]
         self._image_canvas.set_data(frame_image)

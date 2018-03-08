@@ -7,22 +7,12 @@ Public Classes :
 
 import matplotlib.widgets as widgets
 
+from ..helpers.playback import restart_playback
+
 _LEFT_MOUSE_BUTTON = 1
 _RIGHT_MOUSE_BUTTON = 3
 
 _MATPLOTLIB_PAN_ZOOM_MODE = "pan/zoom"
-
-def _restart_playback(viewer):
-    """
-    Method to restart playback from the beginning
-
-    Parameters :
-      * viewer - An instance of PlotPlayer
-    """
-    viewer.stop()
-    viewer.get_render_manager().get_animation_axes().autoscale(True)
-    viewer.get_animation_manager().render(0)
-    viewer.play()
 
 class ZoomHandler(object):
     """
@@ -103,14 +93,14 @@ class ZoomHandler(object):
         self._zoom_ready = False
         self._zoom_box.extents = (0, 0, 0, 0)
 
-        _restart_playback(self._viewer)
+        restart_playback(self._viewer)
 
     def undo_current_zoom(self):
         """
         Return to the previous Zoom Coordinates
         """
         if self._zoomable_backend.zoom_out():
-            _restart_playback(self._viewer)
+            restart_playback(self._viewer)
 
     def _handle_mouse_button_press(self, event_data):
         """

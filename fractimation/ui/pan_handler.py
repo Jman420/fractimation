@@ -1,24 +1,31 @@
-_PAN_TOGGLE_BUTTON = "shift"
+from ..helpers.playback import restart_playback, repopulate_render_cache
+
+_PAN_TOGGLE_BUTTON = '`'
 _SHIFT_LEFT_BUTTON = 'left'
 _SHIFT_RIGHT_BUTTON = 'right'
 _SHIFT_DOWN_BUTTON = 'down'
 _SHIFT_UP_BUTTON = 'up'
 
-_DEFAULT_PAN_SIZE = 0.5
+_DEFAULT_PAN_SIZE = 0.05
 
 def _handle_pan_keys(key, pannable_backend, pan_size):
     handled = True
 
+    real_number_pan_size = 0
+    imaginary_number_pan_size = 0
     if key == _SHIFT_LEFT_BUTTON:
-        pannable_backend.pan_range(-pan_size, 0)
+        real_number_pan_size = -pan_size
     elif key == _SHIFT_RIGHT_BUTTON:
-        pannable_backend.pan_range(pan_size, 0)
+        real_number_pan_size = pan_size
     elif key == _SHIFT_UP_BUTTON:
-        pannable_backend.pan_range(0, pan_size)
+        imaginary_number_pan_size = -pan_size
     elif key == _SHIFT_DOWN_BUTTON:
-        pannable_backend.pan_range(0, -pan_size)
+        imaginary_number_pan_size = pan_size
     else:
         handled = False
+
+    if handled:
+        pannable_backend.pan_range(real_number_pan_size, imaginary_number_pan_size)
 
     return handled
 
@@ -44,6 +51,13 @@ class PanHandler(object):
 
         if self._pan_toggle_pressed and _handle_pan_keys(key, self._pannable_backend,
                                                          self._pan_size):
+            renderer = self._pannable_backend.get_renderer()
+            animation_handler = self._viewer.get_animation_manager()
+            current_frame_num = animation_handler.get_frame_number()
+
+            renderer.populate_render_cache(current_frame_num + 1)
+            animation_handler.render(current_frame_num)
+
             return True
         elif key == _PAN_TOGGLE_BUTTON:
             self._pan_toggle_pressed = True

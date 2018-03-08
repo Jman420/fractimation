@@ -39,6 +39,12 @@
     <Compile Include="data_models\formula_params.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="functionality\base\fractimation_functionality.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="functionality\base\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="functionality\pannable_complex_range.py">
       <SubType>Code</SubType>
     </Compile>
@@ -49,6 +55,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\list_tools.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="helpers\playback.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\__init__.py">
@@ -116,6 +125,7 @@
   <ItemGroup>
     <Folder Include="data_models\" />
     <Folder Include="functionality\" />
+    <Folder Include="functionality\base\" />
     <Folder Include="helpers\" />
     <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\data_models\" />
     <Folder Include="iterators\" />

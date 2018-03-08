@@ -1,5 +1,6 @@
 import numpy
 
+from .base.fractimation_functionality import FractimationFunctionality
 from ..data_models.complex_range_params import ComplexRangeParams
 from ..data_models.dimension_params import DimensionParams
 
@@ -12,14 +13,14 @@ def _reinitialize_renderer(renderer, fractal_iterable, z_values_range_params,
                                 fractal_iterable.get_max_iterations())
     renderer.initialize(fractal_iterable)
 
-class ZoomableComplexRange():
+class ZoomableComplexRange(FractimationFunctionality):
 
-    _renderer = None
     _zoom_cache = None
 
     def __init__(self, renderer):
+        super().__init__(renderer)
+
         self._zoom_cache = []
-        self._renderer = renderer
 
     def zoom_in(self, top_left_x, top_left_y, bottom_right_x, bottom_right_y):
         fractal_iterable = self._renderer.get_fractal_iterable()

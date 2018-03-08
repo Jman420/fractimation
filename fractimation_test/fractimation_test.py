@@ -7,6 +7,8 @@ from plotplayer.managers.window_manager import WindowManager
 
 from fractimation.ui.zoom_handler import ZoomHandler
 from fractimation.functionality.zoomable_complex_range import ZoomableComplexRange
+from fractimation.ui.pan_handler import PanHandler
+from fractimation.functionality.pannable_complex_range import PannableComplexRange
 
 from fractimation.data_models.complex_range_params import ComplexRangeParams
 from fractimation.data_models.dimension_params import DimensionParams
@@ -46,12 +48,17 @@ fractal = Multibrot(c_values_params, image_dimensions, escape_value, z_values_ra
 
 image_params = ImageParams(recolor_image=True)
 renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
-renderer.preheat_render_cache(max_iterations)
+renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
 zoom_handler = ZoomHandler(zoom_backend, viewer)
 
+pan_backend = PannableComplexRange(renderer)
+pan_handler = PanHandler(pan_backend, viewer)
+
 viewer.initialize(max_iterations, renderer.render_to_canvas, "multibrotFractal")
+
+PlotPlayer.show_players()
 
 # Julia Set
 real_number_min, real_number_max = -1.5, 1.5               # Min & Max values for X values in fractal equation
@@ -70,7 +77,7 @@ fractal = Multijulia(z_values_params, image_dimensions, escape_value, c_values_r
 
 image_params = ImageParams(recolor_image=True)
 renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
-renderer.preheat_render_cache(max_iterations)
+renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
 zoom_handler = ZoomHandler(zoom_backend, viewer)
@@ -94,7 +101,7 @@ formula_params = FormulaParams(coefficient_array, escape_value)
 fractal = NewtonMethod(z_values_params, c_values_params, image_dimensions, formula_params)
 
 renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
-renderer.preheat_render_cache(max_iterations)
+renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
 zoom_handler = ZoomHandler(zoom_backend, viewer)
