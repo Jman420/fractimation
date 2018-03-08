@@ -1,7 +1,6 @@
 import numpy
 
 class DimensionParams(object):
-    """description of class"""
 
     width = None
     height = None

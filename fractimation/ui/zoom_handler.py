@@ -49,7 +49,6 @@ class ZoomHandler(object):
     _y_end = None
     _zoom_ready = False
     _zoom_box = None
-    _zoom_stack = None
 
     def __init__(self, zoomable_backend, viewer, min_zoom_width=10, min_zoom_height=10):
         """

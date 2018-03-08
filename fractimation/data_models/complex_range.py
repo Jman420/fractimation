@@ -1,5 +1,4 @@
 class ComplexRange(object):
-    """description of class"""
 
     real_number_values = None
     imaginary_number_values = None

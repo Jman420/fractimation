@@ -13,7 +13,6 @@ def _reinitialize_renderer(renderer, fractal_iterable, z_values_range_params,
     renderer.initialize(fractal_iterable)
 
 class ZoomableComplexRange():
-    """Base Class for Zoomable Complex Polynomial Fractal Equation Renderers"""
 
     _renderer = None
     _zoom_cache = None
