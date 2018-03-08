@@ -10,6 +10,8 @@ The framework can likely be used for general animation purposes as well.
 - Multi-Julia Sets
 - Generic Complex Polynomial Equations
 - Newton Fractal
+
+# Deprecated Fractals (ported in future)
 - Sierpinski Carpet
 - Sierpinski Triangle
 - Fibonacci Squares

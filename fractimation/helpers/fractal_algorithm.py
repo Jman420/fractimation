@@ -65,7 +65,7 @@ def newton_method_algorithm(coefficient_array, coefficient_array_derivative, z_v
     z_values_new = numpy.add(z_values, -func_values)
     iteration_diff = numpy.add(z_values, -z_values_new)
 
-    return iteration_diff, z_values_new
+    return [iteration_diff, z_values_new]
 
 def evaluate_polynomial_1d(coefficient_array, z_values, c_values):
     """
