@@ -10,6 +10,8 @@ The framework can likely be used for general animation purposes as well.
 - Multi-Julia Sets
 - Generic Complex Polynomial Equations
 - Newton Fractal
+
+# Deprecated Fractals (ported in future)
 - Sierpinski Carpet
 - Sierpinski Triangle
 - Fibonacci Squares
@@ -23,8 +25,8 @@ The framework can likely be used for general animation purposes as well.
 - Support Cache Preheating for all renderers
 
 # Dependencies
+- Python v3.6.3
 - Matplotlib (https://matplotlib.org/)
-- numpy (http://www.numpy.org/)
 - plotplayer (https://github.com/Jman420/plotplayer)
 
 # Usage
