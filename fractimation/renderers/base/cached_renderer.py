@@ -53,8 +53,9 @@ class CachedRenderer(FractimationRenderer, ABC):
         super().render_to_canvas(frame_num, canvas)
 
         if frame_num >= len(self._render_cache):
-            self.populate_render_cache(frame_num + 1)
-
+            for frame_counter in range(len(self._render_cache), frame_num + 1):
+                self.render_to_cache()
+        
     @abstractmethod
     def render_to_cache(self):
         pass
