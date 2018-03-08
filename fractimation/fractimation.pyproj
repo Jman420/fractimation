@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data_models\" />
+    <Folder Include="functionality\" />
     <Folder Include="helpers\" />
     <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\data_models\" />
     <Folder Include="iterators\" />

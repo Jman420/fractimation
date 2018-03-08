@@ -101,47 +101,5 @@ zoom_handler = ZoomHandler(zoom_backend, viewer)
 
 viewer.initialize(max_iterations, renderer.render_to_canvas, "newtonFractal")
 
-PlotPlayer.show_players()
-
-# Sierpinski Triangle (3**iteration triangles per iteration)
-sierpinski_triangle_window_mngr = WindowManager(window_title="Sierpinski Triangle")
-sierpinski_triangle_viewer = PlotPlayer(sierpinski_triangle_window_mngr)
-sierpinski_triangle_viewer.get_render_manager().set_slider_visible(True)
-sierpinski_triangle_iterations = 7                      # Be careful with this number; iterations explode at 3**iteration computations
-sierpinski_triangle_line_widths = numpy.linspace(1.0, 0.1, sierpinski_triangle_iterations + 1)
-sierpinski_triangle_fractal = SierpinskiTriangle(sierpinski_triangle_line_widths)
-sierpinski_triangle_viewer.initialize(sierpinski_triangle_iterations, sierpinski_triangle_fractal.render, "sierpinskiTriangle")
-sierpinski_triangle_fractal.preheat_render_cache(sierpinski_triangle_iterations)
-
-# Sierpinski Carpet (8**iteration rectangles per iteration)
-sierpinski_carpet_window_mngr = WindowManager(window_title="Sierpinski Carpet")
-sierpinski_carpet_viewer = PlotPlayer(sierpinski_carpet_window_mngr)
-sierpinski_carpet_viewer.get_render_manager().set_slider_visible(True)
-sierpinski_carpet_iterations = 4                        # Be careful with this number; iterations explode at 8**iteration computations
-sierpinski_carpet_line_widths = numpy.linspace(1.0, 0.1, sierpinski_carpet_iterations + 1)
-sierpinski_carpet_fractal = SierpinskiCarpet(sierpinski_carpet_line_widths)
-sierpinski_carpet_viewer.initialize(sierpinski_carpet_iterations, sierpinski_carpet_fractal.render,  "sierpinskiCarpet")
-sierpinski_carpet_fractal.preheat_render_cache(sierpinski_carpet_iterations)
-
-# Fibonacci Square
-fibonacci_square_window_mngr = WindowManager(window_title="Fibonocci Square")
-fibonacci_square_viewer = PlotPlayer(fibonacci_square_window_mngr)
-fibonacci_square_viewer.get_render_manager().set_slider_visible(True)
-fibonacci_square_iterations = 15
-fibonacci_square_line_widths = numpy.linspace(0.1, 1.0, fibonacci_square_iterations + 1)
-fibonacci_square_fractal = FibonacciSquare(fibonacci_square_line_widths)
-fibonacci_square_viewer.initialize(fibonacci_square_iterations, fibonacci_square_fractal.render, "fibonocciSquare")
-fibonacci_square_fractal.preheat_render_cache(fibonacci_square_iterations)
-
-# Golden Spiral
-golden_spiral_window_mngr = WindowManager(window_title="Golden Spiral")
-golden_spiral_viewer = PlotPlayer(golden_spiral_window_mngr)
-golden_spiral_viewer.get_render_manager().set_slider_visible(True)
-golden_spiral_iterations = 15
-golden_spiral_line_widths = numpy.linspace(0.01, 0.05, golden_spiral_iterations + 1)
-golden_spiral_fractal = GoldenSpiral(golden_spiral_line_widths)
-golden_spiral_viewer.initialize(golden_spiral_iterations, golden_spiral_fractal.render, "goldenSpiral")
-golden_spiral_fractal.preheat_render_cache(golden_spiral_iterations)
-
 # Render Viewers
 PlotPlayer.show_players()
