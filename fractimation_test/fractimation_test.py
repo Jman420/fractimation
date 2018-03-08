@@ -51,7 +51,7 @@ renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(),
 renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
-zoom_handler = ZoomHandler(zoom_backend, viewer)
+multibrot_zoom_handler = ZoomHandler(zoom_backend, viewer)
 
 pan_backend = PannableComplexRange(renderer)
 pan_handler = PanHandler(pan_backend, viewer)
@@ -78,7 +78,7 @@ renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(),
 renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
-zoom_handler = ZoomHandler(zoom_backend, viewer)
+multijulia_zoom_handler = ZoomHandler(zoom_backend, viewer)
 
 pan_backend = PannableComplexRange(renderer)
 pan_handler = PanHandler(pan_backend, viewer)
@@ -105,7 +105,7 @@ renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(),
 renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
-zoom_handler = ZoomHandler(zoom_backend, viewer)
+newton_zoom_handler = ZoomHandler(zoom_backend, viewer)
 
 pan_backend = PannableComplexRange(renderer)
 pan_handler = PanHandler(pan_backend, viewer)
