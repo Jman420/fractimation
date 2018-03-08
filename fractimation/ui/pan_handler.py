@@ -1,4 +1,4 @@
-from ..helpers.playback import restart_playback, repopulate_render_cache
+from ..helpers.playback import restart_playback
 
 _PAN_TOGGLE_BUTTON = '`'
 _SHIFT_LEFT_BUTTON = 'left'

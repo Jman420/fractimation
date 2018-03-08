@@ -58,8 +58,6 @@ pan_handler = PanHandler(pan_backend, viewer)
 
 viewer.initialize(max_iterations, renderer.render_to_canvas, "multibrotFractal")
 
-PlotPlayer.show_players()
-
 # Julia Set
 real_number_min, real_number_max = -1.5, 1.5               # Min & Max values for X values in fractal equation
 imaginary_number_min, imaginary_number_max = -1.5, 1.5     # Min & Max values for Y values in fractal equation
@@ -81,6 +79,9 @@ renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
 zoom_handler = ZoomHandler(zoom_backend, viewer)
+
+pan_backend = PannableComplexRange(renderer)
+pan_handler = PanHandler(pan_backend, viewer)
 
 viewer.initialize(max_iterations, renderer.render_to_canvas, "multijuliaFractal")
 
@@ -105,6 +106,9 @@ renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
 zoom_handler = ZoomHandler(zoom_backend, viewer)
+
+pan_backend = PannableComplexRange(renderer)
+pan_handler = PanHandler(pan_backend, viewer)
 
 viewer.initialize(max_iterations, renderer.render_to_canvas, "newtonFractal")
 
