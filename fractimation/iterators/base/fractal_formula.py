@@ -65,7 +65,6 @@ class FractalFormulaIterator(Iterator, ABC):
     
     _max_iterations = None
     _next_iteration = None
-    _formula_iterable = None
     _z_values = None
     _c_values = None
 
