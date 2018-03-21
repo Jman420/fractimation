@@ -39,6 +39,12 @@
     <Compile Include="data_models\formula_params.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="app_events\cache_events.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="app_events\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="functionality\base\fractimation_functionality.py">
       <SubType>Code</SubType>
     </Compile>
@@ -46,6 +52,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="functionality\pannable_complex_range.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="functionality\pannable_pixel_range.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="helpers\formula_tools.py">
@@ -111,6 +120,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="functionality\__init__.py" />
+    <Compile Include="ui\draw_handler.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ui\pan_handler.py">
       <SubType>Code</SubType>
     </Compile>
@@ -123,7 +135,9 @@
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app_events\" />
     <Folder Include="data_models\" />
+    <Folder Include="C:\J Stash\Projects\fractimation\src\fractimation\app_events\" />
     <Folder Include="functionality\" />
     <Folder Include="functionality\base\" />
     <Folder Include="helpers\" />

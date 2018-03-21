@@ -14,18 +14,14 @@ class CachedImageRenderer(CachedRenderer):
     _image_array = None
     _image_canvas = None
 
-    def __init__(self, image_axes, fractal_iterable, dimension_params, image_params=None):
-        super().__init__(image_axes)
+    def __init__(self, fractal_iterable, dimension_params, image_params=None):
+        super().__init__()
 
         if image_params is None:
             image_params = ImageParams()
 
         self._dimension_params = dimension_params
         self._image_params = image_params
-
-        temp_image = numpy.zeros([self._dimension_params.width, self._dimension_params.height],
-                                  dtype=int)
-        self._image_canvas = self._render_axes.imshow(temp_image.T, cmap=self._image_params.color_map)
 
         self.initialize(fractal_iterable)
 
@@ -40,13 +36,6 @@ class CachedImageRenderer(CachedRenderer):
         initial_image = numpy.copy(self._image_array)
         rotated_image = initial_image.T
         self._render_cache.append(rotated_image)
-        
-    def render_to_canvas(self, frame_num, canvas):
-        super().render_to_canvas(frame_num, canvas)
-
-        frame_image = self._render_cache[frame_num]
-        self._image_canvas.set_data(frame_image)
-        self._image_canvas.autoscale()
 
     def render_to_cache(self):
         iteration_data = self._fractal_iterator.__next__()
@@ -71,8 +60,14 @@ class CachedImageRenderer(CachedRenderer):
             rotated_image = final_image.T
             self._render_cache.append(rotated_image)
 
-            reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
             remaining_indexes = iteration_data.remaining_indexes
+            reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
             reduced_arrays = remove_indexes(reducable_arrays, remaining_indexes)
             dimension_params.x_indexes = reduced_arrays[0]
             dimension_params.y_indexes = reduced_arrays[1]
+
+    def get_image_params(self):
+        return self._image_params
+
+    def get_dimension_params(self):
+        return self._dimension_params

@@ -9,6 +9,7 @@ from fractimation.ui.zoom_handler import ZoomHandler
 from fractimation.functionality.zoomable_complex_range import ZoomableComplexRange
 from fractimation.ui.pan_handler import PanHandler
 from fractimation.functionality.pannable_complex_range import PannableComplexRange
+from fractimation.ui.draw_handler import DrawHandler
 
 from fractimation.data_models.complex_range_params import ComplexRangeParams
 from fractimation.data_models.dimension_params import DimensionParams
@@ -47,7 +48,7 @@ c_values_params = ComplexRangeParams(real_number_min, real_number_max, imaginary
 fractal = Multibrot(c_values_params, image_dimensions, escape_value, z_values_range_params=z_values_params)
 
 image_params = ImageParams(recolor_image=True)
-renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
+renderer = CachedImageRenderer(fractal, image_dimensions, image_params)
 renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
@@ -56,7 +57,10 @@ multibrot_zoom_handler = ZoomHandler(zoom_backend, viewer)
 pan_backend = PannableComplexRange(renderer)
 pan_handler = PanHandler(pan_backend, viewer)
 
-viewer.initialize(max_iterations, renderer.render_to_canvas, "multibrotFractal")
+draw_handler = DrawHandler(renderer, viewer.get_render_manager().get_animation_axes())
+viewer.initialize(max_iterations, draw_handler.draw, "multibrotFractal")
+
+PlotPlayer.show_players()
 
 # Julia Set
 real_number_min, real_number_max = -1.5, 1.5               # Min & Max values for X values in fractal equation
