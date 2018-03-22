@@ -25,7 +25,7 @@ def _handle_pan_keys(key, pannable_backend, pan_size):
         handled = False
 
     if handled:
-        pannable_backend.pan_range(real_number_pan_size, imaginary_number_pan_size)
+        pannable_backend.pan(real_number_pan_size, imaginary_number_pan_size)
 
     return handled
 

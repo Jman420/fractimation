@@ -12,7 +12,7 @@ def _reinitialize_renderer(renderer, fractal_iterable, z_values_range_params,
 
 class PannableComplexRange(FractimationFunctionality):
 
-    def pan_range(self, real_range_diff, imaginary_range_diff):
+    def pan(self, real_range_diff, imaginary_range_diff):
         fractal_iterable = self._renderer.get_fractal_iterable()
 
         z_values_range_params = fractal_iterable.get_z_values_range_params()

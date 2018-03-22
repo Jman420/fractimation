@@ -101,9 +101,6 @@
     <Compile Include="renderers\cached_image_renderer.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="renderers\cached_patch_collection_renderer.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="functionality\zoomable_complex_range.py">
       <SubType>Code</SubType>
     </Compile>

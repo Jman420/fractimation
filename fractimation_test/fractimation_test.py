@@ -60,8 +60,6 @@ pan_handler = PanHandler(pan_backend, viewer)
 draw_handler = DrawHandler(renderer, viewer.get_render_manager().get_animation_axes())
 viewer.initialize(max_iterations, draw_handler.draw, "multibrotFractal")
 
-PlotPlayer.show_players()
-
 # Julia Set
 real_number_min, real_number_max = -1.5, 1.5               # Min & Max values for X values in fractal equation
 imaginary_number_min, imaginary_number_max = -1.5, 1.5     # Min & Max values for Y values in fractal equation
@@ -78,7 +76,7 @@ c_values_params = ComplexRangeParams(constant_real_number, constant_real_number,
 fractal = Multijulia(z_values_params, image_dimensions, escape_value, c_values_range_params=c_values_params)
 
 image_params = ImageParams(recolor_image=True)
-renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
+renderer = CachedImageRenderer(fractal, image_dimensions, image_params)
 renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
@@ -87,7 +85,8 @@ multijulia_zoom_handler = ZoomHandler(zoom_backend, viewer)
 pan_backend = PannableComplexRange(renderer)
 pan_handler = PanHandler(pan_backend, viewer)
 
-viewer.initialize(max_iterations, renderer.render_to_canvas, "multijuliaFractal")
+draw_handler = DrawHandler(renderer, viewer.get_render_manager().get_animation_axes())
+viewer.initialize(max_iterations, draw_handler.draw, "multijuliaFractal")
 
 # Newton Fractal
 real_number_min, real_number_max = -5, 5                   # Min & Max values for X values in fractal equation
@@ -105,7 +104,7 @@ c_values_params = ComplexRangeParams(constant_real_number, constant_real_number,
 formula_params = FormulaParams(coefficient_array, escape_value)
 fractal = NewtonMethod(z_values_params, c_values_params, image_dimensions, formula_params)
 
-renderer = CachedImageRenderer(viewer.get_render_manager().get_animation_axes(), fractal, image_dimensions, image_params)
+renderer = CachedImageRenderer(fractal, image_dimensions, image_params)
 renderer.populate_render_cache(max_iterations)
 
 zoom_backend = ZoomableComplexRange(renderer)
@@ -114,7 +113,8 @@ newton_zoom_handler = ZoomHandler(zoom_backend, viewer)
 pan_backend = PannableComplexRange(renderer)
 pan_handler = PanHandler(pan_backend, viewer)
 
-viewer.initialize(max_iterations, renderer.render_to_canvas, "newtonFractal")
+draw_handler = DrawHandler(renderer, viewer.get_render_manager().get_animation_axes())
+viewer.initialize(max_iterations, draw_handler.draw, "newtonFractal")
 
 # Render Viewers
 PlotPlayer.show_players()

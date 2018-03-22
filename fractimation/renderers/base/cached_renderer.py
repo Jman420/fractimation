@@ -46,6 +46,9 @@ class CachedRenderer(FractimationRenderer, ABC):
 
         frame = self._render_cache[frame_num]
         return frame
+
+    def get_render_cache(self):
+        return self._render_cache
         
     @abstractmethod
     def render_to_cache(self):

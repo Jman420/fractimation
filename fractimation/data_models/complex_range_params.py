@@ -26,8 +26,8 @@ class ComplexRangeParams(object):
     max_imaginary_number = None
     spacing_func = None
 
-    def __init__(self, min_real_number, max_real_number, min_imaginary_number,
-                 max_imaginary_number, spacing_func=numpy.linspace):
+    def __init__(self, min_real_number=0, max_real_number=0, min_imaginary_number=0,
+                 max_imaginary_number=0, spacing_func=numpy.linspace):
         """
         Constructor
 
