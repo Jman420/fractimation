@@ -1,5 +1,7 @@
 import numpy
 
+from copy import copy
+
 from .base.fractimation_functionality import FractimationFunctionality
 from ..data_models.complex_range_params import ComplexRangeParams
 from ..data_models.dimension_params import DimensionParams
@@ -21,7 +23,7 @@ def _append_array_2d(orig_array, values, start_index):
 
     return new_array
 
-# NOTE : THIS FUNCTIONALITY WILL ONLY WORK WITH LINEAR SPACED Z & C VALUES
+# NOTE : THIS FUNCTIONALITY WILL ONLY WORK WITH LINEAR SPACED Z & C VALUES (need to outsource diff calc/map to iterable)
 class PannablePixelRange(FractimationFunctionality):
 
     # NOTE: THIS WHOLE THING NEEDS REWRITING; ITS FAR TOO CONVOLUTED
@@ -48,82 +50,62 @@ class PannablePixelRange(FractimationFunctionality):
         c_imaginary_range_diff = c_values_range.imaginary_number_values[0][abs(imaginary_pixel_diff)] - c_first_imaginary_num
         
         # calculate new areas' complex ranges
-        horizontal_z_range_params = ComplexRangeParams()
-        horizontal_c_range_params = ComplexRangeParams()
-        vertical_z_range_params = ComplexRangeParams()
-        vertical_c_range_params = ComplexRangeParams()
+        orig_z_range_params = fractal_iterable.get_z_values_range_params()
+        orig_c_range_params = fractal_iterable.get_c_values_range_params()
+
+        horizontal_z_range_params = copy(orig_z_range_params)
+        horizontal_c_range_params = copy(orig_c_range_params)
+        vertical_z_range_params = copy(orig_z_range_params)
+        vertical_c_range_params = copy(orig_c_range_params)
         if real_pixel_diff < 0:
             horizontal_z_range_params.min_real_number = z_first_real_num - z_real_range_diff
             horizontal_z_range_params.max_real_number = z_values_range.real_number_values[0][real_pixel_diff]
             vertical_z_range_params.min_real_number = horizontal_z_range_params.min_real_number
-            vertical_z_range_params.max_real_number = z_values_range.real_number_values[real_pixel_diff][0]
+            vertical_z_range_params.max_real_number = z_values_range.real_number_values[0][-1]
 
             horizontal_c_range_params.min_real_number = c_first_real_num - c_real_range_diff
             horizontal_c_range_params.max_real_number = c_values_range.real_number_values[0][real_pixel_diff]
             vertical_c_range_params.min_real_number = horizontal_c_range_params.min_real_number
-            vertical_c_range_params.max_real_number = z_values_range.real_number_values[real_pixel_diff][0]
+            vertical_c_range_params.max_real_number = z_values_range.real_number_values[0][-1]
 
-            ### NEED TO ALSO SET IMAGINARY RANGE (all of this needs to be outsourced to a clever method; just swap parameters)
+            # calculate remaining slices
         elif real_pixel_diff > 0:
             z_last_real_num = z_values_range.real_number_values[-1][-1]
-            horizontal_z_range_params.min_real_number = z_values_range.real_number_values[0][-1]
+            horizontal_z_range_params.min_real_number = z_values_range.real_number_values[0][real_pixel_diff]
             horizontal_z_range_params.max_real_number = z_last_real_num + z_real_range_diff
-            vertical_z_range_params.min_real_number = z_values_range.real_number_values[-1][real_pixel_diff]
+            vertical_z_range_params.min_real_number = z_values_range.real_number_values[0][-1]
             vertical_z_range_params.max_real_number = horizontal_z_range_params.max_real_number
 
             c_last_real_num = c_values_range.real_number_values[-1][-1]
-            horizontal_c_range_params.min_real_number = c_values_range.real_number_values[0][-1]
+            horizontal_c_range_params.min_real_number = c_values_range.real_number_values[0][real_pixel_diff]
             horizontal_c_range_params.max_real_number = c_last_real_num + c_real_range_diff
-            vertical_c_range_params.min_real_number = c_values_range.real_number_values[-1][real_pixel_diff]
+            vertical_c_range_params.min_real_number = c_values_range.real_number_values[0][-1]
             vertical_c_range_params.max_real_number = horizontal_c_range_params.max_real_number
 
-            ### NEED TO ALSO SET IMAGINARY RANGE (all of this needs to be outsourced to a clever method; just swap parameters)
-        if imaginary_pixel_diff > 0:
-            horizontal_z_range_params.max_real_number = z_values_range[-imaginary_pixel_diff][0]
+            # calculate remaining slices
 
-        elif imaginary_pixel_diff < 0:
-            pass
+        if imaginary_pixel_diff < 0:
+            horizontal_z_range_params.max_imaginary_number = z_values_range.imaginary_number_values[imaginary_pixel_diff][0]
+            vertical_z_range_params.min_imaginary_number = z_first_imaginary_num - z_imaginary_range_diff
+            vertical_z_range_params.max_imaginary_number = z_values_range.imaginary_number_values[0][imaginary_pixel_diff]
 
-        # determine complex range for newly exposed area (modify current ranges from iterable)
-        orig_z_range_params = fractal_iterable.get_z_values_range_params()
-        orig_c_range_params = fractal_iterable.get_c_values_range_params()
-        dimension_params = fractal_iterable.get_dimension_params()
-        
-        new_z_range_params = ComplexRangeParams(orig_z_range_params.min_real_number, orig_z_range_params.max_real_number,
-                                                orig_z_range_params.min_imaginary_number, orig_z_range_params.max_imaginary_number,
-                                                orig_z_range_params.spacing_func)
-        new_c_range_params = ComplexRangeParams(orig_c_range_params.min_real_number, orig_c_range_params.max_real_number,
-                                                orig_c_range_params.min_imaginary_number, orig_c_range_params.max_imaginary_number,
-                                                orig_c_range_params.spacing_func)
-        if real_pixel_diff > 0:
-            new_z_range_params.min_real_number = orig_z_range_params.max_real_number
-            new_z_range_params.max_real_number = orig_z_range_params.max_real_number + (real_pixel_diff * z_real_num_step)
-            new_c_range_params.min_real_number = orig_c_range_params.max_real_number
-            new_c_range_params.max_real_number = orig_c_range_params.max_real_number + (real_pixel_diff * c_real_num_step)
+            horizontal_c_range_params.max_imaginary_number = c_values_range.imaginary_number_values[imaginary_pixel_diff][0]
+            vertical_c_range_params.min_imaginary_number = c_first_imaginary_num - c_imaginary_range_diff
+            vertical_c_range_params.max_imaginary_number = z_values_range.imaginary_number_values[0][imaginary_pixel_diff]
 
-            remaining_columns_slice = slice(imaginary_pixel_diff, dimension_params.get_height())
-        elif real_pixel_diff < 0:
-            new_z_range_params.min_real_number = orig_z_range_params.min_real_number + (real_pixel_diff * z_real_num_step)
-            new_z_range_params.max_real_number = orig_z_range_params.min_real_number
-            new_c_range_params.min_real_number = orig_c_range_params.min_real_number + (real_pixel_diff * c_real_num_step)
-            new_c_range_params.max_real_number = orig_c_range_params.min_real_number
+            # calculate remaining slices
+        elif imaginary_pixel_diff > 0:
+            z_last_imaginary_num = z_values_range.imaginary_number_values[-1][-1]
+            horizontal_z_range_params.min_imaginary_number = z_values_range.imaginary_number_values[imaginary_pixel_diff][-1]
+            vertical_z_range_params.min_imaginary_number = z_values_range.imaginary_number_values[-1][imaginary_pixel_diff]
+            vertical_z_range_params.max_imaginary_number = z_last_imaginary_num + z_imaginary_range_diff
 
-            remaining_columns_slice = slice(0, dimension_params.get_height() + imaginary_pixel_diff)
+            c_last_imaginary_num = c_values_range.imaginary_number_values[-1][-1]
+            horizontal_c_range_params.min_imaginary_number = c_values_range.imaginary_number_values[imaginary_pixel_diff][-1]
+            vertical_c_range_params.min_imaginary_number = c_values_range.imaginary_number_values[-1][imaginary_pixel_diff]
+            vertical_c_range_params.max_imaginary_number = c_last_imaginary_num + c_imaginary_range_diff
 
-        if imaginary_pixel_diff > 0:
-            new_z_range_params.min_imaginary_number = orig_z_range_params.max_imaginary_number
-            new_z_range_params.max_imaginary_number = orig_z_range_params.max_imaginary_number + (imaginary_pixel_diff * z_imaginary_num_step)
-            new_c_range_params.min_imaginary_number = orig_c_range_params.max_imaginary_number
-            new_c_range_params.max_imaginary_number = orig_c_range_params.max_imaginary_number + (imaginary_pixel_diff * c_imaginary_num_step)
-
-            remaining_rows_slice = slice(real_pixel_diff, dimension_params.get_width())
-        else:
-            new_z_range_params.min_imaginary_number = orig_z_range_params.min_imaginary_number + (imaginary_pixel_diff * z_imaginary_num_step)
-            new_z_range_params.max_imaginary_number = orig_z_range_params.min_imaginary_number
-            new_c_range_params.min_imaginary_number = orig_c_range_params.min_imaginary_number + (imaginary_pixel_diff * c_imaginary_num_step)
-            new_c_range_params.max_imaginary_number = orig_c_range_params.min_imaginary_number
-
-            remaining_rows_slice = slice(0, dimension_params.get_width() + real_pixel_diff)
+            # calculate remaining slices
             
         # get renderers for newly exposed areas
         vertical_area = DimensionParams(dimension_params.get_width(), abs(imaginary_pixel_diff))
@@ -145,9 +127,8 @@ class PannablePixelRange(FractimationFunctionality):
         render_cache = self._renderer.get_render_cache()
 
         for frameCounter in range(len(orig_render_cache)):
-            # get new area frame from new area renderer
-            new_area_frame = new_area_renderer.render(frameCounter)
-
+            # get renders for new areas and append them appropriately
+            
             # slice original frame for remaining image
             orig_frame = render_cache[frameCounter]
             remaining_image = orig_frame[remaining_rows_slice, remaining_columns_slice]
