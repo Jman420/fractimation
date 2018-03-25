@@ -41,7 +41,8 @@ class ComplexPolynomialIterator(FractalFormulaIterator):
         exploded_indexes = numpy.abs(z_values_new) > formula_params.escape_value
         remaining_indexes = ~exploded_indexes
         reduced_arrays = remove_indexes([z_values_new, cls._c_values], remaining_indexes)
-        cls._z_values, cls._c_values = reduced_arrays
+        cls._z_values = reduced_arrays[0]
+        cls._c_values = reduced_arrays[1]
         
         cls._next_iteration += 1
         return ComplexPolynomialIterationData(z_values_new, exploded_indexes, remaining_indexes)

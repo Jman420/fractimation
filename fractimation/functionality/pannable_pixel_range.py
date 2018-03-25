@@ -57,6 +57,8 @@ class PannablePixelRange(FractimationFunctionality):
         horizontal_c_range_params = copy(orig_c_range_params)
         vertical_z_range_params = copy(orig_z_range_params)
         vertical_c_range_params = copy(orig_c_range_params)
+        remaining_rows_slice = slice(0, -1)
+        remaining_columns_slice = slice(0, -1)
         if real_pixel_diff < 0:
             horizontal_z_range_params.min_real_number = z_first_real_num - z_real_range_diff
             horizontal_z_range_params.max_real_number = z_values_range.real_number_values[0][real_pixel_diff]
@@ -68,7 +70,7 @@ class PannablePixelRange(FractimationFunctionality):
             vertical_c_range_params.min_real_number = horizontal_c_range_params.min_real_number
             vertical_c_range_params.max_real_number = z_values_range.real_number_values[0][-1]
 
-            # calculate remaining slices
+            remaining_columns_slice = slice(0, real_pixel_diff)
         elif real_pixel_diff > 0:
             z_last_real_num = z_values_range.real_number_values[-1][-1]
             horizontal_z_range_params.min_real_number = z_values_range.real_number_values[0][real_pixel_diff]
@@ -82,7 +84,7 @@ class PannablePixelRange(FractimationFunctionality):
             vertical_c_range_params.min_real_number = c_values_range.real_number_values[0][-1]
             vertical_c_range_params.max_real_number = horizontal_c_range_params.max_real_number
 
-            # calculate remaining slices
+            remaining_columns_slice = slice(real_pixel_diff, -1)
 
         if imaginary_pixel_diff < 0:
             horizontal_z_range_params.max_imaginary_number = z_values_range.imaginary_number_values[imaginary_pixel_diff][0]
@@ -93,7 +95,7 @@ class PannablePixelRange(FractimationFunctionality):
             vertical_c_range_params.min_imaginary_number = c_first_imaginary_num - c_imaginary_range_diff
             vertical_c_range_params.max_imaginary_number = z_values_range.imaginary_number_values[0][imaginary_pixel_diff]
 
-            # calculate remaining slices
+            remaining_rows_slice = slice(0, imaginary_pixel_diff)
         elif imaginary_pixel_diff > 0:
             z_last_imaginary_num = z_values_range.imaginary_number_values[-1][-1]
             horizontal_z_range_params.min_imaginary_number = z_values_range.imaginary_number_values[imaginary_pixel_diff][-1]
@@ -105,7 +107,7 @@ class PannablePixelRange(FractimationFunctionality):
             vertical_c_range_params.min_imaginary_number = c_values_range.imaginary_number_values[-1][imaginary_pixel_diff]
             vertical_c_range_params.max_imaginary_number = c_last_imaginary_num + c_imaginary_range_diff
 
-            # calculate remaining slices
+            remaining_rows_slice = slice(imaginary_pixel_diff, -1)
             
         # get renderers for newly exposed areas
         vertical_area = DimensionParams(dimension_params.get_width(), abs(imaginary_pixel_diff))
@@ -126,19 +128,31 @@ class PannablePixelRange(FractimationFunctionality):
         # get original render cache
         render_cache = self._renderer.get_render_cache()
 
-        for frameCounter in range(len(orig_render_cache)):
-            # get renders for new areas and append them appropriately
+        for frame_counter in range(len(orig_render_cache)):
+            # get renders for new areas
+            horizontal_frame = horizontal_area_renderer.render(frame_counter)
+            vertical_frame = vertical_area_renderer.render(frame_counter)
             
             # slice original frame for remaining image
-            orig_frame = render_cache[frameCounter]
+            orig_frame = render_cache[frame_counter]
             remaining_image = orig_frame[remaining_rows_slice, remaining_columns_slice]
 
-            # append new area and remaining image
-            if sign > 0:
-                new_image = _append_array_2d(new_area_renderer, remaining_image, -imaginary_pixel_diff)
+            # construct new image frame
+            new_frame = numpy.copy(orig_frame)
+            if real_pixel_diff < 0:
+                new_frame = _append_array_2d(horizontal_frame, new_frame, 0)
+            elif real_pixel_diff > 0:
+                new_frame = _append_array_2d(new_frame, horizontal_frame, 0)
+
+            if imaginary_pixel_diff < 0:
+                new_frame = _append_array_2d(vertical_frame, new_frame, imaginary_pixel_diff)
+            elif imaginary_pixel_diff > 0:
+                new_frame = _append_array_2d(new_frame, vertical_frame, imaginary_pixel_diff)
 
             # replace original render cache entry
+            render_cache[frame_counter] = new_frame
 
-        # inject final z & c values from newly exposed iterator into renderer's iterator
+        # inject final z & c values from new areas iterators into renderer's iterator
+        # inject remaining indexes from new areas renderers into renderer
         # update original iterable to reflect full image's range
         return
