@@ -1,4 +1,6 @@
 # fractimation
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJman420%2Ffractimation.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FJman420%2Ffractimation?ref=badge_shield)
+
 A Fractal Animation Framework for Matplotlib
 
 # Description
@@ -79,3 +81,6 @@ This issue can be mitigated by caching each frame within the renderer instead of
 calculating the frame each time.  This will provide accurate playback on playthroughs after
 the initial playback.  Another option is preheating the renderer cache by rendering all
 frames before showing the animation.
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FJman420%2Ffractimation.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FJman420%2Ffractimation?ref=badge_large)
