@@ -14,7 +14,10 @@ class DimensionParams(object):
         self.initialize()
 
     def initialize(self):
-        self.x_indexes, self.y_indexes = numpy.mgrid[0:self.width, 0:self.height]
+        x_indexes_grid, y_indexes_grid = numpy.mgrid[0:self.width, 0:self.height]
+
+        self.x_indexes = x_indexes_grid
+        self.y_indexes = y_indexes_grid
 
     def get_width(self):
         return self.width

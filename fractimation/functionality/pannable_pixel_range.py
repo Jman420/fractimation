@@ -152,7 +152,55 @@ class PannablePixelRange(FractimationFunctionality):
             # replace original render cache entry
             render_cache[frame_counter] = new_frame
 
-        # inject final z & c values from new areas iterators into renderer's iterator
-        # inject remaining indexes from new areas renderers into renderer
+        # split renderer's iterator z & c values into 2d arrays along image dimensions
+        fractal_iterator = self._renderer.get_fractal_iterator()
+        orig_z_values = fractal_iterator.get_z_values()
+        orig_c_values = fractal_iterator.get_c_values()
+        remaining_z_values = orig_z_values[remaining_rows_slice, remaining_columns_slice]
+        remaining_c_values = orig_c_values[remaining_rows_slice, remaining_columns_slice]
+
+        # get new area iterators
+        horizontal_iterator = horizontal_area_renderer.get_fractal_iterator()
+        horizontal_iterator_z_values = horizontal_iterator.get_z_values()
+        horizontal_iterator_c_values = horizontal_iterator.get_c_values()
+
+        vertical_iterator = vertical_area_renderer.get_fractal_iterator()
+        vertical_iterator_z_values = vertical_iterator.get_z_values()
+        vertical_iterator_c_values = vertical_iterator.get_c_values()
+
+        # inject final z & c values from new areas iterators into z & c value 2d arrays
+        new_z_values = orig_z_values
+        new_c_values = orig_c_values
+        if real_pixel_diff < 0:
+            new_z_values = _append_array_2d(horizontal_iterator_z_values, new_z_values, 0)
+            new_c_values = _append_array_2d(horizontal_iterator_c_values, new_c_values, 0)
+        elif real_pixel_diff > 0:
+            new_z_values = _append_array_2d(new_z_values, horizontal_iterator_z_values, 0)
+            new_c_values = _append_array_2d(new_c_values, horizontal_iterator_c_values, 0)
+
+        if imaginary_pixel_diff < 0:
+            new_z_values = _append_array_2d(vertical_iterator_z_values, new_z_values, imaginary_pixel_diff)
+            new_c_values = _append_array_2d(vertical_iterator_c_values, new_c_values, imaginary_pixel_diff)
+        elif imaginary_pixel_diff > 0:
+            new_z_values = _append_array_2d(new_z_values, vertical_iterator_z_values, imaginary_pixel_diff)
+            new_c_values = _append_array_2d(new_c_values, vertical_iterator_c_values, imaginary_pixel_diff)
+
+        # replace renderer's iterator z & c values
+        fractal_iterator.set_z_values(new_z_values)
+        fractal_iterator.set_c_values(new_c_values)
+
         # update original iterable to reflect full image's range
-        return
+        new_z_range_params = copy(orig_z_range_params)
+        new_z_range_params.min_real_number += z_real_range_diff
+        new_z_range_params.max_real_number += z_real_range_diff
+        new_z_range_params.min_imaginary_number += z_imaginary_range_diff
+        new_z_range_params.max_imaginary_number += z_imaginary_range_diff
+
+        new_c_range_params = copy(orig_c_range_params)
+        new_c_range_params.min_real_number += c_real_range_diff
+        new_c_range_params.max_real_number += c_real_range_diff
+        new_c_range_params.min_imaginary_number += c_imaginary_range_diff
+        new_c_range_params.max_imaginary_number += c_imaginary_range_diff
+
+        fractal_iterable.initialize(new_z_range_params, new_c_range_params, dimension_params,
+                                    formula_params, max_iterations)

@@ -47,9 +47,9 @@ class CachedImageRenderer(CachedRenderer):
         else:
             dimension_params = self._dimension_params
             exploded_indexes = iteration_data.exploded_indexes
-            exploded_x_indexes = dimension_params.x_indexes[exploded_indexes]
-            exploded_y_indexes = dimension_params.y_indexes[exploded_indexes]
-            self._image_array[exploded_x_indexes, exploded_y_indexes] = frame_num
+            #exploded_x_indexes = dimension_params.x_indexes[exploded_indexes]
+            #exploded_y_indexes = dimension_params.y_indexes[exploded_indexes]
+            self._image_array[exploded_indexes] = frame_num
 
             if self._image_params.recolor_image:
                 final_image = update_indexes_with_value(self._image_array,
@@ -60,11 +60,11 @@ class CachedImageRenderer(CachedRenderer):
             rotated_image = final_image.T
             self._render_cache.append(rotated_image)
 
-            remaining_indexes = iteration_data.remaining_indexes
-            reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
-            reduced_arrays = remove_indexes(reducable_arrays, remaining_indexes)
-            dimension_params.x_indexes = reduced_arrays[0]
-            dimension_params.y_indexes = reduced_arrays[1]
+            #remaining_indexes = iteration_data.remaining_indexes
+            #reducable_arrays = [dimension_params.x_indexes, dimension_params.y_indexes]
+            #reduced_arrays = remove_indexes(reducable_arrays, remaining_indexes)
+            #dimension_params.x_indexes = reduced_arrays[0]
+            #dimension_params.y_indexes = reduced_arrays[1]
 
     def get_image_params(self):
         return self._image_params

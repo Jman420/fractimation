@@ -5,6 +5,9 @@ import numpy
 
 from ...helpers.formula_tools import generate_complex_range
 
+ROWS_INDEX = 0
+COLUMNS_INDEX = 1
+
 class FractalFormulaIterable(Iterable, ABC):
     
     _max_iterations = None
@@ -62,11 +65,11 @@ class FractalFormulaIterable(Iterable, ABC):
         raise NotImplementedError()
 
 class FractalFormulaIterator(Iterator, ABC):
-    
     _max_iterations = None
     _next_iteration = None
     _z_values = None
     _c_values = None
+    _remaining_indexes = None
 
     def __init__(self, z_values_range, c_values_range, max_iterations=None):
         z_values = numpy.multiply(numpy.complex(0, 1), z_values_range.imaginary_number_values)
@@ -80,11 +83,19 @@ class FractalFormulaIterator(Iterator, ABC):
         self._z_values = z_values
         self._c_values = c_values
 
+        all_indexes = numpy.indices(z_values.shape)
+        flatten_rows = all_indexes[ROWS_INDEX].flatten()
+        flatten_columns = all_indexes[COLUMNS_INDEX].flatten()
+        self._remaining_indexes = (flatten_rows, flatten_columns)
+
     def get_z_values(self):
         return self._z_values
 
     def get_c_values(self):
         return self._c_values
+
+    def get_remaining_indexes(self):
+        return self._remaining_indexes
 
     def __next__(cls):
         max_iterations = cls._max_iterations

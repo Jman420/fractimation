@@ -88,6 +88,8 @@ pan_handler = PanHandler(pan_backend, viewer)
 draw_handler = DrawHandler(renderer, viewer.get_render_manager().get_animation_axes())
 viewer.initialize(max_iterations, draw_handler.draw, "multijuliaFractal")
 
+PlotPlayer.show_players()
+
 # Newton Fractal
 real_number_min, real_number_max = -5, 5                   # Min & Max values for X values in fractal equation
 imaginary_number_min, imaginary_number_max = -5, 5         # Min & Max values for Y values in fractal equation
