@@ -1,7 +1,7 @@
 cycler==0.10.0
 matplotlib==2.1.2
 numpy==1.14.1
-pip==9.0.1
+pip==19.2
 plotplayer==5.0.0
 pyparsing==2.2.0
 python-dateutil==2.6.1
